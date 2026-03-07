@@ -1,0 +1,1277 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Perfil de Usuario</title>
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/login.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+          background: url('/IMG/fondo.jpg') no-repeat center/cover;
+          min-height: 100vh;
+          padding-top: 0;
+        }
+
+        .seccion {
+          display: none;
+        }
+
+        .seccion.visible {
+          display: block;
+        }
+
+        .perfil-container {
+          display: flex;
+          min-height: 100vh;
+          padding-top: 60px;
+        }
+
+        /* Sidebar con estilo admin */
+        aside {
+          width: 280px;
+          background: rgba(40, 40, 40, 0.95);
+          backdrop-filter: blur(10px);
+          box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+          border-right: 2px solid #28a745;
+        }
+
+        .sidebar-content {
+          padding: 30px 20px;
+        }
+
+        .avatar-section {
+          text-align: center;
+          margin-bottom: 30px;
+          padding-bottom: 30px;
+          border-bottom: 2px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .avatar-wrapper {
+          position: relative;
+          display: inline-block;
+          margin-bottom: 15px;
+        }
+
+        #avatarSidebar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          border: 4px solid #28a745;
+          box-shadow: 0 8px 20px rgba(40, 167, 69, 0.4);
+          object-fit: cover;
+        }
+
+        .avatar-btn {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background: linear-gradient(45deg, #28a745, #20c997);
+          border: 3px solid rgba(40, 40, 40, 0.95);
+          border-radius: 50%;
+          padding: 8px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .avatar-btn:hover {
+          transform: scale(1.1);
+          box-shadow: 0 4px 12px rgba(40, 167, 69, 0.5);
+        }
+
+        .avatar-btn i {
+          color: white;
+          font-size: 12px;
+        }
+
+        .user-name {
+          color: #28a745;
+          font-size: 20px;
+          font-weight: 700;
+          margin-bottom: 5px;
+        }
+
+        .user-email {
+          color: #cccccc;
+          font-size: 13px;
+          margin-bottom: 10px;
+        }
+
+        .user-status {
+          display: inline-block;
+          background: rgba(40, 167, 69, 0.2);
+          border: 1px solid #28a745;
+          padding: 5px 12px;
+          border-radius: 20px;
+          font-size: 11px;
+          color: #28a745;
+          font-weight: 600;
+        }
+
+        /* Navegación estilo admin */
+        .nav-section {
+          margin-bottom: 25px;
+        }
+
+        .nav-title {
+          color: #28a745;
+          font-size: 11px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 12px;
+          padding: 0 15px;
+        }
+
+        .nav-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        .nav-item {
+          cursor: pointer;
+          padding: 12px 15px;
+          margin-bottom: 5px;
+          border-radius: 8px;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          color: #cccccc;
+          font-weight: 500;
+        }
+
+        .nav-item:hover {
+          background: rgba(40, 167, 69, 0.15);
+          color: #28a745;
+          transform: translateX(5px);
+        }
+
+        .nav-item.active {
+          background: linear-gradient(45deg, rgba(40, 167, 69, 0.3), rgba(32, 201, 151, 0.3));
+          color: #28a745;
+          border-left: 4px solid #28a745;
+        }
+
+        .nav-item i {
+          font-size: 16px;
+          width: 20px;
+        }
+
+        .logout-btn {
+          background: linear-gradient(45deg, #28a745, #20c997);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          text-align: center;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 10px;
+          font-weight: 600;
+          margin-top: 30px;
+          transition: all 0.3s ease;
+          box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        .logout-btn:hover {
+          background: linear-gradient(45deg, #218838, #1e7e34);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+          color: white;
+        }
+
+        /* Contenido principal */
+        main {
+          flex: 1;
+          padding: 40px;
+          overflow-y: auto;
+        }
+
+        .content-card {
+          background: rgba(40, 40, 40, 0.95);
+          backdrop-filter: blur(10px);
+          border-radius: 15px;
+          padding: 30px;
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+          border: 2px solid #28a745;
+          margin-bottom: 20px;
+        }
+
+        .section-title {
+          color: #28a745;
+          font-size: 28px;
+          font-weight: 700;
+          margin-bottom: 25px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+
+        .section-subtitle {
+          color: #28a745;
+          font-size: 20px;
+          font-weight: 600;
+          margin-bottom: 20px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+
+        .section-subtitle i {
+          background: rgba(40, 167, 69, 0.2);
+          padding: 10px;
+          border-radius: 8px;
+        }
+
+        /* Campos de información */
+        .info-field {
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #333333;
+          border-radius: 10px;
+          padding: 18px;
+          margin-bottom: 15px;
+          transition: all 0.3s ease;
+        }
+
+        .info-field:hover {
+          background: rgba(40, 167, 69, 0.1);
+          border-color: #28a745;
+        }
+
+        .info-field.edit-mode {
+          background: rgba(40, 167, 69, 0.15);
+          border-color: #28a745;
+          box-shadow: 0 0 0 4px rgba(40, 167, 69, 0.1);
+        }
+
+        .field-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .field-label {
+          color: #28a745;
+          font-size: 12px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          margin-bottom: 8px;
+        }
+
+        .field-icon {
+          color: #28a745;
+          font-size: 20px;
+        }
+
+        .field-value {
+          color: #ffffff;
+          font-size: 16px;
+          font-weight: 500;
+        }
+
+        .field-input {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #28a745;
+          border-radius: 8px;
+          padding: 10px 15px;
+          color: #ffffff;
+          font-size: 16px;
+          width: 100%;
+          transition: all 0.3s ease;
+        }
+
+        .field-input:focus {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: #20c997;
+          box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+          outline: none;
+        }
+
+        .field-input::placeholder {
+          color: #999999;
+        }
+
+        /* Botones estilo admin */
+        .btn-primary {
+          background: linear-gradient(45deg, #28a745, #20c997);
+          border: none;
+          border-radius: 8px;
+          color: white;
+          padding: 12px 25px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          text-decoration: none;
+        }
+
+        .btn-primary:hover {
+          background: linear-gradient(45deg, #218838, #1e7e34);
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(40, 167, 69, 0.4);
+          color: white;
+        }
+
+        .btn-secondary {
+          background: rgba(108, 117, 125, 0.8);
+          border: 2px solid #6c757d;
+          border-radius: 8px;
+          color: white;
+          padding: 12px 25px;
+          font-size: 15px;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .btn-secondary:hover {
+          background: #6c757d;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(108, 117, 125, 0.4);
+        }
+
+        .btn-group {
+          display: flex;
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        /* Campo ID especial */
+        .id-field {
+          background: rgba(40, 167, 69, 0.1);
+          border: 2px solid #28a745;
+          border-left: 5px solid #28a745;
+        }
+
+        .id-value {
+          font-family: 'Courier New', monospace;
+          color: #28a745;
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        /* Alertas */
+        .alert-box {
+          padding: 15px 20px;
+          border-radius: 10px;
+          margin-top: 20px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          font-size: 14px;
+          font-weight: 500;
+        }
+
+        .alert-info {
+          background: rgba(40, 167, 69, 0.15);
+          border: 2px solid #28a745;
+          color: #28a745;
+        }
+
+        .alert-warning {
+          background: rgba(255, 193, 7, 0.15);
+          border: 2px solid #ffc107;
+          color: #ffc107;
+        }
+
+        .alert-success {
+          background: rgba(40, 167, 69, 0.2);
+          color: #28a745;
+        }
+
+        .alert-error {
+          background: rgba(220, 53, 69, 0.2);
+          color: #dc3545;
+        }
+
+        /* Grid para perfil público */
+        .profile-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 15px;
+          margin-top: 20px;
+        }
+
+        .profile-card {
+          background: linear-gradient(135deg, rgba(40, 167, 69, 0.1), rgba(32, 201, 151, 0.1));
+          border: 2px solid rgba(40, 167, 69, 0.3);
+          border-radius: 10px;
+          padding: 20px;
+          transition: all 0.3s ease;
+        }
+
+        .profile-card:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+          border-color: #28a745;
+        }
+
+        .profile-card-icon {
+          font-size: 24px;
+          color: #28a745;
+          margin-bottom: 10px;
+        }
+
+        .profile-card-label {
+          font-size: 11px;
+          color: #28a745;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+        }
+
+        .profile-card-value {
+          font-size: 16px;
+          color: #ffffff;
+          font-weight: 600;
+          margin-top: 5px;
+        }
+
+        /* Opciones de privacidad */
+        .privacy-option {
+          background: rgba(255, 255, 255, 0.05);
+          border: 2px solid #333333;
+          border-radius: 10px;
+          padding: 18px;
+          margin-bottom: 12px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: flex-start;
+          gap: 15px;
+        }
+
+        .privacy-option:hover {
+          background: rgba(40, 167, 69, 0.1);
+          border-color: #28a745;
+          transform: translateX(5px);
+        }
+
+        .privacy-option input[type="radio"] {
+          margin-top: 3px;
+          accent-color: #28a745;
+          width: 18px;
+          height: 18px;
+        }
+
+        .privacy-option-content {
+          flex: 1;
+        }
+
+        .privacy-option-title {
+          color: #ffffff;
+          font-weight: 600;
+          font-size: 16px;
+          margin-bottom: 5px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .privacy-option-title i {
+          color: #28a745;
+        }
+
+        .privacy-option-desc {
+          color: #cccccc;
+          font-size: 13px;
+        }
+
+        /* Formulario de reporte */
+        .form-group {
+          margin-bottom: 20px;
+        }
+
+        .form-label {
+          color: #28a745;
+          font-size: 13px;
+          font-weight: 700;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 10px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .form-select {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #333333;
+          border-radius: 8px;
+          padding: 12px 15px;
+          color: #ffffff;
+          font-size: 15px;
+          width: 100%;
+          transition: all 0.3s ease;
+        }
+
+        .form-select:focus {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: #28a745;
+          box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+          outline: none;
+        }
+
+        .form-select option {
+          background: #2a2a2a;
+          color: #ffffff;
+        }
+
+        .form-textarea {
+          background: rgba(255, 255, 255, 0.1);
+          border: 2px solid #333333;
+          border-radius: 8px;
+          padding: 12px 15px;
+          color: #ffffff;
+          font-size: 15px;
+          width: 100%;
+          resize: none;
+          transition: all 0.3s ease;
+          font-family: inherit;
+        }
+
+        .form-textarea:focus {
+          background: rgba(255, 255, 255, 0.15);
+          border-color: #28a745;
+          box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.2);
+          outline: none;
+        }
+
+        .form-textarea::placeholder {
+          color: #999999;
+        }
+
+        /* Estado próximamente */
+        .coming-soon {
+          text-align: center;
+          padding: 60px 40px;
+        }
+
+        .coming-soon-icon {
+          background: rgba(255, 193, 7, 0.2);
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 0 auto 20px;
+          border: 3px solid #ffc107;
+        }
+
+        .coming-soon-icon i {
+          font-size: 48px;
+          color: #ffc107;
+        }
+
+        .coming-soon-title {
+          color: #28a745;
+          font-size: 24px;
+          font-weight: 700;
+          margin-bottom: 10px;
+        }
+
+        .coming-soon-text {
+          color: #cccccc;
+          font-size: 15px;
+          margin-bottom: 20px;
+        }
+
+        .coming-soon-badge {
+          display: inline-block;
+          background: rgba(255, 193, 7, 0.2);
+          border: 2px solid #ffc107;
+          color: #ffc107;
+          padding: 8px 20px;
+          border-radius: 20px;
+          font-size: 13px;
+          font-weight: 600;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .fade-in {
+          animation: fadeIn 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+          .perfil-container {
+            flex-direction: column;
+          }
+
+          aside {
+            width: 100%;
+            border-right: none;
+            border-bottom: 2px solid #28a745;
+          }
+
+          main {
+            padding: 20px;
+          }
+
+          .content-card {
+            padding: 20px;
+          }
+
+          .profile-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{plantilla/navbar :: navbar}"></div>
+
+<div class="perfil-container">
+    <!-- Sidebar -->
+    <aside>
+        <div class="sidebar-content">
+            <!-- Avatar Section -->
+            <div class="avatar-section">
+                <div class="avatar-wrapper">
+                    <img id="avatarSidebar"
+                         src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                         alt="avatar">
+                    <button class="avatar-btn">
+                        <i class="fas fa-camera"></i>
+                    </button>
+                </div>
+                <h3 class="user-name" th:text="${usuario.nombreUsuario}">Usuario</h3>
+                <p class="user-email" th:text="${usuario.correoUsuario}">correo@ejemplo.com</p>
+                <span class="user-status">
+            <i class="fas fa-check-circle"></i> Cuenta Activa
+          </span>
+            </div>
+
+            <!-- Navegación -->
+            <nav>
+                <div class="nav-section">
+                    <h4 class="nav-title">Cuenta</h4>
+                    <ul class="nav-list">
+                        <li class="nav-item active" id="item-informacion" onclick="mostrarSeccion('informacion')">
+                            <i class="fas fa-user-circle"></i>
+                            <span>Tu información</span>
+                        </li>
+                        <li class="nav-item" id="item-seguridad" onclick="mostrarSeccion('seguridad')">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Seguridad</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="nav-section">
+                    <h4 class="nav-title">Red Amigos</h4>
+                    <ul class="nav-list">
+                        <li class="nav-item" id="item-perfil" onclick="mostrarSeccion('perfil')">
+                            <i class="fas fa-id-card"></i>
+                            <span>Perfil</span>
+                        </li>
+                        <li class="nav-item" id="item-privacidad" onclick="mostrarSeccion('privacidad')">
+                            <i class="fas fa-lock"></i>
+                            <span>Privacidad</span>
+                        </li>
+                        <li class="nav-item" id="item-familia" onclick="mostrarSeccion('familia')">
+                            <i class="fas fa-users"></i>
+                            <span>Familia</span>
+                        </li>
+                        <li class="nav-item" id="item-reporte" onclick="mostrarSeccion('reporte')">
+                            <i class="fas fa-flag"></i>
+                            <span>Reportes</span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <a th:href="@{/logout}" class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Cerrar sesión</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Contenido Principal -->
+    <main>
+        <!-- Sección: Tu Información -->
+        <section id="informacion" class="seccion visible fade-in">
+            <div class="content-card">
+                <div class="section-title">
+                    <span>Tu información</span>
+                    <button onclick="toggleEditarInfo()" id="btnEditarInfo" class="btn-primary">
+                        <i class="fas fa-edit"></i>
+                        <span>Editar</span>
+                    </button>
+                </div>
+
+                <form th:action="@{/usuario/actualizar-info}" method="post" id="formActualizarInfo">
+                    <!-- Nombre -->
+                    <div class="info-field">
+                        <div class="field-header">
+                            <div style="flex: 1;">
+                                <div class="field-label">Nombre</div>
+                                <div id="displayNombre" class="field-value" th:text="${usuario.nombreUsuario}">Nombre</div>
+                                <input type="text" name="nombreUsuario" id="inputNombre"
+                                       th:value="${usuario.nombreUsuario}"
+                                       class="field-input hidden" required />
+                            </div>
+                            <i class="fas fa-user field-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Apellido -->
+                    <div class="info-field">
+                        <div class="field-header">
+                            <div style="flex: 1;">
+                                <div class="field-label">Apellido</div>
+                                <div id="displayApellido" class="field-value" th:text="${usuario.apellidoUsuario}">Apellido</div>
+                                <input type="text" name="apellidoUsuario" id="inputApellido"
+                                       th:value="${usuario.apellidoUsuario}"
+                                       class="field-input hidden" required />
+                            </div>
+                            <i class="fas fa-user-tag field-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Correo -->
+                    <div class="info-field">
+                        <div class="field-header">
+                            <div style="flex: 1;">
+                                <div class="field-label">Correo electrónico</div>
+                                <div id="displayCorreo" class="field-value" th:text="${usuario.correoUsuario}">correo@ejemplo.com</div>
+                                <input type="email" name="correoUsuario" id="inputCorreo"
+                                       th:value="${usuario.correoUsuario}"
+                                       class="field-input hidden" required />
+                            </div>
+                            <i class="fas fa-envelope field-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="info-field">
+                        <div class="field-header">
+                            <div style="flex: 1;">
+                                <div class="field-label">Teléfono</div>
+                                <div id="displayTelefono" class="field-value"
+                                     th:text="${usuario.telUsuario != null && !usuario.telUsuario.isEmpty() ? usuario.telUsuario : 'No registrado'}">-</div>
+                                <input type="tel" name="telUsuario" id="inputTelefono"
+                                       th:value="${usuario.telUsuario} "
+                                       class="field-input hidden" placeholder="Ingresa tu teléfono"
+                                       pattern="[0-9]{10}"
+                                       maxlength="10"
+                                       oninput="this.value = this.value.replace(/[^0-9]/g,'')"
+
+                                />
+                            </div>
+                            <i class="fas fa-phone field-icon"></i>
+                        </div>
+                    </div>
+
+
+                    <!-- Botones de acción -->
+                    <div id="botonesAccionInfo" class="btn-group hidden">
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i>
+                            <span>Guardar cambios</span>
+                        </button>
+                        <button type="button" onclick="cancelarEditarInfo()" class="btn-secondary">
+                            <i class="fas fa-times"></i>
+                            <span>Cancelar</span>
+                        </button>
+                    </div>
+                </form>
+
+                <div class="alert-box alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <span>Esta información proviene de tu cuenta registrada en el sistema. Los cambios se guardarán en la base de datos.</span>
+                </div>
+
+                <!-- Notificación -->
+                <div th:if="${mensaje != null}"
+                     th:class="${error != null} ? 'alert-box alert-error' : 'alert-box alert-success'">
+                    <i th:class="${error != null} ? 'fas fa-exclamation-circle' : 'fas fa-check-circle'"></i>
+                    <span th:text="${mensaje}"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Seguridad -->
+        <section id="seguridad" class="seccion hidden fade-in">
+            <div class="content-card">
+                <h2 class="section-subtitle">
+                    <i class="fas fa-key"></i>
+                    <div>
+                        <div>Cambiar contraseña</div>
+                        <small style="font-size: 13px; font-weight: 400; color: #cccccc;">Mantén tu cuenta segura actualizando tu contraseña regularmente</small>
+                    </div>
+                </h2>
+
+                <form th:action="@{/usuario/cambiar-password}" method="post" id="formCambiarPassword">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-lock"></i>
+                            Contraseña actual
+                        </label>
+                        <input id="pwdActual" name="passwordActual" type="password" autocomplete="current-password"
+                               class="field-input" required placeholder="Ingresa tu contraseña actual" />
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-key"></i>
+                            Nueva contraseña
+                        </label>
+                        <input id="pwdNueva" name="passwordNueva" type="password" autocomplete="new-password"
+                               class="field-input" required placeholder="Mínimo 8 caracteres" />
+                        <div class="alert-box alert-info" style="margin-top: 10px;">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Debe incluir: mayúscula, minúscula, número y mínimo 8 caracteres</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-check-circle"></i>
+                            Confirmar nueva contraseña
+                        </label>
+                        <input id="pwdConfirm" name="passwordConfirm" type="password" autocomplete="new-password"
+                               class="field-input" required placeholder="Repite tu nueva contraseña" />
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%;">
+                        <i class="fas fa-save"></i>
+                        <span>Actualizar contraseña</span>
+                    </button>
+                </form>
+
+                <div th:if="${mensaje != null}"
+                     th:class="${error != null} ? 'alert-box alert-error' : 'alert-box alert-success'"
+                     style="margin-top: 20px;">
+                    <i th:class="${error != null} ? 'fas fa-exclamation-circle' : 'fas fa-check-circle'"></i>
+                    <span th:text="${mensaje}"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Perfil -->
+        <section id="perfil" class="seccion hidden fade-in">
+            <div class="content-card">
+                <h2 class="section-subtitle">
+                    <i class="fas fa-id-badge"></i>
+                    <div>
+                        <div>Información de tu perfil</div>
+                        <small style="font-size: 13px; font-weight: 400; color: #cccccc;">Así te ven otros usuarios en la plataforma</small>
+                    </div>
+                </h2>
+
+                <div class="profile-grid">
+                    <div class="profile-card">
+                        <i class="fas fa-user profile-card-icon"></i>
+                        <div class="profile-card-label">Nombre de usuario</div>
+                        <div class="profile-card-value" th:text="${usuario.nombreUsuario}">Usuario</div>
+                    </div>
+
+                    <div class="profile-card">
+                        <i class="fas fa-id-card profile-card-icon"></i>
+                        <div class="profile-card-label">Nombre completo</div>
+                        <div class="profile-card-value" th:text="${usuario.nombreUsuario + ' ' + usuario.apellidoUsuario}">Nombre Completo</div>
+                    </div>
+
+                    <div class="profile-card">
+                        <i class="fas fa-envelope profile-card-icon"></i>
+                        <div class="profile-card-label">Correo</div>
+                        <div class="profile-card-value" th:text="${usuario.correoUsuario}">correo@ejemplo.com</div>
+                    </div>
+
+                    <div class="profile-card">
+                        <i class="fas fa-phone profile-card-icon"></i>
+                        <div class="profile-card-label">Teléfono</div>
+                        <div class="profile-card-value" id="telefonoFormateado">
+                        <span th:if="${usuario.telUsuario != null && !usuario.telUsuario.isEmpty()}">
+                        <span th:text="${#strings.substring(usuario.telUsuario, 0, 3)}"></span>-<span th:text="${#strings.substring(usuario.telUsuario, 3, 6)}"></span>-<span th:text="${#strings.substring(usuario.telUsuario, 6, 10)}"></span>
+                         </span>
+                            <span th:if="${usuario.telUsuario == null || usuario.telUsuario.isEmpty()}">
+            No registrado
+        </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert-box alert-warning" style="margin-top: 20px;">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>Para editar esta información, ve a la sección "Tu información" en el menú lateral.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Privacidad -->
+        <section id="privacidad" class="seccion hidden fade-in">
+            <div class="content-card">
+                <h2 class="section-subtitle">
+                    <i class="fas fa-user-shield"></i>
+                    <div>
+                        <div>Control de privacidad</div>
+                        <small style="font-size: 13px; font-weight: 400; color: #cccccc;">Decide quién puede ver tu información</small>
+                    </div>
+                </h2>
+
+                <form th:action="@{/usuario/actualizar-privacidad}" method="post">
+                    <label class="privacy-option">
+                        <input type="radio" name="privacidad" value="amigos" />
+                        <div class="privacy-option-content">
+                            <div class="privacy-option-title">
+                                <i class="fas fa-user-friends"></i>
+                                <span>Solo Amigos</span>
+                            </div>
+                            <div class="privacy-option-desc">Tu información se comparte solo con amigos confirmados</div>
+                        </div>
+                    </label>
+
+                    <label class="privacy-option">
+                        <input type="radio" name="privacidad" value="publico" checked />
+                        <div class="privacy-option-content">
+                            <div class="privacy-option-title">
+                                <i class="fas fa-globe"></i>
+                                <span>Público</span>
+                            </div>
+                            <div class="privacy-option-desc">Tu perfil es visible para todos los usuarios</div>
+                        </div>
+                    </label>
+
+                    <label class="privacy-option">
+                        <input type="radio" name="privacidad" value="privado" />
+                        <div class="privacy-option-content">
+                            <div class="privacy-option-title">
+                                <i class="fas fa-lock"></i>
+                                <span>Privado</span>
+                            </div>
+                            <div class="privacy-option-desc">Tu perfil solo es visible para ti</div>
+                        </div>
+                    </label>
+
+                    <button type="submit" class="btn-primary" style="width: 100%; margin-top: 20px;">
+                        <i class="fas fa-save"></i>
+                        <span>Guardar configuración</span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Sección: Familia -->
+        <section id="familia" class="seccion hidden fade-in">
+            <div class="content-card">
+                <h2 class="section-title">Administración de familia</h2>
+
+                <div class="coming-soon">
+                    <div class="coming-soon-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3 class="coming-soon-title">Próximamente disponible</h3>
+                    <p class="coming-soon-text">Esta funcionalidad estará lista pronto. Podrás gestionar los miembros de tu familia desde aquí.</p>
+                    <span class="coming-soon-badge">
+              <i class="fas fa-clock"></i>
+              En desarrollo
+            </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Reporte -->
+        <section id="reporte" class="seccion hidden fade-in">
+            <div class="content-card">
+                <h2 class="section-subtitle">
+                    <i class="fas fa-comment-dots"></i>
+                    <div>
+                        <div>Enviar un mensaje</div>
+                        <small style="font-size: 13px; font-weight: 400; color: #cccccc;">Comparte tus comentarios, reporta problemas o envía sugerencias</small>
+                    </div>
+                </h2>
+
+                <form th:action="@{/usuario/enviar-reporte}" method="post">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-tag"></i>
+                            Tipo de mensaje
+                        </label>
+                        <select name="tipoMensaje" class="form-select">
+                            <option value="comentario">💬 Comentario general</option>
+                            <option value="reporte">⚠️ Reporte de problema</option>
+                            <option value="sugerencia">💡 Sugerencia de mejora</option>
+                            <option value="error">🐛 Error técnico</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-pen"></i>
+                            Mensaje
+                        </label>
+                        <textarea name="mensaje" rows="6"
+                                  class="form-textarea"
+                                  placeholder="Describe tu comentario o problema aquí..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Enviar mensaje</span>
+                    </button>
+                </form>
+
+                <div class="alert-box alert-success" style="margin-top: 20px;">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Tu mensaje será revisado por nuestro equipo. Te responderemos a tu correo electrónico registrado.</span>
+                </div>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+<script>
+    // Función para mostrar secciones
+    function mostrarSeccion(id) {
+      const secciones = document.querySelectorAll('.seccion');
+      secciones.forEach(s => {
+        s.classList.remove('visible');
+        s.classList.add('hidden');
+      });
+
+      const seccionActual = document.getElementById(id);
+      seccionActual.classList.remove('hidden');
+      seccionActual.classList.add('visible');
+
+      // Actualizar navegación
+      const ids = ['informacion', 'seguridad', 'perfil', 'privacidad', 'familia', 'reporte'];
+      ids.forEach(i => {
+        const item = document.getElementById('item-' + i);
+        if (item) {
+          item.classList.remove('active');
+        }
+      });
+
+      const activo = document.getElementById('item-' + id);
+      if (activo) {
+        activo.classList.add('active');
+      }
+    }
+
+    // Variables originales para cancelar edición
+    let valoresOriginales = {};
+
+    // Función para activar modo edición
+    function toggleEditarInfo() {
+      const displays = ['displayNombre', 'displayApellido', 'displayCorreo', 'displayTelefono'];
+      const inputs = ['inputNombre', 'inputApellido', 'inputCorreo', 'inputTelefono'];
+      const fields = document.querySelectorAll('.info-field');
+
+      // Guardar valores originales
+      valoresOriginales = {
+        nombre: document.getElementById('inputNombre').value,
+        apellido: document.getElementById('inputApellido').value,
+        correo: document.getElementById('inputCorreo').value,
+        telefono: document.getElementById('inputTelefono').value
+      };
+
+      displays.forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+      });
+
+      inputs.forEach((id, index) => {
+        const input = document.getElementById(id);
+        input.classList.remove('hidden');
+        if (index < 4) {
+          fields[index].classList.add('edit-mode');
+        }
+      });
+
+      document.getElementById('btnEditarInfo').classList.add('hidden');
+      document.getElementById('botonesAccionInfo').classList.remove('hidden');
+    }
+
+    // Función para cancelar edición
+    function cancelarEditarInfo() {
+      const displays = ['displayNombre', 'displayApellido', 'displayCorreo', 'displayTelefono'];
+      const inputs = ['inputNombre', 'inputApellido', 'inputCorreo', 'inputTelefono'];
+      const fields = document.querySelectorAll('.info-field');
+
+      // Restaurar valores originales
+      document.getElementById('inputNombre').value = valoresOriginales.nombre;
+      document.getElementById('inputApellido').value = valoresOriginales.apellido;
+      document.getElementById('inputCorreo').value = valoresOriginales.correo;
+      document.getElementById('inputTelefono').value = valoresOriginales.telefono;
+
+      displays.forEach(id => {
+        document.getElementById(id).classList.remove('hidden');
+      });
+
+      inputs.forEach((id, index) => {
+        const input = document.getElementById(id);
+        input.classList.add('hidden');
+        if (index < 4) {
+          fields[index].classList.remove('edit-mode');
+        }
+      });
+
+      document.getElementById('btnEditarInfo').classList.remove('hidden');
+      document.getElementById('botonesAccionInfo').classList.add('hidden');
+    }
+
+    // Validación de formulario de contraseña
+    const formPassword = document.getElementById('formCambiarPassword');
+    if (formPassword) {
+      formPassword.addEventListener('submit', function(e) {
+        const pwdNueva = document.getElementById('pwdNueva').value;
+        const pwdConfirm = document.getElementById('pwdConfirm').value;
+
+        if (pwdNueva !== pwdConfirm) {
+          e.preventDefault();
+          alert('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
+          return false;
+        }
+
+        // Validar requisitos de contraseña
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+        if (!regex.test(pwdNueva)) {
+          e.preventDefault();
+          alert('La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula y número.');
+          return false;
+        }
+      });
+    }
+
+    // Ocultar notificaciones automáticamente después de 5 segundos
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(() => {
+        const alerts = document.querySelectorAll('.alert-box.alert-success, .alert-box.alert-error');
+        alerts.forEach(alert => {
+          if (alert.querySelector('[th\\:text]')) {
+            alert.style.transition = 'opacity 0.5s';
+            alert.style.opacity = '0';
+            setTimeout(() => alert.remove(), 500);
+          }
+        });
+      }, 5000);
+    });
+</script>
+
+<!-- Agregar antes del cierre de </body> en perfil.html -->
+<script>
+    // Prevenir que el navegador use caché al volver atrás
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+
+    // Verificar sesión periódicamente
+    setInterval(function() {
+        fetch('/usuario/check-session', {
+            method: 'GET',
+            credentials: 'same-origin'
+        })
+        .then(response => response.text())
+        .then(data => {
+            if (data === 'NO_SESSION') {
+                window.location.href = '/login?expired=true';
+            }
+        })
+        .catch(() => {
+            window.location.href = '/login';
+        });
+    }, 5000); // Cada 5 segundos
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+const inputTelefono = document.getElementById('inputTelefono');
+const errorTel = document.getElementById('telefonoError');
+
+if (inputTelefono) {
+inputTelefono.addEventListener('input', function(e) {
+// Solo permitir números
+this.value = this.value.replace(/[^0-9]/g, '');
+
+// Mostrar/ocultar error según la longitud
+if (this.value.length > 0 && this.value.length !== 10) {
+if (errorTel) errorTel.style.display = 'block';
+this.style.borderColor = '#dc3545';
+} else {
+if (errorTel) errorTel.style.display = 'none';
+this.style.borderColor = '#28a745';
+}
+});
+}
+});
+
+// Validación del formulario de información
+const formActualizarInfo = document.getElementById('formActualizarInfo');
+if (formActualizarInfo) {
+formActualizarInfo.addEventListener('submit', function(e) {
+const telefono = document.getElementById('inputTelefono').value.trim();
+
+// Validar teléfono solo si se ingresó algo
+if (telefono && telefono.length !== 10) {
+e.preventDefault();
+alert('El teléfono debe tener exactamente 10 dígitos');
+document.getElementById('inputTelefono').focus();
+return false;
+}
+
+// Validar que solo contenga números
+if (telefono && !/^\d+$/.test(telefono)) {
+e.preventDefault();
+alert('El teléfono solo debe contener números');
+document.getElementById('inputTelefono').focus();
+return false;
+}
+});
+}
+
+// Validación de formulario de contraseña
+const formPassword = document.getElementById('formCambiarPassword');
+if (formPassword) {
+formPassword.addEventListener('submit', function(e) {
+const pwdNueva = document.getElementById('pwdNueva').value;
+const pwdConfirm = document.getElementById('pwdConfirm').value;
+
+if (pwdNueva !== pwdConfirm) {
+e.preventDefault();
+alert('Las contraseñas no coinciden. Por favor, verifica e intenta nuevamente.');
+return false;
+}
+
+// Validar requisitos de contraseña
+const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+if (!regex.test(pwdNueva)) {
+e.preventDefault();
+alert('La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula y número.');
+return false;
+}
+});
+}
+</script>
+</body>
+</html>

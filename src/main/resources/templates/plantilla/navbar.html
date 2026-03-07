@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}">
+    <link rel="stylesheet" th:href="@{/CSS/login.css}">
+</head>
+<body>
+    <nav class="navbar-principal" th:fragment="navbar">
+        <!-- Versión móvil -->
+        <div class="mobile">
+            <div class="header">
+                <button id="bmenu"><i class="fa-solid fa-list"></i></button>
+                <a th:href="@{/}">
+                    <img th:src="@{/IMG/Shenmy Kappai.png}" width="60" alt="Logo" />
+                </a>
+                <div>
+                    <a th:href="@{/login}"><i class="fa-solid fa-user"></i></a>
+                    <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+            </div>
+            <div class="links" id="links">
+                <a href="#">Juegos</a>
+                <a th:href="@{/soporte}">Soporte técnico</a>
+            </div>
+        </div>
+
+        <!-- Escritorio -->
+        <ul class="nav-left">
+            <li><a th:href="@{/}"><img th:src="@{/IMG/Shenmy Kappai.png}" width="60" alt="Logo"></a></li>
+            <li><a href="#" class="link link-hide">Juegos</a></li>
+            <li><a th:href="@{/soporte}" class="link link-hide">Soporte técnico</a></li>
+        </ul>
+
+        <ul class="nav-right">
+            <li><a href="#" class="link"><i class="fa-solid fa-search"></i></a></li>
+            <li><a href="#"><i class="fa-solid fa-cart-shopping"></i></a></li>
+            <li><a th:href="@{/login}" class="link"><i class="fa-solid fa-user"></i></a></li>
+        </ul>
+    </nav>
+</body>
+</html>

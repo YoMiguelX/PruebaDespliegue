@@ -1,0 +1,317 @@
+/* Reset básico para ocupar toda la pantalla */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* Asegurar que el body ocupe toda la pantalla */
+body {
+  padding-top: 0px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  /* La imagen de fondo se aplicará desde el HTML usando th:style */
+}
+
+/* Split screen layout - ocupa toda la pantalla disponible */
+.login-container {
+  display: flex;
+  flex: 1;
+  min-height: 100vh;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.login-left {
+  flex: 1;
+  position: relative;
+  min-height: 100vh;
+  /* La imagen de fondo se aplicará desde el HTML usando th:style */
+}
+
+.login-left .overlay {
+  position: absolute;
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0;
+  background-color: rgba(0,0,0,0.6);
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.login-left .overlay h1 {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  font-weight: bold;
+}
+
+.login-left .overlay p {
+  font-size: 1.2rem;
+  opacity: 0.9;
+}
+
+.login-right {
+  flex: 1;
+  background-color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.login-right form {
+  width: 100%;
+  max-width: 350px;
+  background: rgba(0,0,0,0.8);
+  padding: 40px;
+  border-radius: 10px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.1);
+}
+
+.login-right form h2 {
+  margin-bottom: 30px;
+  color: white;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.login-right input {
+  width: 100%;
+  margin: 10px 0;
+  padding: 12px;
+  border-radius: 5px;
+  border: 1px solid rgba(255,255,255,0.3);
+  font-size: 1rem;
+  background-color: rgba(255,255,255,0.9);
+  color: #333;
+}
+
+.login-right input:focus {
+  outline: none;
+  border-color: #00c853;
+  box-shadow: 0 0 5px rgba(0, 200, 83, 0.3);
+}
+
+/* Estilos específicos para el contenedor de contraseña */
+.password-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.password-wrapper input {
+  padding-right: 40px !important;
+  width: 100%;
+  margin: 0;
+}
+
+/* Botón del toggle de contraseña */
+.toggle-password {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none !important;
+  border: none !important;
+  cursor: pointer;
+  font-size: 16px;
+  color: #666 !important;
+  transition: color 0.2s ease;
+  z-index: 10;
+  padding: 0 !important;
+  margin: 0 !important;
+  outline: none !important;
+  width: auto !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+.toggle-password:hover {
+  color: #333 !important;
+  background: none !important;
+}
+
+.toggle-password:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}
+
+.toggle-password:active {
+  color: #000 !important;
+  background: none !important;
+}
+
+/* Botón de submit */
+.login-right button[type="submit"] {
+  width: 100%;
+  margin-top: 20px;
+  padding: 12px;
+  background-color: #00c853;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-right button[type="submit"]:hover {
+  background-color: #00b74a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0, 200, 83, 0.3);
+}
+
+.login-right button[type="submit"]:active {
+  transform: translateY(0);
+}
+
+.acciones {
+  margin-top: 20px;
+  font-size: 0.9rem;
+}
+
+.acciones a {
+  color: #81d4fa;
+  text-decoration: none;
+  display: block;
+  margin-top: 8px;
+  transition: color 0.3s ease;
+}
+
+.acciones a:hover {
+  color: #4fc3f7;
+  text-decoration: underline;
+}
+
+/* Estilos para alertas de Bootstrap */
+.alert {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  z-index: 1000;
+  position: relative;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+  border-bottom: 3px solid #28a745;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-bottom: 3px solid #dc3545;
+}
+
+/* Estilos para el registro (si los necesitas) */
+.registro-container {
+  display: flex;
+  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.registro-left {
+  flex: 1;
+  min-height: 100vh;
+  position: relative;
+  /* La imagen de fondo se aplicará desde el HTML usando th:style */
+}
+
+.registro-right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.7);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* Estilos para navbar si interfiere */
+nav a {
+  padding-bottom: 0px !important;
+  padding-top: 0px !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .login-container,
+  .registro-container {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  
+  .login-left,
+  .login-right,
+  .registro-left,
+  .registro-right {
+    flex: none;
+    min-height: 50vh;
+  }
+  
+  .login-left .overlay h1 {
+    font-size: 2rem;
+  }
+  
+  .login-left .overlay p {
+    font-size: 1rem;
+  }
+  
+  .login-right,
+  .registro-right {
+    padding: 15px;
+  }
+  
+  .login-right form {
+    padding: 30px 20px;
+    max-width: 100%;
+  }
+  
+  .login-right form h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-left .overlay {
+    padding: 15px;
+  }
+  
+  .login-left .overlay h1 {
+    font-size: 1.8rem;
+  }
+  
+  .login-right form {
+    padding: 25px 15px;
+  }
+  
+  .login-right input,
+  .login-right button[type="submit"] {
+    padding: 10px;
+  }
+}

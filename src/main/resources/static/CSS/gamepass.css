@@ -1,0 +1,79 @@
+body {
+    font-family: 'Rajdhani', sans-serif;
+    background: #0e0e0e;
+    color:
+
+
+        #fff;
+    margin: 0;
+    padding: 0;
+}
+
+.titulo {
+    text-align: center;
+    padding: 2rem;
+    font-size: 2rem;
+    letter-spacing: 2px;
+}
+
+.contenedor-cartas {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    flex-wrap: wrap;
+}
+
+.carta {
+    background: #1c1c1c;
+    border: 1px solid #333;
+    border-radius: 8px;
+    width: 300px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carta img {
+    width: 100%;
+    height: auto;
+}
+
+.contenido {
+    padding: 1rem;
+}
+
+.titulo-juego {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+.descripcion {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 1rem;
+}
+
+.disponible {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.boton {
+    background: #ffcc00;
+    border: none;
+    color: #000;
+    font-weight: bold;
+    padding: 0.8rem;
+    cursor: pointer;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.boton:hover {
+    background: #ffd633;
+}

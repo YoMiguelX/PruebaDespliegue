@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Editar Usuario - Juego Educativo</title>
+  <!-- CSS del login -->
+  <link rel="stylesheet" th:href="@{/CSS/login.css}" />
+  <!-- CSS del navbar -->
+  <link rel="stylesheet" th:href="@{/CSS/navbar.css}" />
+  <!-- Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  
+  <!-- Estilos adicionales para el formulario de editar -->
+  <style>
+    /* Ajustar el formulario de editar para que se vea como el login */
+    .login-right form {
+      max-width: 400px;
+      padding: 30px;
+    }
+
+    .login-right form h2 {
+      margin-bottom: 25px;
+      font-size: 1.5rem;
+    }
+
+    .login-right input, .login-right select {
+      width: 100%;
+      margin: 8px 0;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 0.9rem;
+    }
+
+    .login-right select {
+      background-color: white;
+      color: #333;
+    }
+
+    .login-right select option {
+      background-color: white;
+      color: #333;
+    }
+
+    .login-right label {
+      color: white;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .login-right input[readonly] {
+      background-color: #f0f0f0;
+      color: #666;
+      cursor: not-allowed;
+    }
+
+    .login-right .form-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      flex-direction: column;
+    }
+
+    .login-right .btn {
+      padding: 12px;
+      border-radius: 5px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+      text-decoration: none;
+      text-align: center;
+      display: inline-block;
+    }
+
+    .login-right .btn-success {
+      background-color: #00c853;
+      color: white;
+    }
+
+    .login-right .btn-success:hover {
+      background-color: #00b74a;
+    }
+
+    .login-right .btn-secondary {
+      background-color: #6c757d;
+      color: white;
+    }
+
+    .login-right .btn-secondary:hover {
+      background-color: #5a6268;
+    }
+
+    /* Responsive para botones */
+    @media (min-width: 768px) {
+      .login-right .form-buttons {
+        flex-direction: row;
+      }
+    }
+  </style>
+</head>
+
+<body th:style="'background: url(' + @{/IMG/fondo.jpg} + ') no-repeat center/cover; padding-top: 0px;'">
+
+<div th:replace="~{plantilla/navbar :: navbar}"></div>
+
+<!-- Mensajes de alerta -->
+<div th:if="${mensaje}" class="alert alert-success text-center">
+    <span th:text="${mensaje}"></span>
+</div>
+
+<div th:if="${error}" class="alert alert-danger text-center">
+    <span th:text="${error}"></span>
+</div>
+
+<!-- Formulario de editar usuario -->
+<div class="login-container">
+    <div class="login-left" th:style="'background: url(' + @{/IMG/master-chief-darkmode.jpg} + ') center center/cover no-repeat;'">
+        <div class="overlay">
+            <h1>Editar Usuario</h1>
+            <p>Modifique los datos del usuario seleccionado en el sistema.</p>
+        </div>
+    </div>
+    
+    <div class="login-right">
+        <form th:action="@{/admin/actualizar/{id}(id=${usuario.idUsuario})}"
+              th:object="${usuario}" method="post">
+
+            <label>ID</label>
+            <input type="text" th:field="*{idUsuario}" readonly />
+
+            <label>Nombre</label>
+            <input type="text" th:field="*{nombreUsuario}" required />
+
+            <label>Apellido</label>
+            <input type="text" th:field="*{apellidoUsuario}" required />
+
+            <label>Correo</label>
+            <input type="email" th:field="*{correoUsuario}" required />
+
+            <label>Teléfono</label>
+            <input type="text" th:field="*{telUsuario}" />
+
+            <label>Rol</label>
+            <select th:field="*{rol.idRol}">
+                <option value="1">Administrador</option>
+                <option value="2">Usuario</option>
+            </select>
+
+            <label>Estado</label>
+            <select th:field="*{estadoUsuario}">
+                <option th:value="true">Activo</option>
+                <option th:value="false">Inactivo</option>
+            </select>
+
+            <button type="submit">Actualizar</button>
+            <a th:href="@{/admin/lista}">Cancelar</a>
+        </form>
+
+    </div>
+</div>
+
+<!-- Scripts del navbar -->
+<script>
+    document.getElementById('bmenu')?.addEventListener('click', () => {
+      document.getElementById('links').classList.toggle('show');
+    });
+</script>
+
+</body>
+</html>

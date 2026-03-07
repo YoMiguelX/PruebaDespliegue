@@ -1,0 +1,56 @@
+/* SCR.2/CSS/perfil.css */
+body {
+  background: url('/IMG/fondo.jpg') no-repeat center/cover;
+  min-height: 100vh;
+  padding-top: 0;
+}
+
+.seccion {
+  display: none;
+}
+
+.seccion.visible {
+  display: block;
+}
+
+.perfil-container {
+  display: flex;
+  min-height: 100vh;
+  padding-top: 60px;
+}
+
+/* Sidebar con estilo admin */
+aside {
+  width: 280px;
+  background: rgba(40, 40, 40, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+  border-right: 2px solid #28a745;
+}
+
+/* ... resto de tu CSS ... */
+
+/* Responsive */
+@media (max-width: 968px) {
+  .perfil-container {
+    flex-direction: column;
+  }
+
+  aside {
+    width: 100%;
+    border-right: none;
+    border-bottom: 2px solid #28a745;
+  }
+
+  main {
+    padding: 20px;
+  }
+
+  .content-card {
+    padding: 20px;
+  }
+
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+}

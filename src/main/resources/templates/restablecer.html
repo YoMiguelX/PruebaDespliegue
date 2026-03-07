@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restablecer Contraseña - Juego Educativo</title>
+    <!-- CSS del login -->
+    <link rel="stylesheet" th:href="@{/CSS/login.css}" />
+    <!-- CSS del navbar -->
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}" />
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body th:style="'background: url(' + @{/IMG/fondo.jpg} + ') no-repeat center/cover;padding-top:0px'">
+<div th:replace="~{plantilla/navbar :: navbar}"></div>
+
+<!-- Mensajes de alerta -->
+<div th:if="${msg}" class="alert alert-info text-center">
+    <span th:text="${msg}"></span>
+</div>
+
+<div th:if="${error}" class="alert alert-danger text-center">
+    <span th:text="${error}"></span>
+</div>
+
+<!-- Formulario de restablecer contraseña -->
+<div class="login-container">
+    <div class="login-left">
+        <div class="overlay">
+            <h1>¿Olvidaste tu contraseña?</h1>
+            <p>No te preocupes, te ayudamos a recuperarla fácilmente.</p>
+        </div>
+    </div>
+    
+    <div class="login-right">
+        <form th:action="@{/restablecer/enviar}" method="post">
+            <h2>RESTABLECER CONTRASEÑA</h2>
+            <p style="color: #666; margin-bottom: 20px; font-size: 14px;">
+                Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.
+            </p>
+            
+            <input type="email" name="email" placeholder="Ej: usuario@correo.com" required />
+            
+            <button type="submit">
+                <i class="fas fa-paper-plane" style="margin-right: 8px;"></i>
+                Enviar enlace
+            </button>
+            
+            <div class="acciones">
+                <a th:href="@{/login}">
+                    <i class="fas fa-arrow-left" style="margin-right: 5px;"></i>
+                    Volver al inicio de sesión
+                </a>
+                <a th:href="@{/registro}">
+                    <i class="fas fa-user-plus" style="margin-right: 5px;"></i>
+                    Crear cuenta nueva
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Scripts del navbar -->
+<script>
+    document.getElementById('bmenu')?.addEventListener('click', () => {
+      document.getElementById('links').classList.toggle('show');
+    });
+</script>
+
+<!-- Script adicional para mejorar la experiencia -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Agregar efecto de loading al botón cuando se envía el formulario
+        const form = document.querySelector('form');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        
+        if (form && submitBtn) {
+            form.addEventListener('submit', function() {
+                const originalContent = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin" style="margin-right: 8px;"></i>Enviando...';
+                submitBtn.disabled = true;
+                
+                // En caso de error, restaurar el botón después de un tiempo
+                setTimeout(() => {
+                    if (submitBtn.disabled) {
+                        submitBtn.innerHTML = originalContent;
+                        submitBtn.disabled = false;
+                    }
+                }, 10000);
+            });
+        }
+        
+        // Validación adicional del email
+        const emailInput = document.querySelector('input[type="email"]');
+        if (emailInput) {
+            emailInput.addEventListener('blur', function() {
+                const email = this.value;
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                
+                if (email && !emailRegex.test(email)) {
+                    this.style.borderColor = '#dc3545';
+                    this.style.boxShadow = '0 0 0 0.2rem rgba(220, 53, 69, 0.25)';
+                } else {
+                    this.style.borderColor = '';
+                    this.style.boxShadow = '';
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>

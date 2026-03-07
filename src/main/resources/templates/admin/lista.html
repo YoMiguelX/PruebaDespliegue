@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Lista de Usuarios y Administradores</title>
+
+    <!-- CSS locales -->
+    <link rel="stylesheet" th:href="@{/CSS/login.css}">
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}">
+
+    <!-- Bootstrap y FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body style="background: url('/IMG/fondo.jpg') no-repeat center top/cover fixed; padding-top:70px;">
+
+<!-- NAVBAR -->
+<header>
+    <nav class="navbar-principal">
+        <div class="mobile">
+            <div class="header">
+                <button id="bmenu"><i class="fa-solid fa-list"></i></button>
+                <a th:href="@{/}"><img th:src="@{/IMG/Shenmi Kappai.png}" width="60" /></a>
+                <div>
+                    <a th:href="@{/login}"><i class="fa-solid fa-user"></i></a>
+                    <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+            </div>
+            <div class="links" id="links">
+                <a href="#">Juegos</a>
+                <a href="#">Soporte</a>
+            </div>
+        </div>
+
+        <ul>
+            <li><a th:href="@{/}"><img th:src="@{/IMG/Shenmi Kappai.png}" width="60"></a></li>
+            <li><a href="#" class="link link-hide">Juegos</a></li>
+            <li><a href="#" class="link link-hide">Soporte técnico</a></li>
+            <li class="more">
+                <a href="#" class="link" id="bmore">Menú</a>
+                <div class="menu" id="menu">
+                    <a href="#">Soporte técnico</a>
+                </div>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <a th:href="@{/admin/cambiar-password}" class="dropdown-item">Cambiar contraseña</a>
+
+            </li>
+            <li><a th:href="@{/admin/crear}" class="dropdown-item">Registrar Admin</a></li>
+            <li class="more">
+                <a href="#" class="link" id="bmore2">Menú</a>
+
+                <div class="menu" id="menu2" style="right:0; left:auto;">
+                    <a th:href="@{/admin/correo}" class="dropdown-item">
+                        Enviar correo
+                    </a>
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="generarReporte()">
+                        <i class="fas fa-file-pdf"></i> Generar Reporte PDF
+                    </a>
+                    <a th:href="@{/jugador}" class="dropdown-item">Estado del jugador</a>
+
+                    <a th:href="@{/admin/exportarExcel}" class="dropdown-item">Exportar Datos</a>
+
+                </div>
+            </li>
+
+            <li> <a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- CONTENIDO -->
+<div class="container mt-5 text-white">
+
+    <!-- Encabezado -->
+    <div class="text-center bg-dark bg-opacity-75 p-4 rounded mb-4">
+        <h1>Lista de Usuarios y Administradores</h1>
+        <p>Desde aquí puedes gestionar los usuarios del sistema.</p>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros-container">
+        <h5 class="text-white mb-3">
+            <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        </h5>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <input type="text" id="filtroNombre" class="form-control filtro-input" placeholder="Buscar por nombre...">
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="text" id="filtroApellido" class="form-control filtro-input" placeholder="Buscar por apellido...">
+            </div>
+            <div class="col-md-3 mb-3">
+                <input type="email" id="filtroCorreo" class="form-control filtro-input" placeholder="Buscar por correo...">
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="filtroTipo" class="form-control filtro-input">
+                    <option value="">Todos los usuarios</option>
+                    <option value="admin">Solo Administradores</option>
+                    <option value="usuario">Solo Usuarios</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <select id="registrosPorPagina" class="form-control filtro-input">
+                    <option value="5">5 por página</option>
+                    <option value="10" selected>10 por página</option>
+                    <option value="25">25 por página</option>
+                    <option value="50">50 por página</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <button class="btn btn-limpiar" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser me-2"></i>Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información de resultados -->
+    <div class="resultados-info" id="infoResultados">
+        <i class="fas fa-info-circle me-2"></i>
+        Mostrando <span id="resultadosCount">0</span> registros de <span id="totalRegistros">0</span> total
+    </div>
+
+    <!-- Lista de Administradores -->
+    <div class="bg-dark bg-opacity-50 p-4 rounded mb-4" id="seccionAdmins">
+        <h3 class="text-white mb-3">
+            <i class="fas fa-user-shield me-2"></i>Administradores
+            <span class="badge bg-success ms-2" id="contadorAdmins">0</span>
+        </h3>
+        <table class="table table-dark table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaAdmins">
+            <tr th:each="admin : ${administradores}">
+                <td th:text="${admin.idUsuario}"></td>
+                <td th:text="${admin.nombreUsuario}"></td>
+                <td th:text="${admin.apellidoUsuario}"></td>
+                <td th:text="${admin.telUsuario}"></td>
+                <td th:text="${admin.correoUsuario}"></td>
+                <td>
+                    <a th:href="@{/admin/editar/{id}(id=${admin.idUsuario})}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit me-1"></i>Editar
+                    </a>
+                    <a th:href="@{/admin/eliminar/{id}(id=${admin.idUsuario})}" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash me-1"></i>Desactivar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Lista de Usuarios -->
+    <div class="bg-dark bg-opacity-50 p-4 rounded mb-4" id="seccionUsuarios">
+        <h3 class="text-white mb-3">
+            <i class="fas fa-users me-2"></i>Usuarios
+            <span class="badge bg-primary ms-2" id="contadorUsuarios">0</span>
+        </h3>
+        <table class="table table-dark table-striped table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody id="tablaUsuarios">
+            <tr th:each="user : ${usuarios}">
+                <td th:text="${user.idUsuario}"></td>
+                <td th:text="${user.nombreUsuario}"></td>
+                <td th:text="${user.apellidoUsuario}"></td>
+                <td th:text="${user.telUsuario}"></td>
+                <td th:text="${user.correoUsuario}"></td>
+                <td>
+                    <a th:href="@{/admin/eliminar/{id}(id=${user.idUsuario})}" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash me-1"></i>Desactivar
+                    </a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mb-5 pb-4">
+        <div class="page-info" id="paginaInfo">
+            Página <span id="paginaActual">1</span> de <span id="totalPaginas">1</span>
+        </div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0" id="paginacion">
+                <!-- Los elementos de paginación se generarán con JavaScript -->
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<!-- JS menú móvil y filtros -->
+<script>
+    let todosLosRegistros = [];
+    let registrosFiltrados = [];
+    let paginaActual = 1;
+    let registrosPorPagina = 10;
+
+    document.addEventListener('DOMContentLoaded', function() {
+      cargarDatos();
+      configurarEventos();
+    });
+
+    function cargarDatos() {
+      const filasAdmins = document.querySelectorAll('#tablaAdmins tr');
+      const filasUsuarios = document.querySelectorAll('#tablaUsuarios tr');
+
+      todosLosRegistros = [];
+
+      filasAdmins.forEach(fila => {
+        const celdas = fila.querySelectorAll('td');
+        if (celdas.length > 0) {
+          todosLosRegistros.push({
+            id: celdas[0].textContent,
+            nombre: celdas[1].textContent,
+            apellido: celdas[2].textContent,
+            telefono: celdas[3].textContent,
+            correo: celdas[4].textContent,
+            tipo: 'admin',
+            acciones: celdas[5].innerHTML,
+            elemento: fila
+          });
+        }
+      });
+
+      filasUsuarios.forEach(fila => {
+        const celdas = fila.querySelectorAll('td');
+        if (celdas.length > 0) {
+          todosLosRegistros.push({
+            id: celdas[0].textContent,
+            nombre: celdas[1].textContent,
+            apellido: celdas[2].textContent,
+            telefono: celdas[3].textContent,
+            correo: celdas[4].textContent,
+            tipo: 'usuario',
+            acciones: celdas[5].innerHTML,
+            elemento: fila
+          });
+        }
+      });
+
+      aplicarFiltros();
+    }
+
+    function configurarEventos() {
+      document.getElementById('filtroNombre').addEventListener('input', aplicarFiltros);
+      document.getElementById('filtroApellido').addEventListener('input', aplicarFiltros);
+      document.getElementById('filtroCorreo').addEventListener('input', aplicarFiltros);
+      document.getElementById('filtroTipo').addEventListener('change', aplicarFiltros);
+      document.getElementById('registrosPorPagina').addEventListener('change', function() {
+        registrosPorPagina = parseInt(this.value);
+        paginaActual = 1;
+        aplicarFiltros();
+      });
+    }
+
+    function aplicarFiltros() {
+      const filtroNombre = document.getElementById('filtroNombre').value.toLowerCase();
+      const filtroApellido = document.getElementById('filtroApellido').value.toLowerCase();
+      const filtroCorreo = document.getElementById('filtroCorreo').value.toLowerCase();
+      const filtroTipo = document.getElementById('filtroTipo').value;
+
+      registrosFiltrados = todosLosRegistros.filter(registro => {
+        const cumpleNombre = !filtroNombre || registro.nombre.toLowerCase().includes(filtroNombre);
+        const cumpleApellido = !filtroApellido || registro.apellido.toLowerCase().includes(filtroApellido);
+        const cumpleCorreo = !filtroCorreo || registro.correo.toLowerCase().includes(filtroCorreo);
+        const cumpleTipo = !filtroTipo || registro.tipo === filtroTipo;
+        return cumpleNombre && cumpleApellido && cumpleCorreo && cumpleTipo;
+      });
+
+      mostrarResultados();
+      actualizarPaginacion();
+      actualizarContadores();
+    }
+
+    function mostrarResultados() {
+      const inicio = (paginaActual - 1) * registrosPorPagina;
+      const fin = inicio + registrosPorPagina;
+      const registrosPagina = registrosFiltrados.slice(inicio, fin);
+
+      document.getElementById('tablaAdmins').innerHTML = '';
+      document.getElementById('tablaUsuarios').innerHTML = '';
+
+      const filtroTipo = document.getElementById('filtroTipo').value;
+      const seccionAdmins = document.getElementById('seccionAdmins');
+      const seccionUsuarios = document.getElementById('seccionUsuarios');
+
+      seccionAdmins.style.display = filtroTipo === 'usuario' ? 'none' : 'block';
+      seccionUsuarios.style.display = filtroTipo === 'admin' ? 'none' : 'block';
+
+      registrosPagina.forEach(registro => {
+        const fila = document.createElement('tr');
+        fila.innerHTML = `
+          <td>${registro.id}</td>
+          <td>${registro.nombre}</td>
+          <td>${registro.apellido}</td>
+          <td>${registro.telefono}</td>
+          <td>${registro.correo}</td>
+          <td>${registro.acciones}</td>
+        `;
+        if (registro.tipo === 'admin') {
+          document.getElementById('tablaAdmins').appendChild(fila);
+        } else {
+          document.getElementById('tablaUsuarios').appendChild(fila);
+        }
+      });
+
+      document.getElementById('resultadosCount').textContent = registrosFiltrados.length;
+      document.getElementById('totalRegistros').textContent = todosLosRegistros.length;
+    }
+
+    function actualizarPaginacion() {
+      const totalPaginas = Math.ceil(registrosFiltrados.length / registrosPorPagina);
+      document.getElementById('totalPaginas').textContent = totalPaginas;
+      document.getElementById('paginaActual').textContent = paginaActual;
+
+      const paginacion = document.getElementById('paginacion');
+      paginacion.innerHTML = '';
+
+      if (totalPaginas <= 1) return;
+
+      const anterior = document.createElement('li');
+      anterior.className = `page-item ${paginaActual === 1 ? 'disabled' : ''}`;
+      anterior.innerHTML = '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual - 1) + '); return false;">Anterior</a>';
+      paginacion.appendChild(anterior);
+
+      for (let i = 1; i <= totalPaginas; i++) {
+        if (i === 1 || i === totalPaginas || (i >= paginaActual - 2 && i <= paginaActual + 2)) {
+          const pagina = document.createElement('li');
+          pagina.className = `page-item ${i === paginaActual ? 'active' : ''}`;
+          pagina.innerHTML = '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + i + '); return false;">' + i + '</a>';
+          paginacion.appendChild(pagina);
+        } else if (i === paginaActual - 3 || i === paginaActual + 3) {
+          const puntos = document.createElement('li');
+          puntos.className = 'page-item disabled';
+          puntos.innerHTML = '<span class="page-link">...</span>';
+          paginacion.appendChild(puntos);
+        }
+      }
+
+      const siguiente = document.createElement('li');
+      siguiente.className = `page-item ${paginaActual === totalPaginas ? 'disabled' : ''}`;
+      siguiente.innerHTML = '<a class="page-link" href="javascript:void(0)" onclick="cambiarPagina(' + (paginaActual + 1) + '); return false;">Siguiente</a>';
+      paginacion.appendChild(siguiente);
+    }
+
+    function cambiarPagina(nuevaPagina) {
+      const totalPaginas = Math.ceil(registrosFiltrados.length / registrosPorPagina);
+      if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+      paginaActual = nuevaPagina;
+      mostrarResultados();
+      actualizarPaginacion();
+      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function actualizarContadores() {
+      document.getElementById('contadorAdmins').textContent = registrosFiltrados.filter(r => r.tipo === 'admin').length;
+      document.getElementById('contadorUsuarios').textContent = registrosFiltrados.filter(r => r.tipo === 'usuario').length;
+    }
+
+    function limpiarFiltros() {
+      document.getElementById('filtroNombre').value = '';
+      document.getElementById('filtroApellido').value = '';
+      document.getElementById('filtroCorreo').value = '';
+      document.getElementById('filtroTipo').value = '';
+      document.getElementById('registrosPorPagina').value = '10';
+      registrosPorPagina = 10;
+      paginaActual = 1;
+      aplicarFiltros();
+    }
+
+    document.getElementById('bmenu')?.addEventListener('click', () => {
+      document.getElementById('links').classList.toggle('show');
+    });
+    document.getElementById('bmore')?.addEventListener('click', (e) => {
+      e.preventDefault();
+      document.getElementById('menu').classList.toggle('show');
+    });
+</script>
+<!-- Script para prevenir acceso después de cerrar sesión -->
+<script>
+    // Prevenir que el navegador use caché al volver atrás
+    window.onpageshow = function(event) {
+        if (event.persisted) {
+            window.location.reload();
+        }
+    };
+
+    // Deshabilitar el botón atrás del navegador
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () {
+        history.go(1);
+    };
+
+    // Verificar sesión periódicamente
+    setInterval(function() {
+        fetch('/admin/check-session', {
+            method: 'GET',
+            credentials: 'same-origin'
+        })
+        .then(response => {
+            if (response.status === 401 || response.status === 403) {
+                window.location.href = '/login?expired=true';
+            }
+        })
+        .catch(() => {
+            // Si hay error de red, redirigir al login
+            window.location.href = '/login';
+        });
+    }, 5000); // Cada 5 segundos
+
+
+
+</script>
+<script>
+    // --- MENÚ MÓVIL ---
+    document.getElementById('bmenu')?.addEventListener('click', () => {
+        document.getElementById('links').classList.toggle('show');
+    });
+
+    // --- MENÚ 1 ---
+    document.getElementById('bmore')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('menu').classList.toggle('show');
+        document.getElementById('menu2').classList.remove('show');
+    });
+
+    // --- MENÚ 2 (USUARIO ACTUAL) ---
+    document.getElementById('bmore2')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('menu2').classList.toggle('show');
+        document.getElementById('menu').classList.remove('show');
+    });
+
+    // Cerrar menús si el usuario hace clic afuera
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.more')) {
+            document.getElementById('menu').classList.remove('show');
+            document.getElementById('menu2').classList.remove('show');
+        }
+    });
+</script>
+
+<script>
+    function generarReporte() {
+        fetch("/api/reportes/jasper/estadistico")
+            .then(r => r.json())
+            .then(data => {
+                const byteCharacters = atob(data.base64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const byteArray = new Uint8Array(byteNumbers);
+                const blob = new Blob([byteArray], { type: "application/pdf" });
+
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = data.nombre || "reporte.pdf";
+                link.click();
+            })
+            .catch(err => alert("Error al generar reporte: " + err));
+    }
+</script>
+</body>
+</html>
