@@ -22,8 +22,6 @@
         <java.version>21</java.version>
     </properties>
 
-
-
     <dependencies>
         <!-- Web -->
         <dependency>
@@ -98,13 +96,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- SendGrid -->
         <dependency>
             <groupId>com.sendgrid</groupId>
             <artifactId>sendgrid-java</artifactId>
             <version>4.9.3</version>
         </dependency>
-
-
 
         <!-- ModelMapper -->
         <dependency>
@@ -125,9 +122,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
-
-
-
     </dependencies>
 
     <build>
@@ -144,7 +138,6 @@
             </plugin>
         </plugins>
     </build>
-
 
     <profiles>
         <profile>
