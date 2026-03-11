@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Fisica - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/fisicaw.jpg" alt="Curso Fisica" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">Las leyes del mundo</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ Comprensión de los movimientos básicos</li>
+                    <li>✔ Naturaleza de la energía y sus transformaciones</li>
+                    <li>✔ Damos un salto hacia el presente y el futuro</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Fundamentos de la Física Clásica
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 Cinemática y Dinámica</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Energía y Trabajo</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 Leyes de Newton y Gravitación</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Física Aplicada y Fenómenos Modernos
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Ondas, Sonido y Luz</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 Termodinámica y Estados de la Materia</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Electricidad y Magnetismo</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Física Contemporánea y Avances Actuales
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Relatividad y Espacio-Tiempo</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Física Cuántica y Computación</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Física de Partículas y Descubrimientos Recientes</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Módulo 1: Ondas, Sonido y Luz</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Tarjeta 1 - Cinemática y Dinámica con enfoque inspirador -->
+<div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+    <div class="text-blue-700 text-2xl font-bold mb-2">01</div>
+    <h2 class="text-xl font-semibold mb-2">Cinemática y Dinámica</h2>
+    <p class="text-gray-600 mb-4">
+        La cinemática estudia cómo se mueven los cuerpos y la dinámica explica por qué se mueven.
+        Entender sus principios es abrir la puerta para controlar el movimiento, la energía y las fuerzas que gobiernan
+        nuestro mundo.
+    </p>
+    <a href="#" onclick="marcarLeccion('leccion1'); openModal('Cinemática y Dinámica', `
+      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+      <p class='mb-4'>
+        Descubrir cómo las leyes del movimiento dan sentido a cada paso, cada giro y cada salto. 
+        No solo aprenderás fórmulas: comprenderás la lógica detrás del movimiento, 
+        para que puedas aplicarlo en la vida real… y en tus videojuegos.
+      </p>
+  
+      <h3 class='text-lg font-bold mb-2'>1. El arte de describir el movimiento</h3>
+      <p class='mb-4'>
+        La <strong>cinemática</strong> nos enseña a analizar el “cómo” se mueven los cuerpos: velocidad, aceleración, desplazamiento y trayectorias. 
+        Es como dibujar la coreografía secreta de la naturaleza, una danza entre espacio y tiempo.
+      </p>
+  
+      <h3 class='text-lg font-bold mb-2'>2. La fuerza detrás de todo</h3>
+      <p class='mb-4'>
+        La <strong>dinámica</strong> revela el “por qué” del movimiento. 
+        Nos lleva a las <em>Leyes de Newton</em>, la clave para entender que cada acción en el universo tiene una causa. 
+        La fuerza es el motor de todo lo que se desplaza, se detiene o colisiona, incluso en los mundos virtuales que estás creando.
+      </p>
+  
+      <h3 class='text-lg font-bold mb-2'>3. Inspiración para crear</h3>
+      <p class='mb-4'>
+        Como desarrollador y estudiante, comprender estas leyes no es solo teoría: 
+        es <strong>herramienta</strong>. Te permitirá programar saltos realistas, trayectorias precisas y colisiones exactas. 
+        La física deja de ser un concepto abstracto para convertirse en la aliada silenciosa que hará que tus videojuegos cobren vida.
+      </p>
+    `)" class="inline-block bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">
+        Ver lección
+    </a>
+</div>
+
+  
+
+            <!-- Tarjeta 2 - Energía y Trabajo con enfoque inspirador -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-yellow-600 text-2xl font-bold mb-2">02</div>
+                <h2 class="text-xl font-semibold mb-2">Energía y Trabajo</h2>
+                <p class="text-gray-600 mb-4">
+                    La energía mueve al universo. Entender cómo se transforma y cómo aplicarla
+                    es esencial para comprender la naturaleza y programar mundos realistas.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion2'); openModal('Energía y Trabajo', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Comprender los diferentes tipos de energía, sus transformaciones y su relación con el trabajo mecánico. 
+                    Este conocimiento será tu base para crear mundos virtuales llenos de física realista.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. La esencia de la energía</h3>
+                  <p class='mb-4'>
+                    La <strong>energía</strong> es la capacidad de realizar un trabajo. 
+                    Puede presentarse como <em>cinética</em> (movimiento), <em>potencial</em> (posición), 
+                    térmica, eléctrica o química. 
+                    En tus videojuegos, es lo que define la potencia de un salto, la velocidad de un proyectil o la fuerza de un golpe.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Trabajo y transformación</h3>
+                  <p class='mb-4'>
+                    El <strong>trabajo</strong> es la transferencia de energía cuando una fuerza mueve un objeto. 
+                    Se expresa como: <em>W = F · d · cos(θ)</em>.  
+                    Cada vez que un jugador empuja una caja, escala un muro o activa una palanca, 
+                    detrás de escena está ocurriendo un intercambio invisible de energía.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Conservación de la energía</h3>
+                  <p class='mb-4'>
+                    La <strong>Ley de Conservación</strong> nos dice que la energía no se crea ni se destruye, solo se transforma. 
+                    Entender esto te permite diseñar sistemas de juego coherentes: 
+                    desde armas que consumen “stamina” hasta puzzles donde el jugador gestiona recursos energéticos.
+                  </p>
+                `)" class="inline-block bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">
+                    Ver lección
+                </a>
+            </div>
+
+            <!-- Tarjeta 3 - Leyes de Newton y Gravitación con enfoque inspirador -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-purple-700 text-2xl font-bold mb-2">03</div>
+                <h2 class="text-xl font-semibold mb-2">Leyes de Newton y Gravitación</h2>
+                <p class="text-gray-600 mb-4">
+                    Las leyes de Newton y la gravitación universal son el corazón de la física clásica.
+                    Comprenderlas es dominar el arte de simular el movimiento con precisión.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion3'); openModal('Leyes de Newton y Gravitación', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Aprender a interpretar las tres Leyes de Newton y la Ley de Gravitación Universal, 
+                    para aplicar estos principios en el diseño de entornos físicos realistas.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. La base del movimiento</h3>
+                  <p class='mb-4'>
+                    La <strong>Primera Ley de Newton</strong>, o ley de inercia, nos dice que un objeto permanecerá 
+                    en reposo o en movimiento rectilíneo uniforme hasta que una fuerza externa actúe sobre él.
+                    En tus videojuegos, es la clave para programar personajes que se detienen, deslizan o flotan según el entorno.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. La fuerza como motor</h3>
+                  <p class='mb-4'>
+                    La <strong>Segunda Ley</strong> establece que: <em>F = m · a</em>.  
+                    Aquí la fuerza es proporcional a la masa y la aceleración.  
+                    Esto define desde la rapidez con que cae un objeto hasta la potencia de un disparo.
+                  </p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Acción, reacción y gravedad</h3>
+                  <p class='mb-4'>
+                    La <strong>Tercera Ley</strong> indica que a toda acción corresponde una reacción igual y opuesta.  
+                    Además, la <strong>Ley de Gravitación Universal</strong> de Newton explica cómo cada objeto en el universo atrae a otro:
+                    <em>F = G · (m₁·m₂) / r²</em>.  
+                    Comprender esto te permitirá programar saltos, caídas, órbitas y trayectorias balísticas con gran realismo.
+                  </p>
+                `)" class="inline-block bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 2: Termodinámica y Estados de la Materia</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 4 - Ondas, Sonido y Luz con enfoque inspirador -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-indigo-600 text-2xl font-bold mb-2">04</div>
+                <h2 class="text-xl font-semibold mb-2">Ondas, Sonido y Luz</h2>
+                <p class="text-gray-600 mb-4">
+                    Las ondas son la forma en que la naturaleza transmite energía.
+                    Comprender cómo viajan el sonido y la luz es clave para simular mundos realistas.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion4'); openModal('Ondas, Sonido y Luz', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Entender los principios de propagación de ondas, el comportamiento del sonido y las propiedades de la luz, 
+                    para aplicarlos en la creación de ambientes inmersivos y realistas.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. El lenguaje invisible de las ondas</h3>
+                  <p class='mb-4'>
+                    Las <strong>ondas mecánicas</strong> requieren un medio para propagarse, como el sonido o las olas en el agua. 
+                    En cambio, las <strong>ondas electromagnéticas</strong>, como la luz, viajan incluso en el vacío.
+                    Comprender esta diferencia te permite controlar cómo tus mundos transmiten energía.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. El sonido que da vida a tu juego</h3>
+                  <p class='mb-4'>
+                    La velocidad del sonido varía según el medio.  
+                    Usar este principio te permitirá crear <strong>efectos realistas de eco, reverberación y distorsión</strong>.
+                    Así, cuando un personaje dispara en un túnel o grita en una cueva, el jugador sentirá que está ahí.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Luz y color: la física que vemos</h3>
+                  <p class='mb-4'>
+                    La luz se comporta como <em>onda</em> y como <em>partícula</em>.  
+                    Este principio explica fenómenos como la <strong>reflexión, refracción y difracción</strong>.
+                    Aplicando esto, puedes programar destellos, sombras dinámicas y efectos visuales avanzados.
+                  </p>
+                `)" class="inline-block bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+
+        <!-- Tarjeta 5 - Termodinámica y Estados de la Materia con enfoque inspirador -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-red-600 text-2xl font-bold mb-2">05</div>
+            <h2 class="text-xl font-semibold mb-2">Termodinámica y Estados de la Materia</h2>
+            <p class="text-gray-600 mb-4">
+                La termodinámica gobierna el calor, la energía y los estados de la materia.
+                Comprenderla es dominar el cambio, la expansión y la transformación de los mundos.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion5'); openModal('Termodinámica y Estados de la Materia', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>
+                Comprender las leyes fundamentales de la termodinámica y los estados de la materia,
+                aplicando sus principios para dar realismo a climas, ambientes y sistemas dinámicos.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. El calor como energía en movimiento</h3>
+              <p class='mb-4'>
+                La <strong>Primera Ley de la Termodinámica</strong> nos dice que la energía interna cambia
+                con el calor y el trabajo. Este principio es esencial para crear sistemas de 
+                <em>consumo energético, combustibles o regeneración de recursos</em> dentro de tus juegos.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Entropía y desorden</h3>
+              <p class='mb-4'>
+                La <strong>Segunda Ley</strong> establece que la entropía siempre aumenta: todo tiende al desorden.
+                Puedes aplicar este concepto para programar <em>ambientes dinámicos</em>, donde las estructuras se desgastan,
+                los recursos se agotan y el jugador debe adaptarse.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Los estados de la materia</h3>
+              <p class='mb-4'>
+                Sólido, líquido, gas, plasma… y más recientemente, los <strong>condensados de Bose-Einstein</strong>.
+                Comprender los estados te ayudará a simular <em>transiciones térmicas, evaporación, congelación</em> 
+                y efectos ambientales que impacten directamente la jugabilidad.
+              </p>
+            `)" class="inline-block bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+                Ver lección
+            </a>
+        </div>
+
+
+        <!-- Tarjeta 6 - Electricidad y Magnetismo con enfoque inspirador -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">06</div>
+            <h2 class="text-xl font-semibold mb-2">Electricidad y Magnetismo</h2>
+            <p class="text-gray-600 mb-4">
+                La electricidad y el magnetismo son las fuerzas invisibles que sostienen la tecnología moderna.
+                Dominar su comportamiento es abrir la puerta a mundos interactivos más vivos.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion6'); openModal('Electricidad y Magnetismo', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>
+                Comprender cómo interactúan la electricidad y el magnetismo para aplicar sus principios
+                en la creación de escenarios dinámicos y sistemas de energía complejos.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. Cargas y campos eléctricos</h3>
+              <p class='mb-4'>
+                La <strong>ley de Coulomb</strong> describe cómo dos cargas se atraen o repelen:
+                <em>F = k · (q₁·q₂) / r²</em>.  
+                Este concepto puede usarse para programar <strong>campos de fuerza, armas de plasma</strong>
+                y hasta puzzles basados en electricidad.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Magnetismo y movimiento</h3>
+              <p class='mb-4'>
+                Los campos magnéticos afectan a las partículas cargadas en movimiento.
+                Este principio es la base de <em>motores, generadores y campos de protección</em>.
+                En tus videojuegos, puede dar lugar a mecánicas únicas, como atracción de objetos o trampas magnéticas.
+              </p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Electromagnetismo aplicado</h3>
+              <p class='mb-4'>
+                La combinación de electricidad y magnetismo forma la base de casi toda la tecnología moderna.
+                Desde <em>armas láser</em> hasta <em>escudos energéticos</em>, entender el electromagnetismo
+                te permitirá crear experiencias más inmersivas y coherentes.
+              </p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 3: Electricidad y Magnetismo</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 7 - Relatividad y Espacio-Tiempo con enfoque inspirador -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-blue-900 text-2xl font-bold mb-2">07</div>
+                <h2 class="text-xl font-semibold mb-2">Relatividad y Espacio-Tiempo</h2>
+                <p class="text-gray-600 mb-4">
+                    Einstein cambió nuestra forma de entender el universo.
+                    El espacio y el tiempo ya no son absolutos: se deforman, se dilatan y se entrelazan.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion7'); openModal('Relatividad y Espacio-Tiempo', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Comprender los fundamentos de la Relatividad Especial y General,
+                    y aprender a aplicarlos para crear mecánicas basadas en viajes espaciales y dilatación temporal.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Relatividad especial</h3>
+                  <p class='mb-4'>
+                    Postulada en 1905, nos enseña que la <strong>velocidad de la luz</strong> es constante
+                    y que el tiempo se dilata cuando un objeto se mueve muy rápido.
+                    Fórmula clave: <em>E = mc²</em>.  
+                    Ideal para integrar <em>efectos de cámara lenta</em> o <em>saltos temporales</em> en tus juegos.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Relatividad general</h3>
+                  <p class='mb-4'>
+                    En 1915, Einstein descubrió que la <strong>gravedad</strong> es en realidad la curvatura del espacio-tiempo.
+                    Esto permite programar <em>mapas espaciales</em> donde los cuerpos orbitan,
+                    los objetos caen en pozos gravitacionales o incluso aparecen <em>agujeros negros</em>.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Inspiración para mundos inmersivos</h3>
+                  <p class='mb-4'>
+                    Comprender la relatividad te permitirá crear mundos donde <em>el tiempo no fluye igual</em>,
+                    las dimensiones cambian y la física clásica deja de funcionar.
+                    Perfecto para escenarios futuristas y mecánicas innovadoras.
+                  </p>
+                `)" class="inline-block bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-950 transition">
+                    Ver lección
+                </a>
+            </div>
+
+
+                <!-- Tarjeta 8 - Física Cuántica y Computación Avanzada con enfoque inspirador -->
+                <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                    <div class="text-pink-700 text-2xl font-bold mb-2">08</div>
+                    <h2 class="text-xl font-semibold mb-2">Física Cuántica y Computación Avanzada</h2>
+                    <p class="text-gray-600 mb-4">
+                        En el reino cuántico, las reglas cambian. Las partículas pueden estar en dos lugares,
+                        el azar domina y la información viaja más rápido de lo que imaginamos.
+                    </p>
+                    <a href="#" onclick="marcarLeccion('leccion8'); openModal('Física Cuántica y Computación Avanzada', `
+                      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                      <p class='mb-4'>
+                        Explorar los fenómenos más extraños de la física moderna
+                        y cómo la computación cuántica está cambiando el futuro de la tecnología.
+                      </p>
+                
+                      <h3 class='text-lg font-bold mb-2'>1. Dualidad onda-partícula</h3>
+                      <p class='mb-4'>
+                        La luz y la materia se comportan como <strong>ondas</strong> y <strong>partículas</strong> al mismo tiempo.
+                        Este principio permite crear <em>efectos visuales únicos</em> y mecánicas donde un objeto puede
+                        “existir en varios estados” dentro del juego.
+                      </p>
+                
+                      <h3 class='text-lg font-bold mb-2'>2. Superposición y entrelazamiento</h3>
+                      <p class='mb-4'>
+                        En física cuántica, una partícula puede estar en varios estados a la vez 
+                        y dos partículas pueden “conectarse” sin importar la distancia.
+                        En videojuegos, puedes usarlo para <strong>teletransportación, clones, multiversos</strong>
+                        y decisiones simultáneas.
+                      </p>
+                
+                      <h3 class='text-lg font-bold mb-2'>3. Computación cuántica</h3>
+                      <p class='mb-4'>
+                        Los <strong>qubits</strong> permiten procesar millones de posibilidades al mismo tiempo.
+                        Esto puede inspirarte a crear <em>inteligencias artificiales avanzadas</em> dentro del juego,
+                        sistemas impredecibles o simulaciones de universos completos.
+                      </p>
+                    `)" class="inline-block bg-pink-700 text-white px-4 py-2 rounded hover:bg-pink-800 transition">
+                        Ver lección
+                    </a>
+                </div>
+
+  
+
+            <!-- Tarjeta 9 - Física de Partículas y Descubrimientos Actuales con enfoque inspirador -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-teal-700 text-2xl font-bold mb-2">09</div>
+                <h2 class="text-xl font-semibold mb-2">Física de Partículas y Descubrimientos Actuales</h2>
+                <p class="text-gray-600 mb-4">
+                    La física de partículas estudia los bloques más pequeños de la realidad.
+                    Es el camino hacia los misterios del universo: materia oscura, energía oscura y multiversos.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion9'); openModal('Física de Partículas y Descubrimientos Actuales', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Conocer el modelo estándar, los últimos descubrimientos científicos
+                    y cómo aplicarlos para crear escenarios llenos de misterio y tecnología avanzada.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. El modelo estándar</h3>
+                  <p class='mb-4'>
+                    Describe las <strong>partículas elementales</strong>: quarks, leptones y bosones.
+                    Comprender estas bases te permitirá programar <em>armas futuristas, sistemas energéticos avanzados</em>
+                    y mundos donde las leyes de la física pueden alterarse.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. El bosón de Higgs y el CERN</h3>
+                  <p class='mb-4'>
+                    En 2012, el <strong>bosón de Higgs</strong> fue detectado en el <em>Gran Colisionador de Hadrones</em>,
+                    confirmando cómo las partículas obtienen masa.
+                    Este descubrimiento puede inspirar mecánicas de <strong>alteración de peso</strong> y <strong>gravedad variable</strong>.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Materia y energía oscura</h3>
+                  <p class='mb-4'>
+                    Sabemos que el 95% del universo es invisible: <strong>materia oscura</strong> y <strong>energía oscura</strong>.
+                    Esto abre la puerta a crear <em>universos paralelos, portales interdimensionales</em>
+                    y enemigos que manipulan leyes físicas desconocidas.
+                  </p>
+                `)" class="inline-block bg-teal-700 text-white px-4 py-2 rounded hover:bg-teal-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>

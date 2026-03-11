@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Catálogo de Cursos - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50">
+
+<!-- Encabezado -->
+<header class="bg-gray-900 text-white py-6 px-8 flex items-center justify-between">
+    <h1 class="text-3xl font-bold">Catálogo de cursos</h1>
+    <div class="flex items-center gap-4">
+        <span class="text-sm" th:text="'Bienvenido, ' + ${session.usuarioNombre}"></span>
+        <button class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded text-white font-semibold"
+                onclick="window.location.href='/perfil'">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            Mi Perfil
+        </button>
+    </div>
+</header>
+
+<!-- Filtro por mundos -->
+<nav class="bg-white border-b border-gray-200 px-8 py-4">
+    <form method="get" action="/categoria-cursos" class="flex items-center gap-4">
+        <label class="text-sm font-medium text-gray-700">Filtrar por mundo:</label>
+        <select name="mundo" class="border rounded px-3 py-2 text-sm">
+            <option value="">Todos los mundos</option>
+            <option th:each="mundo : ${mundos}"
+                    th:value="${mundo.nombre}"
+                    th:text="${mundo.nombre}"
+                    th:selected="${param.mundo == mundo.nombre}">
+            </option>
+        </select>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
+            Filtrar
+        </button>
+    </form>
+</nav>
+
+<!-- Grid de cursos -->
+<main class="p-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+
+        <!-- Curso: Comprar Casa -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/comprar-casa'">
+            <p class="text-xs text-gray-500 mb-1">Finanzas personales</p>
+            <h2 class="font-bold text-lg mb-2">Compra tu casa</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Matemáticas -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/matematicas'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias exactas</p>
+            <h2 class="font-bold text-lg mb-2">Matemáticas</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Física -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/fisica'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
+            <h2 class="font-bold text-lg mb-2">Física</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Inglés -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/ingles'">
+            <p class="text-xs text-gray-500 mb-1">Idiomas</p>
+            <h2 class="font-bold text-lg mb-2">Inglés</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Historia -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/historia'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias sociales</p>
+            <h2 class="font-bold text-lg mb-2">Historia</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Geografía -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/geografia'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias sociales</p>
+            <h2 class="font-bold text-lg mb-2">Geografía</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Biología -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/biologia'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
+            <h2 class="font-bold text-lg mb-2">Biología</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Química -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/quimica'">
+            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
+            <h2 class="font-bold text-lg mb-2">Química</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Lógica -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/logica'">
+            <p class="text-xs text-gray-500 mb-1">Pensamiento crítico</p>
+            <h2 class="font-bold text-lg mb-2">Lógica</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Programación -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/programacion'">
+            <p class="text-xs text-gray-500 mb-1">Tecnología</p>
+            <h2 class="font-bold text-lg mb-2">Programación</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+
+        <!-- Curso: Medio Ambiente -->
+        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
+                onclick="window.location.href='/curso/medio-ambiente'">
+            <p class="text-xs text-gray-500 mb-1">Ecología</p>
+            <h2 class="font-bold text-lg mb-2">Medio ambiente</h2>
+            <div class="text-right text-blue-600 text-xl">→</div>
+        </button>
+    </div>
+</main>
+
+</body>
+</html>

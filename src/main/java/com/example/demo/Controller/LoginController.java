@@ -33,6 +33,7 @@ public class LoginController {
             session.setAttribute("usuarioId", usuario.getIdUsuario());
             session.setAttribute("correo", usuario.getCorreoUsuario());
             session.setAttribute("rol", usuario.getRol().getIdRol());
+            session.setAttribute("usuarioNombre", usuario.getNombreUsuario());
 
             if (usuario.getRol().getIdRol() == 1) {
                 return "redirect:/admin/lista";

@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Biologia - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/medioAmbiente.jpg" alt="Curso Biologia" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">La Vida Que te Rodea</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ En donde vives</li>
+                    <li>✔ Que es la naturelaz</li>
+                    <li>✔ Como contrubuyes a tu mundo</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Comprendiendo el Entorno
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 ¿Qué es el medio ambiente?</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Factores bióticos y abióticos</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 Problemas ambientales actuales</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Cuidado del planeta
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Reciclaje y reutilización</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 Energías limpias</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Consumo responsable</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Acción y Conciencia
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Campañas ambientales</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Proyectos comunitarios</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Compromiso personal y global</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Módulo 1: Comprendiendo el entorno</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Tarjeta 1 - Medio Ambiente con enfoque inspirador -->
+<div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+    <div class="text-green-700 text-2xl font-bold mb-2">01</div>
+    <h2 class="text-xl font-semibold mb-2">¿Qué es el medio ambiente?</h2>
+    <p class="text-gray-600 mb-4">
+        Descubre lo que te rodea, desde el susurro del viento hasta el latido de tu corazón, está conectado a
+        un equilibrio natural que debemos proteger.
+    </p>
+    <a href="#" onclick="marcarLeccion('leccion1'); openModal('¿Qué es el medio ambiente?', `
+      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+      <p class='mb-4'>Despertar en ti una comprensión profunda del medio ambiente como la casa común de toda forma de vida, incluyendo la nuestra.</p>
+  
+      <h3 class='text-lg font-bold mb-2'>1. El medio que nos da vida</h3>
+      <p class='mb-4'>El medio ambiente no es solo un concepto: es el suelo que pisas, el agua que bebes, el aire que respiras y el árbol que te da sombra. Es un sistema interconectado que sostiene la existencia humana y de todas las especies.</p>
+  
+      <h3 class='text-lg font-bold mb-2'>2. Relación vital con el ser humano</h3>
+      <p class='mb-4'>Nuestra salud, nuestra economía y hasta nuestras emociones dependen de un entorno sano. Cuando cuidamos la Tierra, nos cuidamos a nosotros mismos. El ambiente no es un “otro” externo, es parte de lo que somos.</p>
+  
+      <h3 class='text-lg font-bold mb-2'>3. Una historia de equilibrio y ruptura</h3>
+      <p class='mb-4'>Por milenios, la naturaleza ha evolucionado en armonía. Hoy, esa armonía se quiebra por el consumo desmedido, la contaminación y la indiferencia. Reconocer el problema es el primer paso para ser parte de la solución.</p>
+    `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+        Ver lección
+    </a>
+</div>
+  
+
+            <!-- Tarjeta 2 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">02</div>
+                <h2 class="text-xl font-semibold mb-2">Factores bióticos y abióticos</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a diferenciar la vida del soporte físico que la hace posible, y cómo cada componente influye en la
+                    armonía del planeta.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion2'); openModal('Factores bióticos y abióticos', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Reconocer los elementos vivos y no vivos que interactúan para formar un ecosistema funcional.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. Factores bióticos</h3>
+                  <p class='mb-4'>Son los seres vivos que habitan un ecosistema: animales, plantas, hongos, bacterias. Cada uno cumple un rol vital como productor, consumidor o descomponedor.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Factores abióticos</h3>
+                  <p class='mb-4'>Comprenden la luz, la temperatura, el suelo, el agua, el viento, la altitud y otros elementos físicos que condicionan la vida y su distribución.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Interacciones complejas</h3>
+                  <p class='mb-4'>Los factores bióticos y abióticos no existen aislados; se relacionan en equilibrio. Un cambio en uno puede alterar todo un ecosistema.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+  
+
+            <!-- Tarjeta 3 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">03</div>
+                <h2 class="text-xl font-semibold mb-2">Problemas ambientales actuales</h2>
+                <p class="text-gray-600 mb-4">
+                    Analiza los grandes desafíos ecológicos que enfrentamos como humanidad y cómo afectan nuestro futuro colectivo.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion3'); openModal('Problemas ambientales actuales', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Identificar los principales problemas que amenazan los ecosistemas y la calidad de vida en el planeta.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. Cambio climático</h3>
+                  <p class='mb-4'>Aumento de temperaturas, fenómenos extremos, deshielo de glaciares y pérdida de hábitats como resultado de la actividad humana intensiva.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Contaminación global</h3>
+                  <p class='mb-4'>Aire irrespirable, ríos tóxicos, océanos llenos de plásticos: la contaminación afecta desde la célula más pequeña hasta los climas regionales.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Deforestación y pérdida de biodiversidad</h3>
+                  <p class='mb-4'>Millones de especies desaparecen al año. Cada árbol talado, cada especie extinguida, debilita la red de la vida.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 2: Cuidado del Planeta</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 4 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">04</div>
+                <h2 class="text-xl font-semibold mb-2">Reciclaje y reutilización</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende cómo tus residuos pueden convertirse en recursos y cómo reducir tu impacto desde casa.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion4'); openModal('Reciclaje y reutilización', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Incentivar la reducción de residuos mediante prácticas de reciclaje y la reutilización creativa.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. ¿Qué es reciclar?</h3>
+                  <p class='mb-4'>Separar, procesar y transformar materiales como papel, plástico, vidrio y metal para darles una nueva vida útil.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Reutiliza antes de desechar</h3>
+                  <p class='mb-4'>Botellas que se vuelven macetas, camisetas que se transforman en bolsas. Cada objeto puede tener una segunda oportunidad.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Impacto positivo</h3>
+                  <p class='mb-4'>Reciclar reduce la extracción de recursos naturales, disminuye la energía usada y evita toneladas de basura en los océanos y vertederos.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+  
+
+        <!-- Tarjeta 5 -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">05</div>
+            <h2 class="text-xl font-semibold mb-2">Energías limpias</h2>
+            <p class="text-gray-600 mb-4">
+                Descubre cómo la fuerza del sol, el viento y el agua pueden alimentar al mundo sin contaminarlo.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion5'); openModal('Energías limpias', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender qué son las energías renovables y cómo podemos migrar hacia un sistema energético sostenible.</p>
+          
+              <h3 class='text-lg font-bold mb-2'>1. Fuentes inagotables</h3>
+              <p class='mb-4'>El sol, el viento, el agua y la biomasa nos ofrecen energía sin agotar el planeta ni emitir gases contaminantes.</p>
+          
+              <h3 class='text-lg font-bold mb-2'>2. Ventajas frente a combustibles fósiles</h3>
+              <p class='mb-4'>No emiten CO₂, no producen lluvia ácida, y generan empleo en el desarrollo local.</p>
+          
+              <h3 class='text-lg font-bold mb-2'>3. Participación ciudadana</h3>
+              <p class='mb-4'>Desde instalar paneles solares hasta exigir políticas limpias, todos podemos acelerar la transición energética.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+        </div>
+  
+
+            <!-- Tarjeta 6 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">06</div>
+                <h2 class="text-xl font-semibold mb-2">Consumo responsable</h2>
+                <p class="text-gray-600 mb-4">
+                    Cambia tu forma de comprar y consumir para proteger el planeta y apoyar economías sostenibles.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion6'); openModal('Consumo responsable', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Fomentar decisiones de consumo informadas, éticas y sostenibles en la vida cotidiana.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. Antes de comprar, pregúntate</h3>
+                  <p class='mb-4'>¿Lo necesito? ¿De dónde viene? ¿Quién lo fabricó? ¿A qué costo ambiental?</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Apoya lo local y lo justo</h3>
+                  <p class='mb-4'>Compra productos de comercio justo, agrícolas, sin empaques excesivos y hechos con materiales reciclables.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Menos es más</h3>
+                  <p class='mb-4'>Un estilo de vida minimalista genera menos residuos, menos estrés y más bienestar.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 3: Acción y conciencia</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 7 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">07</div>
+                <h2 class="text-xl font-semibold mb-2">Campañas ambientales</h2>
+                <p class="text-gray-600 mb-4">
+                    Descubre cómo los movimientos ciudadanos pueden transformar comunidades y salvar ecosistemas.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion7'); openModal('Campañas ambientales', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Explorar cómo las campañas públicas fomentan la educación y acción ambiental desde lo local a lo global.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. Educación y sensibilización</h3>
+                  <p class='mb-4'>Las campañas informan, movilizan y despiertan conciencia en quienes aún no ven el problema.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Ejemplos exitosos</h3>
+                  <p class='mb-4'>“Un día sin carro”, “La hora del planeta”, limpiezas de ríos, siembra masiva de árboles. Son acciones pequeñas con impactos grandes.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. Únete o crea la tuya</h3>
+                  <p class='mb-4'>No necesitas ser experto para comenzar. Un cartel, una idea, una voz: todo suma para cambiar el rumbo.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+
+                <!-- Tarjeta 8 -->
+                <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                    <div class="text-green-700 text-2xl font-bold mb-2">08</div>
+                    <h2 class="text-xl font-semibold mb-2">Proyectos comunitarios</h2>
+                    <p class="text-gray-600 mb-4">
+                        Aprende cómo el trabajo conjunto entre vecinos, estudiantes o empresas puede cambiar el entorno desde adentro.
+                    </p>
+                    <a href="#" onclick="marcarLeccion('leccion8'); openModal('Proyectos comunitarios', `
+                      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                      <p class='mb-4'>Demostrar el valor del trabajo colectivo en la protección y restauración del entorno.</p>
+                  
+                      <h3 class='text-lg font-bold mb-2'>1. ¿Qué es un proyecto comunitario?</h3>
+                      <p class='mb-4'>Son iniciativas impulsadas por la propia comunidad para resolver problemas ambientales locales.</p>
+                  
+                      <h3 class='text-lg font-bold mb-2'>2. Ideas que funcionan</h3>
+                      <p class='mb-4'>Huertas urbanas, reciclaje barrial, eco-escuelas, viveros colectivos, senderos ecológicos. ¡Todo vale si suma!</p>
+                  
+                      <h3 class='text-lg font-bold mb-2'>3. Cómo empezar</h3>
+                      <p class='mb-4'>Detecta una necesidad, crea un equipo, busca aliados, actúa. La clave es iniciar con lo que tengas.</p>
+                    `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+                </div>
+  
+
+            <!-- Tarjeta 9 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">09</div>
+                <h2 class="text-xl font-semibold mb-2">Compromiso personal y global</h2>
+                <p class="text-gray-600 mb-4">
+                    Porque salvar al planeta comienza contigo. Cada elección cuenta, y cada voz suma en la defensa de la vida.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion9'); openModal('Compromiso personal y global', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Motivar un compromiso cotidiano con el medio ambiente desde lo individual hasta lo colectivo.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>1. Acciones desde casa</h3>
+                  <p class='mb-4'>Reduce el uso de plásticos, ahorra energía, planta un árbol, cuida el agua. Empieza por lo simple.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>2. Multiplica la conciencia</h3>
+                  <p class='mb-4'>Habla del tema, educa a otros, comparte buenas prácticas, vota por políticas verdes.</p>
+              
+                  <h3 class='text-lg font-bold mb-2'>3. El planeta necesita héroes comunes</h3>
+                  <p class='mb-4'>No se trata de grandes gestos, sino de constancia. La verdadera revolución ecológica comienza en ti.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver lección</a>
+            </div>
+  
+        </div>
+
+
+    </main>
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>

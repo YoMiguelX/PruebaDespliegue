@@ -1,7 +1,9 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Dto.UsuarioDto;
+import com.example.demo.Model.Reporte;
 import com.example.demo.Model.Usuario;
+import com.example.demo.Repository.ReporteRepository;
 import com.example.demo.Services.UsuarioService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,9 @@ public class PerfilController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private ReporteRepository reporteRepository;
 
     // Mostrar página de perfil
     @GetMapping("/perfil")
@@ -148,5 +153,45 @@ public class PerfilController {
             return "NO_SESSION";
         }
         return "OK";
+    }
+
+    // Enviar reporte desde perfil
+    @PostMapping("/enviar-reporte")
+    public String enviarReporte(
+            @RequestParam("tipoMensaje") String tipoMensaje,
+            @RequestParam("mensaje") String mensaje,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) {
+            return "redirect:/login";
+        }
+
+        try {
+            if (mensaje == null || mensaje.trim().isEmpty()) {
+                redirectAttributes.addFlashAttribute("reporteError", "El mensaje no puede estar vacío.");
+                redirectAttributes.addFlashAttribute("seccionActiva", "reporte");
+                return "redirect:/usuario/perfil";
+            }
+
+            Reporte reporte = new Reporte();
+            reporte.setTipoMensaje(tipoMensaje);
+            reporte.setMensaje(mensaje.trim());
+            reporte.setEstado("Pendiente");
+            reporte.setFechaEnvio(java.time.LocalDateTime.now());
+            reporte.setUsuario(usuario);
+
+            reporteRepository.save(reporte);
+
+            redirectAttributes.addFlashAttribute("reporteExito", "¡Tu reporte fue enviado correctamente! Lo revisaremos pronto.");
+            redirectAttributes.addFlashAttribute("seccionActiva", "reporte");
+
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("reporteError", "Error al enviar el reporte: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("seccionActiva", "reporte");
+        }
+
+        return "redirect:/usuario/perfil";
     }
 }

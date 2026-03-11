@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Reportes de Usuarios — Shenmi Kappai</title>
+
+    <!-- CSS locales -->
+    <link rel="stylesheet" th:href="@{/CSS/login.css}">
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}">
+
+    <!-- Bootstrap y FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* Badges de tipo de reporte */
+        .badge-comentario { background-color: #0d6efd; }
+        .badge-reporte    { background-color: #ffc107; color: #000; }
+        .badge-sugerencia { background-color: #198754; }
+        .badge-error      { background-color: #dc3545; }
+
+        /* Mensaje truncado en tabla */
+        .mensaje-truncado {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: block;
+        }
+
+        /* Modal de mensaje completo */
+        .modal-content-dark {
+            background-color: #1a1a1a;
+            border: 1px solid #28a745;
+            color: white;
+        }
+        .modal-header-dark {
+            border-bottom: 1px solid #28a745;
+        }
+        .modal-body-dark {
+            white-space: pre-wrap;
+            word-break: break-word;
+            line-height: 1.75;
+        }
+
+        /* Filtros */
+        .filtros-container {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(40, 167, 69, 0.4);
+            border-radius: 10px;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+        }
+        .filtro-input {
+            background: rgba(255, 255, 255, 0.1) !important;
+            border: 1px solid #28a745 !important;
+            color: white !important;
+        }
+        .filtro-input::placeholder { color: #aaa !important; }
+        .filtro-input:focus { background: rgba(255,255,255,0.15) !important; box-shadow: 0 0 0 3px rgba(40,167,69,0.25) !important; outline: none; }
+        .filtro-input option { background: #1a1a1a; color: white; }
+
+        /* Info resultados */
+        .resultados-info {
+            background: rgba(40, 167, 69, 0.15);
+            border: 1px solid rgba(40, 167, 69, 0.4);
+            border-radius: 8px;
+            padding: 10px 18px;
+            color: #fff;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        /* Botón limpiar */
+        .btn-limpiar {
+            background: rgba(108, 117, 125, 0.5);
+            border: 1px solid #6c757d;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .btn-limpiar:hover { background: #6c757d; color: white; }
+
+        /* Paginación oscura */
+        .page-info { color: #ccc; font-size: 14px; }
+        .pagination .page-link { background: rgba(0,0,0,0.5); border-color: #444; color: #28a745; }
+        .pagination .page-item.active .page-link { background: #28a745; border-color: #28a745; color: white; }
+        .pagination .page-item.disabled .page-link { background: rgba(0,0,0,0.3); color: #666; }
+        .pagination .page-link:hover { background: rgba(40,167,69,0.2); color: #28a745; }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: #aaa;
+        }
+        .empty-state i { font-size: 3rem; margin-bottom: 15px; display: block; color: #555; }
+    </style>
+</head>
+
+<body style="background: url('/IMG/fondo.jpg') no-repeat center top/cover fixed; padding-top:70px;">
+
+<!-- ══ NAVBAR (idéntico al de lista.html) ══════════════════════════════════ -->
+<header>
+    <nav class="navbar-principal">
+        <div class="mobile">
+            <div class="header">
+                <button id="bmenu"><i class="fa-solid fa-list"></i></button>
+                <a th:href="@{/}"><img th:src="@{/IMG/Shenmi Kappai.png}" width="60" /></a>
+                <div>
+                    <a th:href="@{/login}"><i class="fa-solid fa-user"></i></a>
+                    <a href="#"><i class="fa-solid fa-cart-shopping"></i></a>
+                </div>
+            </div>
+            <div class="links" id="links">
+                <a href="#">Juegos</a>
+                <a href="#">Soporte</a>
+            </div>
+        </div>
+
+        <ul>
+            <li><a th:href="@{/}"><img th:src="@{/IMG/Shenmi Kappai.png}" width="60"></a></li>
+            <li><a href="#" class="link link-hide">Juegos</a></li>
+            <li><a href="#" class="link link-hide">Soporte técnico</a></li>
+            <li class="more">
+                <a href="#" class="link" id="bmore">Menú</a>
+                <div class="menu" id="menu">
+                    <a href="#">Soporte técnico</a>
+                </div>
+            </li>
+        </ul>
+
+        <ul>
+            <li>
+                <a th:href="@{/admin/cambiar-password}" class="dropdown-item">Cambiar contraseña</a>
+            </li>
+            <li><a th:href="@{/admin/crear}" class="dropdown-item">Registrar Admin</a></li>
+            <li class="more">
+                <a href="#" class="link" id="bmore2">Menú</a>
+                <div class="menu" id="menu2" style="right:0; left:auto;">
+                    <a th:href="@{/admin/correo}" class="dropdown-item">
+                        Enviar correo
+                    </a>
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="generarReporte()">
+                        <i class="fas fa-file-pdf"></i> Generar Reporte PDF
+                    </a>
+                    <!-- ══ BOTÓN REPORTES DE USUARIOS ══ -->
+                    <a th:href="@{/admin/reportes}" class="dropdown-item">
+                        <i class="fas fa-comment-dots"></i> Reportes de usuarios
+                    </a>
+                    <a th:href="@{/jugador}" class="dropdown-item">Estado del jugador</a>
+                    <a th:href="@{/admin/exportarExcel}" class="dropdown-item">Exportar Datos</a>
+                </div>
+            </li>
+            <li><a th:href="@{/logout}" class="dropdown-item">Cerrar sesión</a></li>
+        </ul>
+    </nav>
+</header>
+<!-- ════════════════════════════════════════════════════════════════════════ -->
+
+<!-- CONTENIDO -->
+<div class="container mt-5 text-white">
+
+    <!-- Encabezado -->
+    <div class="text-center bg-dark bg-opacity-75 p-4 rounded mb-4">
+        <h1><i class="fas fa-comment-dots me-2"></i>Reportes de Usuarios</h1>
+        <p>Revisa y gestiona los mensajes, reportes y sugerencias enviados por los usuarios.</p>
+    </div>
+
+    <!-- Flash messages -->
+    <div th:if="${mensaje}"
+         th:class="${tipoMensaje == 'success'} ? 'alert alert-success' : 'alert alert-danger'"
+         style="margin-bottom:16px;">
+        <i th:class="${tipoMensaje == 'success'} ? 'fas fa-check-circle me-2' : 'fas fa-exclamation-triangle me-2'"></i>
+        <span th:text="${mensaje}"></span>
+    </div>
+
+    <!-- Stats -->
+    <div class="row mb-4 g-3">
+        <div class="col-md-4">
+            <div class="bg-dark bg-opacity-75 rounded p-3 text-center border border-secondary">
+                <div style="font-size:2rem;font-weight:900;color:#fff;" th:text="${reportes.size()}">0</div>
+                <div style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#aaa;">Total reportes</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-dark bg-opacity-75 rounded p-3 text-center border border-warning">
+                <div style="font-size:2rem;font-weight:900;color:#ffc107;"
+                     th:text="${#lists.size(reportes.?[estado == null or estado == 'Pendiente'])}">0</div>
+                <div style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#aaa;">Pendientes</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="bg-dark bg-opacity-75 rounded p-3 text-center border border-success">
+
+                <div style="font-size:2rem;font-weight:900;color:#28a745;"
+                     th:text="${#lists.size(reportes.?[estado == 'Revisado'])}">0</div>
+                <div style="font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:#aaa;">Revisados</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="filtros-container">
+        <h5 class="text-white mb-3">
+            <i class="fas fa-filter me-2"></i>Filtros de Búsqueda
+        </h5>
+        <div class="row">
+            <div class="col-md-3 mb-3">
+                <input type="text" id="filtroUsuario" class="form-control filtro-input"
+                       placeholder="Buscar por usuario...">
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="filtroTipo" class="form-control filtro-input">
+                    <option value="">Todos los tipos</option>
+                    <option value="comentario">💬 Comentario</option>
+                    <option value="reporte">⚠️ Reporte</option>
+                    <option value="sugerencia">💡 Sugerencia</option>
+                    <option value="error">🐛 Error técnico</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="filtroEstado" class="form-control filtro-input">
+                    <option value="">Todos los estados</option>
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Revisado">Revisado</option>
+                </select>
+            </div>
+            <div class="col-md-3 mb-3">
+                <select id="registrosPorPagina" class="form-control filtro-input">
+                    <option value="5">5 por página</option>
+                    <option value="10" selected>10 por página</option>
+                    <option value="25">25 por página</option>
+                    <option value="50">50 por página</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3 mb-2">
+                <button class="btn btn-limpiar w-100" onclick="limpiarFiltros()">
+                    <i class="fas fa-eraser me-2"></i>Limpiar Filtros
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Info resultados -->
+    <div class="resultados-info" id="infoResultados">
+        <i class="fas fa-info-circle me-2"></i>
+        Mostrando <span id="resultadosCount">0</span> registros de <span id="totalRegistros">0</span> total
+    </div>
+
+    <!-- Tabla de Reportes -->
+    <div class="bg-dark bg-opacity-50 p-4 rounded mb-4">
+        <h3 class="text-white mb-3">
+            <i class="fas fa-list me-2"></i>Listado de Reportes
+            <span class="badge bg-success ms-2" id="contadorReportes">0</span>
+        </h3>
+
+        <!-- Empty state (sin reportes) -->
+        <div th:if="${reportes.isEmpty()}" class="empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No hay reportes enviados todavía.</p>
+        </div>
+
+        <!-- Tabla (visible solo si hay reportes) -->
+        <div th:if="${!reportes.isEmpty()}">
+            <table class="table table-dark table-striped table-bordered">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Usuario</th>
+                    <th>Tipo</th>
+                    <th>Mensaje</th>
+                    <th>Estado</th>
+                    <th>Fecha</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody id="tablaReportes">
+                <tr th:each="reporte : ${reportes}"
+                    th:attr="data-usuario=${reporte.usuario.nombreUsuario + ' ' + reporte.usuario.apellidoUsuario + ' ' + reporte.usuario.correoUsuario},
+                                 data-tipo=${reporte.tipoMensaje},
+                                 data-estado=${reporte.estado != null ? reporte.estado : 'Pendiente'}">
+                    <td th:text="${reporte.idReporte}">1</td>
+                    <td>
+                        <div style="font-weight:600;" th:text="${reporte.usuario.nombreUsuario + ' ' + reporte.usuario.apellidoUsuario}">Nombre</div>
+                        <small class="text-muted" th:text="${reporte.usuario.correoUsuario}">correo</small>
+                    </td>
+                    <td>
+                            <span th:class="'badge ' + (${reporte.tipoMensaje == 'comentario'} ? 'badge-comentario' :
+                                                        (${reporte.tipoMensaje == 'reporte'}    ? 'badge-reporte'    :
+                                                        (${reporte.tipoMensaje == 'sugerencia'} ? 'badge-sugerencia' :
+                                                         'badge-error')))">
+                                <span th:switch="${reporte.tipoMensaje}">
+                                    <span th:case="'comentario'">💬 Comentario</span>
+                                    <span th:case="'reporte'">⚠️ Reporte</span>
+                                    <span th:case="'sugerencia'">💡 Sugerencia</span>
+                                    <span th:case="'error'">🐛 Error</span>
+                                    <span th:case="*" th:text="${reporte.tipoMensaje}"></span>
+                                </span>
+                            </span>
+                    </td>
+                    <td>
+                        <span class="mensaje-truncado" th:text="${reporte.mensaje}"></span>
+                        <a th:if="${#strings.length(reporte.mensaje) > 60}"
+                           href="javascript:void(0)"
+                           style="color:#28a745;font-size:.8rem;"
+                           th:onclick="'verMensaje(\'' + ${#strings.replace(reporte.mensaje,'\'','\\\'')} + '\', \'' + ${reporte.tipoMensaje} + '\')'">
+                            Ver completo
+                        </a>
+                    </td>
+                    <td>
+                            <span th:class="'badge ' + (${reporte.estado == 'Revisado'} ? 'bg-success' : 'bg-warning text-dark')"
+                                  th:text="${reporte.estado != null ? reporte.estado : 'Pendiente'}">Pendiente</span>
+                    </td>
+                    <td style="white-space:nowrap;font-size:.85rem;"
+                        th:text="${#temporals.format(reporte.fechaEnvio, 'dd/MM/yyyy HH:mm')}">--</td>
+                    <td>
+                        <a th:if="${reporte.estado == null || !reporte.estado.equals('Revisado')}"
+                           th:href="@{/admin/reportes/revisar/{id}(id=${reporte.idReporte})}"
+                           class="btn btn-sm btn-success mb-1">
+                            <i class="fas fa-check me-1"></i>Revisar
+                        </a>
+                        <a th:href="@{/admin/reportes/eliminar/{id}(id=${reporte.idReporte})}"
+                           onclick="return confirm('¿Eliminar este reporte?')"
+                           class="btn btn-sm btn-danger">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Paginación -->
+    <div class="d-flex justify-content-between align-items-center mb-5 pb-4">
+        <div class="page-info" id="paginaInfo">
+            Página <span id="paginaActual">1</span> de <span id="totalPaginas">1</span>
+        </div>
+        <nav>
+            <ul class="pagination pagination-sm mb-0" id="paginacion"></ul>
+        </nav>
+    </div>
+
+</div>
+
+<!-- Modal mensaje completo -->
+<div class="modal fade" id="modalMensaje" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content modal-content-dark">
+            <div class="modal-header modal-header-dark">
+                <h5 class="modal-title" id="modalTitulo">Mensaje completo</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body modal-body-dark" id="modalBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    /* ── Datos y estado de paginación ── */
+    let todosLosReportes = [];
+    let reportesFiltrados = [];
+    let paginaActual = 1;
+    let registrosPorPagina = 10;
+
+    const emojis = {
+        comentario: '💬 Comentario general',
+        reporte:    '⚠️ Reporte de problema',
+        sugerencia: '💡 Sugerencia de mejora',
+        error:      '🐛 Error técnico'
+    };
+
+    document.addEventListener('DOMContentLoaded', function () {
+        cargarDatos();
+        configurarEventos();
+    });
+
+    function cargarDatos() {
+        const filas = document.querySelectorAll('#tablaReportes tr');
+        todosLosReportes = [];
+        filas.forEach(fila => {
+            const celdas = fila.querySelectorAll('td');
+            if (celdas.length > 0) {
+                todosLosReportes.push({
+                    elemento: fila,
+                    usuario:  fila.dataset.usuario  || '',
+                    tipo:     fila.dataset.tipo      || '',
+                    estado:   fila.dataset.estado    || ''
+                });
+            }
+        });
+        aplicarFiltros();
+    }
+
+    function configurarEventos() {
+        document.getElementById('filtroUsuario').addEventListener('input',  aplicarFiltros);
+        document.getElementById('filtroTipo').addEventListener('change',    aplicarFiltros);
+        document.getElementById('filtroEstado').addEventListener('change',  aplicarFiltros);
+        document.getElementById('registrosPorPagina').addEventListener('change', function () {
+            registrosPorPagina = parseInt(this.value);
+            paginaActual = 1;
+            aplicarFiltros();
+        });
+    }
+
+    function aplicarFiltros() {
+        const fUsuario = document.getElementById('filtroUsuario').value.toLowerCase();
+        const fTipo    = document.getElementById('filtroTipo').value;
+        const fEstado  = document.getElementById('filtroEstado').value;
+
+        reportesFiltrados = todosLosReportes.filter(r => {
+            const okUsuario = !fUsuario || r.usuario.toLowerCase().includes(fUsuario);
+            const okTipo    = !fTipo    || r.tipo    === fTipo;
+            const okEstado  = !fEstado  || r.estado  === fEstado;
+            return okUsuario && okTipo && okEstado;
+        });
+
+        mostrarResultados();
+        actualizarPaginacion();
+        document.getElementById('resultadosCount').textContent = reportesFiltrados.length;
+        document.getElementById('totalRegistros').textContent  = todosLosReportes.length;
+        document.getElementById('contadorReportes').textContent = reportesFiltrados.length;
+    }
+
+    function mostrarResultados() {
+        const inicio = (paginaActual - 1) * registrosPorPagina;
+        const fin    = inicio + registrosPorPagina;
+
+        todosLosReportes.forEach(r => r.elemento.style.display = 'none');
+        reportesFiltrados.slice(inicio, fin).forEach(r => r.elemento.style.display = '');
+    }
+
+    function actualizarPaginacion() {
+        const totalPaginas = Math.max(1, Math.ceil(reportesFiltrados.length / registrosPorPagina));
+        document.getElementById('totalPaginas').textContent  = totalPaginas;
+        document.getElementById('paginaActual').textContent  = paginaActual;
+
+        const paginacion = document.getElementById('paginacion');
+        paginacion.innerHTML = '';
+        if (totalPaginas <= 1) return;
+
+        const crearLi = (texto, pagina, deshabilitado, activo) => {
+            const li = document.createElement('li');
+            li.className = `page-item${deshabilitado ? ' disabled' : ''}${activo ? ' active' : ''}`;
+            li.innerHTML = `<a class="page-link" href="javascript:void(0)"
+                onclick="cambiarPagina(${pagina}); return false;">${texto}</a>`;
+            return li;
+        };
+
+        paginacion.appendChild(crearLi('Anterior', paginaActual - 1, paginaActual === 1, false));
+        for (let i = 1; i <= totalPaginas; i++) {
+            if (i === 1 || i === totalPaginas || (i >= paginaActual - 2 && i <= paginaActual + 2)) {
+                paginacion.appendChild(crearLi(i, i, false, i === paginaActual));
+            } else if (i === paginaActual - 3 || i === paginaActual + 3) {
+                const li = document.createElement('li');
+                li.className = 'page-item disabled';
+                li.innerHTML = '<span class="page-link">...</span>';
+                paginacion.appendChild(li);
+            }
+        }
+        paginacion.appendChild(crearLi('Siguiente', paginaActual + 1, paginaActual === totalPaginas, false));
+    }
+
+    function cambiarPagina(nueva) {
+        const total = Math.ceil(reportesFiltrados.length / registrosPorPagina);
+        if (nueva < 1 || nueva > total) return;
+        paginaActual = nueva;
+        mostrarResultados();
+        actualizarPaginacion();
+        document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function limpiarFiltros() {
+        document.getElementById('filtroUsuario').value      = '';
+        document.getElementById('filtroTipo').value         = '';
+        document.getElementById('filtroEstado').value       = '';
+        document.getElementById('registrosPorPagina').value = '10';
+        registrosPorPagina = 10;
+        paginaActual = 1;
+        aplicarFiltros();
+    }
+
+    /* ── Modal mensaje completo ── */
+    function verMensaje(texto, tipo) {
+        document.getElementById('modalTitulo').textContent = emojis[tipo] || tipo;
+        document.getElementById('modalBody').textContent   = texto;
+        new bootstrap.Modal(document.getElementById('modalMensaje')).show();
+    }
+
+    /* ── Menús navbar ── */
+    document.getElementById('bmenu')?.addEventListener('click', () => {
+        document.getElementById('links').classList.toggle('show');
+    });
+    document.getElementById('bmore')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('menu').classList.toggle('show');
+        document.getElementById('menu2').classList.remove('show');
+    });
+    document.getElementById('bmore2')?.addEventListener('click', (e) => {
+        e.preventDefault();
+        document.getElementById('menu2').classList.toggle('show');
+        document.getElementById('menu').classList.remove('show');
+    });
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.more')) {
+            document.getElementById('menu')?.classList.remove('show');
+            document.getElementById('menu2')?.classList.remove('show');
+        }
+    });
+
+    /* ── Anti-caché ── */
+    window.onpageshow = function (e) { if (e.persisted) window.location.reload(); };
+    history.pushState(null, null, location.href);
+    window.onpopstate = function () { history.go(1); };
+
+    /* ── Reporte PDF (igual que lista.html) ── */
+    function generarReporte() {
+        fetch("/api/reportes/jasper/estadistico")
+            .then(r => r.json())
+            .then(data => {
+                const byteCharacters = atob(data.base64);
+                const byteNumbers = new Array(byteCharacters.length);
+                for (let i = 0; i < byteCharacters.length; i++) {
+                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+                }
+                const blob = new Blob([new Uint8Array(byteNumbers)], { type: "application/pdf" });
+                const link = document.createElement("a");
+                link.href = URL.createObjectURL(blob);
+                link.download = data.nombre || "reporte.pdf";
+                link.click();
+            })
+            .catch(err => alert("Error al generar reporte: " + err));
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+
+    <title>Quiz educativo</title>
+
+    <style>
+
+        body{
+        font-family: Arial;
+        background:#111;
+        color:white;
+        text-align:center;
+        }
+
+        .pregunta{
+        background:#222;
+        padding:20px;
+        margin:20px;
+        border-radius:10px;
+        }
+
+        button{
+        display:block;
+        margin:10px auto;
+        padding:10px;
+        width:300px;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<h1>Quiz educativo</h1>
+
+<div th:each="pregunta : ${preguntas}" class="pregunta">
+
+    <h3 th:text="${pregunta.question}"></h3>
+
+    <button th:each="resp : ${pregunta.incorrect_answers}"
+            th:text="${resp}">
+    </button>
+
+    <button th:text="${pregunta.correct_answer}"></button>
+
+</div>
+
+</body>
+</html>

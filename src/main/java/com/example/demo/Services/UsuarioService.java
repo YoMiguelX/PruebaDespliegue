@@ -6,6 +6,12 @@ import com.example.demo.Dto.Response.ApiResponse;
 import com.example.demo.Interface.IUsuarioService;
 import com.example.demo.Model.Rol;
 import com.example.demo.Model.Usuario;
+import com.example.demo.Model.Jugador;
+import com.example.demo.Repository.JugadorRepository;
+import com.example.demo.Repository.ProgresoJugadorRepository;
+import com.example.demo.Repository.ReporteRepository;
+import com.example.demo.Repository.ResetTokenRepository;
+import com.example.demo.Repository.RespuestasJugadorRepository;
 import com.example.demo.Repository.RolRepository;
 import com.example.demo.Repository.UsuarioRepository;
 import jakarta.annotation.PostConstruct;
@@ -33,6 +39,12 @@ public class UsuarioService implements IUsuarioService {
     private final ModelMapper mapper;
 
     private final RolRepository rolRepository;
+
+    @Autowired private JugadorRepository jugadorRepository;
+    @Autowired private ProgresoJugadorRepository progresoJugadorRepository;
+    @Autowired private RespuestasJugadorRepository respuestasJugadorRepository;
+    @Autowired private ResetTokenRepository resetTokenRepository;
+    @Autowired private ReporteRepository reporteRepository;
 
     public UsuarioService(
             UsuarioRepository repo,
@@ -197,16 +209,44 @@ public class UsuarioService implements IUsuarioService {
 
 
     // ------------------------------
-    // DELETE LÓGICO
+    // INACTIVAR (soft delete)
+    // ------------------------------
+    @Transactional
+    public void inactivar(Integer id) {
+        Usuario usuario = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
+        usuario.setEstadoUsuario("Inactivo");
+        repo.save(usuario);
+    }
+
+    // ------------------------------
+    // DELETE REAL (borra en cascada)
     // ------------------------------
     @Transactional
     @Override
     public void delete(Integer id) {
-        Usuario usuario = repo.findById(id)
+        repo.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
 
-        usuario.setEstadoUsuario("Inactivo");
-        repo.save(usuario);
+        // 1. Borrar reportes del usuario
+        reporteRepository.deleteByUsuario_IdUsuario(id);
+
+        // 2. Borrar reset tokens del usuario
+        resetTokenRepository.deleteByUsuario_IdUsuario(id);
+
+        // 3. Obtener jugadores y limpiar FK circular Jugador->ProgresoJugador
+        List<Jugador> jugadores = jugadorRepository.findByUsuario_IdUsuario(id);
+        jugadorRepository.nullifyProgresoByUsuario(id);
+
+        // 4. Borrar respuestas y progreso de cada jugador
+        for (Jugador jugador : jugadores) {
+            respuestasJugadorRepository.deleteByJugador(jugador);
+            progresoJugadorRepository.deleteByJugador(jugador);
+        }
+
+        // 5. Borrar jugadores y finalmente el usuario
+        jugadorRepository.deleteByUsuario_IdUsuario(id);
+        repo.deleteById(id);
     }
 
     @Override
@@ -248,10 +288,15 @@ public class UsuarioService implements IUsuarioService {
     @Override
     public Usuario loginWeb(String correo, String contrasena) {
         Usuario usuario = repo.findByCorreoUsuario(correo)
-                .orElseThrow(() -> new EntityNotFoundException("Credenciales inválidas"));
+                .orElseThrow(() -> new EntityNotFoundException("Correo o contraseña incorrectos"));
 
         if (!passwordEncoder.matches(contrasena, usuario.getContrasena())) {
-            throw new EntityNotFoundException("Credenciales inválidas");
+            throw new EntityNotFoundException("Correo o contraseña incorrectos");
+        }
+
+        // Bloquear acceso a cuentas inactivas
+        if ("Inactivo".equalsIgnoreCase(usuario.getEstadoUsuario())) {
+            throw new EntityNotFoundException("Tu cuenta ha sido desactivada. Contacta al administrador.");
         }
 
         return usuario;

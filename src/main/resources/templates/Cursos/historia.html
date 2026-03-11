@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Historia - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/Historia.png" alt="Curso Historia" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">Conozca la historia de sus abuelos</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ Desde donde empieza</li>
+                    <li>✔ Sociedades</li>
+                    <li>✔ Derechos y Avanzes sociales</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Orígenes y primeras civilizaciones
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 Introducción a la Historia</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Las Primeras Civilizaciones</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 La Antigua Grecia y Roma</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Edad Media y Edad Moderna
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Caída del Imperio Romano y Alta Edad Media</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 Cruzadas y Expansión Islámica</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Renacimiento y Transición a la Edad Moderna</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Historia Contemporánea y actual
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Revolución Francesa y Cambios Sociales</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Revolución Industrial y Avances Tecnológicos</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Guerras Mundiales y Mundo Actual</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Módulo 1: Comprendiendo el entorno</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Tarjeta 1 - Introducción a la Historia -->
+<div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+    <div class="text-yellow-700 text-2xl font-bold mb-2">01</div>
+    <h2 class="text-xl font-semibold mb-2">Introducción a la Historia</h2>
+    <p class="text-gray-600 mb-4">
+        Descubre qué es la historia, por qué es importante estudiarla y cómo nos ayuda a comprender el pasado, el
+        presente y el futuro.
+    </p>
+    <a href="#" onclick="marcarLeccion('historia1'); openModal('Introducción a la Historia', `
+      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+      <p class='mb-4'>Comprender qué estudia la historia y su importancia en la evolución de la humanidad.</p>
+
+      <h3 class='text-lg font-bold mb-2'>1. Definición de Historia</h3>
+      <p class='mb-4'>La historia estudia los hechos y procesos del pasado, analizando sus causas y consecuencias.</p>
+
+      <h3 class='text-lg font-bold mb-2'>2. Importancia</h3>
+      <ul class='list-disc list-inside mb-4'>
+        <li>Comprender el presente y proyectar el futuro.</li>
+        <li>Conservar la memoria colectiva.</li>
+        <li>Fortalecer nuestra identidad cultural.</li>
+      </ul>
+
+      <h3 class='text-lg font-bold mb-2'>3. Fuentes Históricas</h3>
+      <ul class='list-disc list-inside mb-4'>
+        <li><b>Primarias:</b> Documentos, inscripciones, objetos y restos arqueológicos.</li>
+        <li><b>Secundarias:</b> Libros, artículos y estudios de otros autores.</li>
+      </ul>
+    `)" class="inline-block bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800 transition">
+        Ver lección
+    </a>
+</div>
+
+  
+
+            <!-- Tarjeta 2 - Las Primeras Civilizaciones -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-yellow-700 text-2xl font-bold mb-2">02</div>
+                <h2 class="text-xl font-semibold mb-2">Las Primeras Civilizaciones</h2>
+                <p class="text-gray-600 mb-4">
+                    Explora cómo surgieron las primeras sociedades organizadas y su impacto en la historia de la humanidad.
+                </p>
+                <a href="#" onclick="marcarLeccion('historia2'); openModal('Las Primeras Civilizaciones', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender el origen de las civilizaciones y su influencia en el desarrollo cultural y social.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Mesopotamia</h3>
+                  <p class='mb-4'>Considerada la cuna de la civilización, destacó por la escritura cuneiforme, el Código de Hammurabi y la invención de la rueda.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Egipto</h3>
+                  <p class='mb-4'>Desarrolló un sistema político centralizado, avances en medicina y arquitectura monumental como las pirámides.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. India y China</h3>
+                  <p class='mb-4'>Ambas aportaron sistemas filosóficos, religiosos y tecnológicos que marcaron el rumbo de Asia.</p>
+                `)" class="inline-block bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+
+    <!-- Tarjeta 3 - Grecia y Roma -->
+    <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+        <div class="text-yellow-700 text-2xl font-bold mb-2">03</div>
+        <h2 class="text-xl font-semibold mb-2">Grecia y Roma</h2>
+        <p class="text-gray-600 mb-4">
+            Conoce las aportaciones de dos de las civilizaciones más influyentes en la cultura, la política y la filosofía.
+        </p>
+        <a href="#" onclick="marcarLeccion('historia3'); openModal('Grecia y Roma', `
+          <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+          <p class='mb-4'>Analizar el legado cultural, político y social de Grecia y Roma en la historia universal.</p>
+    
+          <h3 class='text-lg font-bold mb-2'>1. Grecia</h3>
+          <p class='mb-4'>La cuna de la democracia, la filosofía y las artes. Sus pensadores y arquitectos marcaron el rumbo cultural de Occidente.</p>
+    
+          <h3 class='text-lg font-bold mb-2'>2. Roma</h3>
+          <p class='mb-4'>Pioneros en derecho, ingeniería y organización militar. El Imperio Romano consolidó estructuras políticas y sociales aún vigentes.</p>
+        `)" class="inline-block bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800 transition">
+            Ver lección
+        </a>
+    </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 2: Edad Media</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Tarjeta 4 - Caída del Imperio Romano y Alta Edad Media -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-yellow-600 text-2xl font-bold mb-2">04</div>
+            <h2 class="text-xl font-semibold mb-2">Caída del Imperio Romano y Alta Edad Media</h2>
+            <p class="text-gray-600 mb-4">
+                Descubre cómo la caída de Roma transformó Europa, dando origen a reinos germánicos, el feudalismo y nuevas
+                estructuras sociales.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion4'); openModal('Caída del Imperio Romano y Alta Edad Media', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Analizar las causas de la caída de Roma y cómo surgieron los primeros reinos europeos.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. La caída de Roma (476 d.C.)</h3>
+              <p class='mb-4'>Factores internos y externos debilitaron al Imperio, dando paso a invasiones bárbaras y un nuevo orden europeo.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Surgimiento del Feudalismo</h3>
+              <p class='mb-4'>La fragmentación política llevó a la creación de un sistema basado en la tierra, la nobleza y la servidumbre.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Influencia de la Iglesia</h3>
+              <p class='mb-4'>La Iglesia Católica emergió como fuerza unificadora, controlando educación, cultura y poder político.</p>
+            `)" class="inline-block bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+
+    <!-- Tarjeta 5 - Cruzadas y Expansión Islámica -->
+    <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+        <div class="text-yellow-600 text-2xl font-bold mb-2">05</div>
+        <h2 class="text-xl font-semibold mb-2">Cruzadas y Expansión Islámica</h2>
+        <p class="text-gray-600 mb-4">
+            Conoce cómo el Islam se expandió rápidamente y cómo las cruzadas marcaron el choque cultural entre Oriente y
+            Occidente.
+        </p>
+        <a href="#" onclick="marcarLeccion('leccion5'); openModal('Cruzadas y Expansión Islámica', `
+          <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+          <p class='mb-4'>Comprender el impacto político, religioso y cultural de las cruzadas y la expansión del Islam.</p>
+    
+          <h3 class='text-lg font-bold mb-2'>1. Origen y expansión del Islam</h3>
+          <p class='mb-4'>Desde Mahoma hasta la formación de un vasto imperio, el Islam influyó en Asia, África y Europa.</p>
+    
+          <h3 class='text-lg font-bold mb-2'>2. Las Cruzadas</h3>
+          <p class='mb-4'>Series de expediciones militares cristianas para recuperar Tierra Santa, que transformaron la política europea.</p>
+    
+          <h3 class='text-lg font-bold mb-2'>3. Intercambio cultural</h3>
+          <p class='mb-4'>El contacto entre Oriente y Occidente impulsó avances en medicina, arquitectura y comercio.</p>
+        `)" class="inline-block bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">
+            Ver lección
+        </a>
+    </div>
+
+
+        <!-- Tarjeta 6 - Renacimiento y Transición a la Edad Moderna -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-yellow-600 text-2xl font-bold mb-2">06</div>
+            <h2 class="text-xl font-semibold mb-2">Renacimiento y Transición a la Edad Moderna</h2>
+            <p class="text-gray-600 mb-4">
+                Explora el movimiento intelectual y artístico que transformó Europa, preparando el camino para los
+                descubrimientos y cambios modernos.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion6'); openModal('Renacimiento y Transición a la Edad Moderna', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Analizar el impacto del Renacimiento y su papel en la evolución hacia la Edad Moderna.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. Humanismo y arte</h3>
+              <p class='mb-4'>Un resurgimiento del pensamiento crítico y el redescubrimiento de la filosofía y las artes clásicas.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Grandes inventos</h3>
+              <p class='mb-4'>La imprenta, nuevos métodos de navegación y avances científicos revolucionaron el mundo.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Viajes de exploración</h3>
+              <p class='mb-4'>Los descubrimientos de América y nuevas rutas comerciales cambiaron la economía global.</p>
+            `)" class="inline-block bg-yellow-600 text-white px-4 py-2 rounded hover:bg-yellow-700 transition">
+                Ver lección
+            </a>
+        </div>
+
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 3: Edad Contemporánea</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        <!-- Tarjeta 7 - Revolución Francesa y Cambios Sociales -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">07</div>
+            <h2 class="text-xl font-semibold mb-2">Revolución Francesa y Cambios Sociales</h2>
+            <p class="text-gray-600 mb-4">
+                Un evento que transformó al mundo, sembrando las semillas de libertad, igualdad y fraternidad.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion7'); openModal('Revolución Francesa y Cambios Sociales', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender la Revolución Francesa y su impacto en la política, la sociedad y el nacimiento de los derechos modernos.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. Contexto histórico</h3>
+              <p class='mb-4'>A finales del siglo XVIII, la monarquía francesa enfrentaba crisis económicas, desigualdad social y un pueblo descontento. Este ambiente detonó la revolución.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Ideas ilustradas y cambios sociales</h3>
+              <p class='mb-4'>Las ideas de Rousseau, Voltaire y Montesquieu inspiraron el levantamiento. Se impulsaron conceptos como la soberanía popular, la separación de poderes y los derechos individuales.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Consecuencias y legado</h3>
+              <p class='mb-4'>La Revolución Francesa abolió privilegios feudales, proclamó la Declaración de los Derechos del Hombre y marcó el inicio de una nueva era política en Europa.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+                <!-- Tarjeta 8 - Revolución Industrial y Avances Tecnológicos -->
+                <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                    <div class="text-green-700 text-2xl font-bold mb-2">08</div>
+                    <h2 class="text-xl font-semibold mb-2">Revolución Industrial y Avances Tecnológicos</h2>
+                    <p class="text-gray-600 mb-4">
+                        El salto de la humanidad hacia la modernidad, impulsando la producción, la ciencia y la economía.
+                    </p>
+                    <a href="#" onclick="marcarLeccion('leccion8'); openModal('Revolución Industrial y Avances Tecnológicos', `
+                      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                      <p class='mb-4'>Analizar los cambios sociales, económicos y tecnológicos generados por la Revolución Industrial y su impacto global.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>1. Origen y transformaciones</h3>
+                      <p class='mb-4'>A finales del siglo XVIII, Inglaterra lideró un proceso de industrialización que reemplazó la producción manual por la mecanizada, revolucionando la economía.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>2. Cambios sociales y urbanos</h3>
+                      <p class='mb-4'>El auge de las fábricas atrajo a millones hacia las ciudades, provocando la urbanización masiva y nuevas clases sociales, como el proletariado industrial.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>3. Avances científicos y tecnológicos</h3>
+                      <p class='mb-4'>La máquina de vapor, la electricidad, el telégrafo y la locomotora transformaron el transporte, la comunicación y la vida cotidiana en todo el mundo.</p>
+                    `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                        Ver lección
+                    </a>
+                </div>
+  
+
+        <!-- Tarjeta 9 - Guerras Mundiales y Mundo Actual -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">09</div>
+            <h2 class="text-xl font-semibold mb-2">Guerras Mundiales y Mundo Actual</h2>
+            <p class="text-gray-600 mb-4">
+                Dos conflictos globales que redefinieron las fronteras, las alianzas y el rumbo de la humanidad.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion9'); openModal('Guerras Mundiales y Mundo Actual', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender las causas, el desarrollo y las consecuencias de las Guerras Mundiales y cómo moldearon el mundo actual.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. Primera Guerra Mundial</h3>
+              <p class='mb-4'>Iniciada en 1914, enfrentó a potencias europeas en una lucha marcada por alianzas militares, rivalidades imperiales y avances en armamento.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Segunda Guerra Mundial</h3>
+              <p class='mb-4'>Entre 1939 y 1945, el mundo se vio envuelto en el conflicto más devastador de la historia, que transformó el orden político, económico y social.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. El mundo actual</h3>
+              <p class='mb-4'>Tras las guerras surgieron organismos internacionales, avances tecnológicos y un nuevo equilibrio global que aún influye en nuestras vidas.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+  
+        </div>
+
+
+    </main>
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>

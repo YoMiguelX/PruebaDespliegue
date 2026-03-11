@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Programacion - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/Programacion.jpg" alt="Curso Programacion" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">Imagina y desarrolla</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ Tu propio ciclo</li>
+                    <li>✔ Herramientas</li>
+                    <li>✔ Tecnologias que apoyan</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Fundamentos de Programación
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 Introducción a HTML, CSS y JavaScript</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Estructura de proyectos web</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 Buenas prácticas y accesibilidad</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Herramientas y Frameworks Modernos
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Tailwind CSS y diseño responsivo</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 CodeIgniter 4 y desarrollo backend</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Android Studio y apps móviles</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Innovación y Proyectos Inteligentes
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Introducción a la inteligencia artificial</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Proyectos con tecnologías emergentes</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Desarrollo de experiencias educativas digitales</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Curso de Programación</h1>
+    
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- ========== MÓDULO 1: Fundamentos de Programación ========== -->
+    
+            <!-- Tarjeta 1 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">01</div>
+                <h2 class="text-xl font-semibold mb-2">HTML, CSS y JavaScript</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a crear la estructura, el diseño y la interactividad de un sitio web moderno.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion1'); openModal('HTML, CSS y JavaScript', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Dominar los fundamentos esenciales del desarrollo web y comprender cómo se integran HTML, CSS y JavaScript para crear interfaces atractivas.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. HTML</h3>
+                  <p class='mb-4'>Aprende a construir la estructura de una página mediante etiquetas semánticas.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. CSS</h3>
+                  <p class='mb-4'>Diseña estilos, colores, fuentes y layouts adaptativos con CSS moderno.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. JavaScript</h3>
+                  <p class='mb-4'>Agrega interactividad, manipula el DOM y trabaja con eventos básicos.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 2 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">02</div>
+                <h2 class="text-xl font-semibold mb-2">Estructura de Proyectos Web</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a organizar carpetas, archivos y recursos para mantener proyectos escalables.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion2'); openModal('Estructura de Proyectos Web', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Aprender a estructurar proyectos siguiendo buenas prácticas y estándares de la industria.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Organización de archivos</h3>
+                  <p class='mb-4'>Separación clara entre HTML, CSS, JS, imágenes y librerías.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Uso de rutas relativas y absolutas</h3>
+                  <p class='mb-4'>Implementa rutas eficientes para acceder a recursos internos y externos.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Configuración básica</h3>
+                  <p class='mb-4'>Buenas prácticas para preparar tu proyecto para producción.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 3 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">03</div>
+                <h2 class="text-xl font-semibold mb-2">Buenas Prácticas y Accesibilidad</h2>
+                <p class="text-gray-600 mb-4">
+                    Mejora la calidad y accesibilidad de tus aplicaciones siguiendo estándares modernos.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion3'); openModal('Buenas Prácticas y Accesibilidad', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Crear proyectos eficientes, mantenibles y accesibles para todo tipo de usuarios.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Buenas prácticas</h3>
+                  <p class='mb-4'>Convenciones de nombres, comentarios, modularización y control de versiones.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Accesibilidad web</h3>
+                  <p class='mb-4'>Implementa estándares WAI-ARIA para garantizar inclusión digital.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Optimización de rendimiento</h3>
+                  <p class='mb-4'>Minimiza recursos y mejora la velocidad de carga de tus sitios web.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- ========== MÓDULO 2: Herramientas y Frameworks Modernos ========== -->
+    
+            <!-- Tarjeta 4 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">04</div>
+                <h2 class="text-xl font-semibold mb-2">Tailwind CSS y Diseño Responsivo</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a crear interfaces modernas, minimalistas y adaptables a cualquier dispositivo.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion4'); openModal('Tailwind CSS y Diseño Responsivo', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Dominar Tailwind CSS para diseñar interfaces atractivas y completamente responsivas.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Utilización de clases</h3>
+                  <p class='mb-4'>Aprende a personalizar diseños usando clases utilitarias.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Responsive design</h3>
+                  <p class='mb-4'>Crea layouts que se adaptan automáticamente a diferentes pantallas.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Componentes reutilizables</h3>
+                  <p class='mb-4'>Construye elementos dinámicos que mantienen la coherencia visual.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 5 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">05</div>
+                <h2 class="text-xl font-semibold mb-2">CodeIgniter 4 y Desarrollo Backend</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a crear APIs y sistemas robustos usando el framework PHP CodeIgniter 4.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion5'); openModal('CodeIgniter 4 y Desarrollo Backend', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Desarrollar aplicaciones dinámicas y escalables utilizando CodeIgniter 4.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Configuración del framework</h3>
+                  <p class='mb-4'>Instalación, estructura de carpetas y archivos principales.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. MVC en CodeIgniter</h3>
+                  <p class='mb-4'>Comprende el modelo, la vista y el controlador.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Creación de APIs REST</h3>
+                  <p class='mb-4'>Aprende a construir endpoints para consumir datos de forma eficiente.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 6 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">06</div>
+                <h2 class="text-xl font-semibold mb-2">Android Studio y Apps Móviles</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a crear aplicaciones móviles nativas y funcionales para Android.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion6'); openModal('Android Studio y Apps Móviles', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Dominar Android Studio para desarrollar apps móviles intuitivas y eficientes.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Configuración inicial</h3>
+                  <p class='mb-4'>Instalación, emuladores y primeros pasos.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Diseño de interfaces</h3>
+                  <p class='mb-4'>Aprende a crear layouts modernos con XML y Material Design.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Consumo de APIs</h3>
+                  <p class='mb-4'>Integra servicios externos y bases de datos en tus apps móviles.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- ========== MÓDULO 3: Innovación y Proyectos Inteligentes ========== -->
+    
+            <!-- Tarjeta 7 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">07</div>
+                <h2 class="text-xl font-semibold mb-2">Introducción a la Inteligencia Artificial</h2>
+                <p class="text-gray-600 mb-4">
+                    Descubre los conceptos básicos de IA y su aplicación en proyectos reales.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion7'); openModal('Introducción a la Inteligencia Artificial', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender los fundamentos de la IA y su impacto en el desarrollo tecnológico.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Conceptos básicos</h3>
+                  <p class='mb-4'>Definición, historia y evolución de la inteligencia artificial.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Áreas de aplicación</h3>
+                  <p class='mb-4'>IA en asistentes virtuales, reconocimiento de voz, visión artificial y chatbots.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Herramientas iniciales</h3>
+                  <p class='mb-4'>Librerías y plataformas para comenzar con IA.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 8 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">08</div>
+                <h2 class="text-xl font-semibold mb-2">Proyectos con Tecnologías Emergentes</h2>
+                <p class="text-gray-600 mb-4">
+                    Explora nuevas herramientas y tendencias que están transformando el desarrollo.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion8'); openModal('Proyectos con Tecnologías Emergentes', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Aplicar tecnologías de vanguardia para la creación de soluciones innovadoras.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Web3 y blockchain</h3>
+                  <p class='mb-4'>Aprende sobre contratos inteligentes y aplicaciones descentralizadas.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Realidad aumentada y virtual</h3>
+                  <p class='mb-4'>Desarrolla experiencias inmersivas usando tecnologías AR y VR.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. IoT y automatización</h3>
+                  <p class='mb-4'>Conecta dispositivos y controla sistemas inteligentes.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+    
+            <!-- Tarjeta 9 -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">09</div>
+                <h2 class="text-xl font-semibold mb-2">Experiencias Educativas Digitales</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende a diseñar plataformas y contenidos educativos interactivos.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion9'); openModal('Experiencias Educativas Digitales', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Diseñar soluciones educativas digitales que potencien el aprendizaje interactivo.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>1. Diseño instruccional</h3>
+                  <p class='mb-4'>Planea contenidos pedagógicos atractivos y efectivos.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>2. Plataformas educativas</h3>
+                  <p class='mb-4'>Explora LMS, CMS y sistemas personalizados para educación online.</p>
+    
+                  <h3 class='text-lg font-bold mb-2'>3. Gamificación</h3>
+                  <p class='mb-4'>Incorpora dinámicas de juego para aumentar la motivación del estudiante.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Ver
+                    lección</a>
+            </div>
+        </div>
+    </main>
+
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>

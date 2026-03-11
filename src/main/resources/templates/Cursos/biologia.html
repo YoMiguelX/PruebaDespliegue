@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Biologia - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/biologia.jpg" alt="Curso Biologia" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">Cumple con tener conciencia del interior de tu cuerpo</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ Celulas y Adn</li>
+                    <li>✔ Seres vivos</li>
+                    <li>✔ Ecosistemas</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Fundamentos de la Biología
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 Introducción a la Biología</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Célula: Unidad de la Vida</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 Genética Básica</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Organismos y Sistemas
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Clasificación de los Seres Vivos</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 Sistemas del Cuerpo Humano</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Reproducción y Desarrollo</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Acción y Conciencia
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Ecosistemas y Biodiversidad</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Ciclos Biogeoquímicos</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Impacto Humano en el Medio Ambiente</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Módulo 1: Fundamentos de la Biología</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Tarjeta 1 - Introducción a la Biología -->
+<div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+    <div class="text-green-700 text-2xl font-bold mb-2">01</div>
+    <h2 class="text-xl font-semibold mb-2">Introducción a la Biología</h2>
+    <p class="text-gray-600 mb-4">
+        Explora el fascinante estudio de la vida: desde la célula más diminuta hasta los ecosistemas más complejos,
+        la biología nos revela los secretos de nuestra existencia.
+    </p>
+    <a href="#" onclick="marcarLeccion('bio1'); openModal('Introducción a la Biología', `
+      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+      <p class='mb-4'>Comprender la biología como la ciencia que estudia la vida y sus procesos, reconociendo su impacto
+      en nuestra salud, el ambiente y la tecnología.</p>
+
+      <h3 class='text-lg font-bold mb-2'>1. ¿Qué es la biología?</h3>
+      <p class='mb-4'>La biología es la ciencia que estudia a los seres vivos y su relación con el entorno. Nos ayuda a entender
+      cómo funciona nuestro cuerpo, cómo evolucionan las especies y cómo interactúan los organismos con su ambiente.</p>
+
+      <h3 class='text-lg font-bold mb-2'>2. Importancia de la biología</h3>
+      <p class='mb-4'>Gracias a la biología descubrimos la complejidad de la vida y desarrollamos avances en medicina,
+      biotecnología, conservación y sostenibilidad. Es clave para tomar decisiones informadas sobre nuestra salud y nuestro planeta.</p>
+
+      <h3 class='text-lg font-bold mb-2'>3. Biología y futuro</h3>
+      <p class='mb-4'>La biología no solo nos ayuda a entender el presente, sino que también nos prepara para enfrentar
+      los desafíos del futuro: cambio climático, pandemias y conservación de especies.</p>
+    `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+        Ver lección
+    </a>
+</div>
+
+  
+
+        <!-- Tarjeta 2 - Célula: Unidad Básica de la Vida -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">02</div>
+            <h2 class="text-xl font-semibold mb-2">Célula: Unidad Básica de la Vida</h2>
+            <p class="text-gray-600 mb-4">
+                Descubre cómo las células, diminutas pero complejas, son las unidades fundamentales que dan origen y sostienen
+                la vida en todas sus formas.
+            </p>
+            <a href="#" onclick="marcarLeccion('bio2'); openModal('Célula: Unidad Básica de la Vida', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender la célula como la unidad estructural y funcional de los seres vivos, identificando sus componentes, funciones y tipos.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. ¿Qué es una célula?</h3>
+              <p class='mb-4'>La célula es la unidad mínima de vida. Puede funcionar de forma independiente o como parte de organismos multicelulares.
+              En su interior ocurren procesos esenciales como la producción de energía, la síntesis de proteínas y la replicación del ADN.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Tipos de células</h3>
+              <ul class='list-disc pl-5 mb-4'>
+                <li><b>Procariotas:</b> Simples y sin núcleo definido, como las bacterias.</li>
+                <li><b>Eucariotas:</b> Más complejas, con núcleo y organelos especializados, presentes en plantas, animales y hongos.</li>
+              </ul>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Organelos principales</h3>
+              <ul class='list-disc pl-5 mb-4'>
+                <li><b>Membrana celular:</b> Regula el paso de sustancias.</li>
+                <li><b>Núcleo:</b> Contiene el material genético.</li>
+                <li><b>Mitocondrias:</b> Generan energía para la célula.</li>
+                <li><b>Ribosomas:</b> Sintetizan proteínas esenciales.</li>
+              </ul>
+        
+              <h3 class='text-lg font-bold mb-2'>4. Importancia de las células</h3>
+              <p class='mb-4'>Todas las funciones vitales dependen de las células. Desde la respiración y la digestión hasta el pensamiento,
+              la célula es la base de la vida tal como la conocemos.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+
+        <!-- Tarjeta 3 - Genética y Herencia -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">03</div>
+            <h2 class="text-xl font-semibold mb-2">Genética y Herencia</h2>
+            <p class="text-gray-600 mb-4">
+                Descubre cómo la información genética se transmite de padres a hijos y cómo el ADN define las características de
+                cada ser vivo.
+            </p>
+            <a href="#" onclick="marcarLeccion('bio3'); openModal('Genética y Herencia', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender los fundamentos de la genética, la estructura del ADN, los genes y la herencia de características biológicas.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. ¿Qué es la genética?</h3>
+              <p class='mb-4'>La genética es la rama de la biología que estudia la transmisión de información biológica de generación en generación.
+              Gracias a ella entendemos cómo los rasgos físicos, comportamentales y fisiológicos son heredados.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. ADN y genes</h3>
+              <p class='mb-4'>El <b>ADN</b> (Ácido Desoxirribonucleico) es la molécula que contiene la información genética.
+              Está formado por genes, que son fragmentos específicos encargados de determinar características como el color de los ojos, la altura o incluso predisposiciones a ciertas enfermedades.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Leyes de Mendel</h3>
+              <p class='mb-4'>Gregor Mendel descubrió los principios básicos de la herencia mediante experimentos con plantas de guisante.
+              Sus leyes establecen cómo los rasgos se transmiten y combinan entre generaciones.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>4. Herencia genética</h3>
+              <ul class='list-disc pl-5 mb-4'>
+                <li><b>Herencia dominante:</b> Un solo gen es suficiente para expresar un rasgo.</li>
+                <li><b>Herencia recesiva:</b> El rasgo solo se expresa si ambos genes son iguales.</li>
+                <li><b>Herencia multifactorial:</b> Rasgos influenciados por varios genes y el ambiente.</li>
+              </ul>
+        
+              <h3 class='text-lg font-bold mb-2'>5. Aplicaciones de la genética</h3>
+              <p class='mb-4'>La genética moderna permite avances como la medicina personalizada, la biotecnología, la ingeniería genética
+              y la prevención de enfermedades hereditarias, revolucionando la salud y la biología.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 2: Organismos y Sistemas</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 4 - Clasificación de los Seres Vivos -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">04</div>
+                <h2 class="text-xl font-semibold mb-2">Clasificación de los Seres Vivos</h2>
+                <p class="text-gray-600 mb-4">
+                    Descubre cómo los científicos organizan la increíble diversidad de la vida,
+                    desde diminutas bacterias hasta complejas formas de vida pluricelular.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion4'); openModal('Clasificación de los Seres Vivos', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>
+                    Comprender los sistemas de clasificación biológica que permiten ordenar, estudiar y entender la diversidad de organismos que habitan nuestro planeta.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. La necesidad de clasificar</h3>
+                  <p class='mb-4'>
+                    El planeta alberga millones de especies diferentes. Para poder estudiarlas, identificarlas y comprenderlas, los científicos han creado sistemas de clasificación que agrupan organismos según sus características compartidas.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Los cinco reinos tradicionales</h3>
+                  <p class='mb-4'>
+                    Una de las clasificaciones más conocidas organiza a los seres vivos en cinco reinos:
+                    <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Monera:</strong> bacterias y organismos unicelulares sin núcleo definido.</li>
+                      <li><strong>Protista:</strong> protozoos y algas unicelulares.</li>
+                      <li><strong>Fungi:</strong> hongos y levaduras.</li>
+                      <li><strong>Plantae:</strong> plantas multicelulares con capacidad fotosintética.</li>
+                      <li><strong>Animalia:</strong> animales invertebrados y vertebrados.</li>
+                    </ul>
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. La taxonomía moderna</h3>
+                  <p class='mb-4'>
+                    Hoy en día, la biología utiliza la <strong>taxonomía</strong> y la <strong>filogenia molecular</strong> para clasificar organismos según su historia evolutiva.
+                    Estos métodos permiten descubrir relaciones sorprendentes entre especies y redefinir categorías como dominios, reinos, familias y géneros.
+                  </p>
+            
+                  <h3 class='text-lg font-bold mb-2'>4. La unidad en la diversidad</h3>
+                  <p class='mb-4'>
+                    Aunque la vida es diversa y compleja, todos los seres vivos comparten una base común: el ADN.
+                    La clasificación nos recuerda que cada especie, por distinta que parezca, forma parte de un mismo árbol de la vida.
+                  </p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+
+        <!-- Tarjeta 5 - Sistemas del Cuerpo Humano -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">05</div>
+            <h2 class="text-xl font-semibold mb-2">Sistemas del Cuerpo Humano</h2>
+            <p class="text-gray-600 mb-4">
+                Explora los principales sistemas del cuerpo humano y comprende su importancia para la vida.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion5'); openModal('Sistemas del Cuerpo Humano', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender la estructura y función de los sistemas que conforman el cuerpo humano, así como su interrelación para mantener la vida.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. Sistema Digestivo</h3>
+              <p class='mb-4'>Transforma los alimentos en nutrientes que el cuerpo puede absorber y utilizar para obtener energía.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Sistema Respiratorio</h3>
+              <p class='mb-4'>Permite el intercambio de oxígeno y dióxido de carbono, fundamental para la respiración celular.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Sistema Circulatorio</h3>
+              <p class='mb-4'>Transporta oxígeno, nutrientes y desechos por todo el organismo a través de la sangre.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>4. Sistema Nervioso</h3>
+              <p class='mb-4'>Coordina y regula las funciones del cuerpo mediante impulsos eléctricos y químicos.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>5. Sistema Musculoesquelético</h3>
+              <p class='mb-4'>Proporciona soporte, movimiento y protección a los órganos vitales.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>6. Sistema Inmunológico</h3>
+              <p class='mb-4'>Defiende al cuerpo contra microorganismos, infecciones y enfermedades.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>7. Sistema Endocrino</h3>
+              <p class='mb-4'>Regula procesos corporales mediante la liberación de hormonas.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+
+            <!-- Tarjeta 6 - Reproducción y Desarrollo -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">06</div>
+                <h2 class="text-xl font-semibold mb-2">Reproducción y Desarrollo</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende cómo los seres vivos se reproducen y cómo ocurre el desarrollo desde la fecundación hasta la madurez.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion6'); openModal('Reproducción y Desarrollo', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender los procesos de reproducción en los seres vivos y las etapas del desarrollo desde la formación de nuevas células hasta la madurez del organismo.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Tipos de Reproducción</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Asexual:</strong> Un solo organismo origina descendencia idéntica, como ocurre en bacterias y algunas plantas.</li>
+                      <li><strong>Sexual:</strong> Involucra la unión de gametos (óvulos y espermatozoides), generando variabilidad genética.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Fecundación</h3>
+                  <p class='mb-4'>Proceso mediante el cual se fusionan el gameto masculino y el femenino, formando un cigoto con información genética combinada.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Etapas del Desarrollo</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Segmentación:</strong> División rápida del cigoto en múltiples células.</li>
+                      <li><strong>Gastrulación:</strong> Formación de capas embrionarias que darán origen a tejidos y órganos.</li>
+                      <li><strong>Organogénesis:</strong> Desarrollo de los órganos y sistemas del cuerpo.</li>
+                      <li><strong>Crecimiento y Maduración:</strong> Aumento de tamaño, desarrollo de funciones y preparación para la reproducción.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>4. Importancia Biológica</h3>
+                  <p class='mb-4'>La reproducción asegura la continuidad de las especies, mientras que el desarrollo permite la formación de organismos complejos y funcionales.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 3: Ecología y Medio Ambiente</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 7 - Ecosistemas y Biodiversidad -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">07</div>
+                <h2 class="text-xl font-semibold mb-2">Ecosistemas y Biodiversidad</h2>
+                <p class="text-gray-600 mb-4">
+                    Explora cómo los ecosistemas funcionan y la importancia de la biodiversidad para mantener el equilibrio natural.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion7'); openModal('Ecosistemas y Biodiversidad', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender cómo interactúan los organismos entre sí y con su entorno, y la importancia de la diversidad biológica para la vida en la Tierra.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Ecosistemas</h3>
+                  <p class='mb-4'>Un ecosistema es un sistema formado por organismos vivos y su entorno físico, interactuando mediante el flujo de energía y el ciclo de nutrientes.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Tipos de Ecosistemas</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Terrestres:</strong> Bosques, desiertos, selvas y praderas.</li>
+                      <li><strong>Acuáticos:</strong> Ríos, lagos, océanos y arrecifes.</li>
+                      <li><strong>Artificiales:</strong> Creados por el ser humano, como jardines o acuarios.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Biodiversidad</h3>
+                  <p class='mb-4'>Se refiere a la variedad de especies, genes y ecosistemas. Una alta biodiversidad fortalece la estabilidad y la capacidad de adaptación de los ecosistemas.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>4. Importancia</h3>
+                  <p class='mb-4'>La biodiversidad es esencial para el equilibrio ecológico, la producción de oxígeno, el suministro de alimentos y la estabilidad climática.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+            
+            <!-- Tarjeta 8 - Ciclos Biogeoquímicos -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">08</div>
+                <h2 class="text-xl font-semibold mb-2">Ciclos Biogeoquímicos</h2>
+                <p class="text-gray-600 mb-4">
+                    Descubre cómo circulan los elementos esenciales para la vida a través de los ecosistemas y la atmósfera.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion8'); openModal('Ciclos Biogeoquímicos', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender el recorrido y la transformación de los elementos químicos en los ecosistemas y su impacto en la vida.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Definición</h3>
+                  <p class='mb-4'>Los ciclos biogeoquímicos son procesos naturales que reciclan elementos esenciales como carbono, oxígeno, nitrógeno y fósforo.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Principales Ciclos</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Ciclo del Agua:</strong> Movimiento del agua entre océanos, atmósfera y tierra.</li>
+                      <li><strong>Ciclo del Carbono:</strong> Flujo de carbono entre organismos, océanos y atmósfera.</li>
+                      <li><strong>Ciclo del Nitrógeno:</strong> Conversión de nitrógeno entre formas que las plantas y animales pueden usar.</li>
+                      <li><strong>Ciclo del Fósforo:</strong> Transferencia de fósforo a través de rocas, suelo y seres vivos.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Importancia</h3>
+                  <p class='mb-4'>Estos ciclos mantienen el equilibrio de los ecosistemas y permiten que la vida se sustente y evolucione.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+            
+            <!-- Tarjeta 9 - Impacto Humano en el Medio Ambiente -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">09</div>
+                <h2 class="text-xl font-semibold mb-2">Impacto Humano en el Medio Ambiente</h2>
+                <p class="text-gray-600 mb-4">
+                    Analiza cómo las actividades humanas afectan los ecosistemas y las soluciones para lograr un desarrollo
+                    sostenible.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion9'); openModal('Impacto Humano en el Medio Ambiente', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Identificar las principales acciones humanas que alteran el medio ambiente y proponer soluciones sostenibles.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Principales Impactos</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li><strong>Deforestación:</strong> Pérdida de bosques y biodiversidad.</li>
+                      <li><strong>Contaminación:</strong> Alteración de agua, aire y suelo.</li>
+                      <li><strong>Cambio Climático:</strong> Incremento de gases de efecto invernadero y calentamiento global.</li>
+                      <li><strong>Pérdida de Biodiversidad:</strong> Extinción de especies y reducción de hábitats.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Desarrollo Sostenible</h3>
+                  <p class='mb-4'>Se busca equilibrar el crecimiento económico con la protección ambiental, fomentando prácticas responsables.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Soluciones</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                      <li>Uso eficiente de los recursos naturales.</li>
+                      <li>Reciclaje y reducción de residuos.</li>
+                      <li>Protección de áreas naturales.</li>
+                      <li>Educación ambiental y concientización social.</li>
+                  </ul>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+        </div>
+
+
+    </main>
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>

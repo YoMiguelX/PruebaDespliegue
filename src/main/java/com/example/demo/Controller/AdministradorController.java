@@ -22,6 +22,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.example.demo.Services.RolService;
 
 import com.example.demo.Services.ExcelExportService;
+import com.example.demo.Model.Reporte;
+import com.example.demo.Repository.ReporteRepository;
 import com.example.demo.Services.UsuarioService;
 import com.example.demo.Model.Usuario;
 import com.example.demo.Dto.FiltroDTO;
@@ -48,6 +50,9 @@ public class AdministradorController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private ReporteRepository reporteRepository;
 
     public AdministradorController(RolRepository rolRepository) {
         this.rolRepository = rolRepository;
@@ -77,7 +82,7 @@ public class AdministradorController {
         return "admin/lista";
     }
 
-    // ===== ELIMINAR =====
+    // ===== ELIMINAR USUARIO =====
     @GetMapping("/eliminar/{id}")
     public String eliminarUsuario(@PathVariable Integer id,
                                   RedirectAttributes redirectAttributes) {
@@ -90,6 +95,88 @@ public class AdministradorController {
             redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
         }
         return "redirect:/admin/lista";
+    }
+
+    // ===== ELIMINAR ADMIN =====
+    @GetMapping("/eliminar-admin/{id}")
+    public String eliminarAdmin(@PathVariable Integer id,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        // Un admin no puede eliminarse a sí mismo
+        Integer idSesion = (Integer) session.getAttribute("usuarioId");
+        if (idSesion != null && idSesion.equals(id)) {
+            redirectAttributes.addFlashAttribute("mensaje", "No puedes eliminarte a ti mismo");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
+            return "redirect:/admin/lista";
+        }
+        try {
+            usuarioService.delete(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Administrador eliminado correctamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al eliminar administrador: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
+        }
+        return "redirect:/admin/lista";
+    }
+
+    // ===== INACTIVAR USUARIO =====
+    @GetMapping("/inactivar/{id}")
+    public String inactivarUsuario(@PathVariable Integer id,
+                                   HttpSession session,
+                                   RedirectAttributes redirectAttributes) {
+        Integer idSesion = (Integer) session.getAttribute("usuarioId");
+        if (idSesion != null && idSesion.equals(id)) {
+            redirectAttributes.addFlashAttribute("mensaje", "No puedes inactivarte a ti mismo");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
+            return "redirect:/admin/lista";
+        }
+        try {
+            usuarioService.inactivar(id);
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario inactivado correctamente");
+            redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error: " + e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoMensaje", "danger");
+        }
+        return "redirect:/admin/lista";
+    }
+
+    @GetMapping("/reportes")
+    public String verReportes(Model model, HttpSession session) {
+        if (session.getAttribute("usuarioId") == null) return "redirect:/login";
+
+        List<Reporte> reportes = reporteRepository.findAllByOrderByFechaEnvioDesc();
+        long pendientes = reportes.stream()
+                .filter(r -> "Pendiente".equals(r.getEstado()) || r.getEstado() == null)
+                .count();
+
+        model.addAttribute("reportes", reportes);
+        model.addAttribute("pendientes", pendientes);
+
+        return "admin/reportes";
+    }
+
+
+    // ===== MARCAR REPORTE COMO REVISADO =====
+    @GetMapping("/reportes/revisar/{id}")
+    public String marcarRevisado(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        reporteRepository.findById(id).ifPresent(r -> {
+            r.setEstado("Revisado");
+            reporteRepository.save(r);
+        });
+        redirectAttributes.addFlashAttribute("mensaje", "Reporte marcado como revisado");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        return "redirect:/admin/reportes";
+    }
+
+    // ===== ELIMINAR REPORTE =====
+    @GetMapping("/reportes/eliminar/{id}")
+    public String eliminarReporte(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
+        reporteRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("mensaje", "Reporte eliminado");
+        redirectAttributes.addFlashAttribute("tipoMensaje", "success");
+        return "redirect:/admin/reportes";
     }
 
     // ===== CREAR ADMIN =====
@@ -311,12 +398,12 @@ public class AdministradorController {
     }
 
 
-//correo
+    //correo
     @GetMapping("/correo")
     public String mostrarFormularioCorreo() {
         return "admin/enviar-correo"; // la vista Thymeleaf
     }
-//reporte pdf
+    //reporte pdf
     @GetMapping("/reporte-estadistico")
     public String mostrarReporteEstadistico() {
         return "admin/reporte-estadistico";

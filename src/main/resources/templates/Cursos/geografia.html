@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Curso Geografia - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .rotate-90 {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+
+<body class="flex bg-gray-100 min-h-screen">
+
+    <!-- Menú lateral -->
+    <aside class="w-72 bg-gray-900 text-white p-6 sticky top-0 h-screen overflow-y-auto space-y-6">
+
+        <!-- Imagen superior -->
+        <div class="w-full h-36 rounded-xl overflow-hidden border-2 border-white shadow-inner">
+            <img src="SRC.2/IMG/geografia.jpg" alt="Curso Geografia" class="w-full h-full object-cover">
+        </div>
+
+        <!-- Título y descripción -->
+        <div>
+            <h2 class="text-2xl font-bold">Maravillas del mundo</h2>
+            <p class="text-sm text-green-100">Curso completo paso a paso</p>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div class="mb-4">
+            <div id="progress-label" class="text-xs uppercase mb-1">0% completado</div>
+            <div class="w-full bg-green-900 h-2 rounded">
+                <div id="progress-bar" class="bg-white h-2 rounded transition-all duration-500" style="width: 0%;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú dinámico con cajas rayadas -->
+        <nav class="space-y-4 text-sm">
+
+            <!-- Bloques de módulo con borde -->
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('resumen')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Resumen del curso
+                    <span id="icon-resumen">▼</span>
+                </button>
+                <ul id="resumen" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li>✔ Tu mundo</li>
+                    <li>✔ Naturalesas del planeta</li>
+                    <li>✔ Sociedad</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo1')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 1: Fundamentos de la Geografía
+                    <span id="icon-modulo1">▼</span>
+                </button>
+                <ul id="modulo1" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion1"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion1"></span>🔘 Introducción a la Geografía</li>
+                    <li id="estado-leccion2"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion2"></span>🔘 Mapas y Cartografía</li>
+                    <li id="estado-leccion3"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion3"></span>🔘 Relieve Terrestre</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo2')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 2: Dinámicas Naturales del Planeta
+                    <span id="icon-modulo2">▼</span>
+                </button>
+                <ul id="modulo2" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion4"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion4"></span>🔘 Climas del Mundo</li>
+                    <li id="estado-leccion5"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion5"></span>🔘 Hidrografía</li>
+                    <li id="estado-leccion6"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion6"></span>🔘 Recursos Naturales</li>
+                </ul>
+            </div>
+
+            <div class="border border-green-300 rounded-xl p-3 bg-green-800 bg-opacity-20">
+                <button onclick="toggleMenu('modulo3')"
+                    class="flex items-center justify-between w-full font-semibold uppercase text-green-200">
+                    Módulo 3: Sociedad, Espacio y Medio Ambiente
+                    <span id="icon-modulo3">▼</span>
+                </button>
+                <ul id="modulo3" class="mt-2 ml-3 space-y-1 text-green-100">
+                    <li id="estado-leccion7"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion7"></span>🔘 Población y Demografía</li>
+                    <li id="estado-leccion8"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion8"></span>🔘 Regiones Geográficas del Mundo</li>
+                    <li id="estado-leccion9"><span class="inline-block w-4 h-4 rounded-full mr-2 bg-gray-400"
+                            id="icon-leccion9"></span>🔘 Impacto del Ser Humano en la Tierra</li>
+                </ul>
+            </div>
+            <button onclick="window.location.href = 'categoriaCursos.html'"
+                class="fixed top-6 right-6 bg-black bg-opacity-20 text-white uppercase font-bold py-2 px-5 rounded-full shadow hover:bg-opacity-40 transition">
+                Ver otros cursos
+            </button>
+
+        </nav>
+    </aside>
+
+
+    <!-- Contenido -->
+    <main class="flex-1 p-10 bg-gray-50">
+        <h1 class="text-3xl font-bold mb-8 text-gray-800">Módulo 1: Fundamentos de la Geografía</h1>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Tarjeta 1 - Introducción a la Geografía -->
+<div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+    <div class="text-blue-700 text-2xl font-bold mb-2">01</div>
+    <h2 class="text-xl font-semibold mb-2">¿Qué es la Geografía?</h2>
+    <p class="text-gray-600 mb-4">
+        La geografía es la ciencia que estudia nuestro planeta, los fenómenos que ocurren en él
+        y la relación entre las personas y su entorno. Es la llave para comprender el mundo que habitamos.
+    </p>
+    <a href="#" onclick="marcarLeccion('geografia1'); openModal('¿Qué es la Geografía?', `
+      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+      <p class='mb-4'>Comprender qué es la geografía, cuál es su función y cómo nos ayuda a entender
+      la relación entre los seres humanos, el territorio y el medio ambiente.</p>
+      
+      <h3 class='text-lg font-bold mb-2'>1. Una ciencia que conecta</h3>
+      <p class='mb-4'>La geografía analiza la superficie terrestre, los fenómenos naturales y humanos,
+      mostrando cómo todo está interconectado: desde montañas y ríos hasta ciudades y fronteras.</p>
+      
+      <h3 class='text-lg font-bold mb-2'>2. Geografía física y humana</h3>
+      <p class='mb-4'>La geografía física estudia montañas, océanos, climas y ecosistemas; mientras que
+      la geografía humana se enfoca en la población, culturas, economías y asentamientos.</p>
+      
+      <h3 class='text-lg font-bold mb-2'>3. Comprender el mundo que habitamos</h3>
+      <p class='mb-4'>Gracias a la geografía podemos entender cómo las personas aprovechan los recursos,
+      adaptan sus formas de vida y transforman el entorno, para bien o para mal.</p>
+    `)" class="inline-block bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800 transition">
+        Ver lección
+    </a>
+</div>
+
+  
+
+        <!-- Tarjeta 2 - Mapas y Cartografía -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">02</div>
+            <h2 class="text-xl font-semibold mb-2">Mapas y Cartografía</h2>
+            <p class="text-gray-600 mb-4">
+                Aprende a leer el lenguaje de los mapas y descubre cómo la cartografía nos ayuda a comprender el mundo que
+                habitamos.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion2'); openModal('Mapas y Cartografía', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender el uso de los mapas y la cartografía como herramientas fundamentales para explorar, representar y analizar la superficie terrestre.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. La cartografía: el arte de representar el mundo</h3>
+              <p class='mb-4'>La cartografía combina ciencia, arte y técnica para crear representaciones visuales del planeta. Permite interpretar distancias, límites, relieves y ubicaciones de manera precisa.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Tipos de mapas</h3>
+              <p class='mb-4'>Existen diferentes tipos de mapas: <b>políticos</b>, que muestran fronteras y países; <b>físicos</b>, que destacan montañas, ríos y relieves; <b>temáticos</b>, que representan datos específicos como clima o población.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>3. La importancia de la escala y la orientación</h3>
+              <p class='mb-4'>Las escalas nos permiten medir distancias reales, mientras que los puntos cardinales y las coordenadas nos ubican en el espacio. Comprender estas referencias es esencial para interpretar mapas correctamente.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+
+        <!-- Tarjeta 3 - Relieve Terrestre -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">03</div>
+            <h2 class="text-xl font-semibold mb-2">Relieve Terrestre</h2>
+            <p class="text-gray-600 mb-4">
+                Explora las formas de la superficie terrestre y descubre cómo el relieve influye en el clima, la biodiversidad y
+                la vida humana.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion3'); openModal('Relieve Terrestre', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender las principales formas del relieve terrestre y su impacto en la geografía, el clima y la actividad humana.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. ¿Qué es el relieve?</h3>
+              <p class='mb-4'>El relieve es el conjunto de formas y elevaciones que presenta la superficie terrestre. Su origen se debe a procesos internos, como el movimiento de placas tectónicas, y externos, como la erosión y el desgaste producido por el agua, el viento y el hielo.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Principales formas del relieve</h3>
+              <ul class='list-disc list-inside mb-4'>
+                <li><b>Montañas:</b> Grandes elevaciones que pueden influir en el clima y la vegetación.</li>
+                <li><b>Mesetas:</b> Zonas planas ubicadas a gran altura.</li>
+                <li><b>Valles:</b> Espacios bajos entre montañas, generalmente recorridos por ríos.</li>
+                <li><b>Llanuras:</b> Terrenos planos ideales para la agricultura y el asentamiento humano.</li>
+                <li><b>Depresiones:</b> Áreas más bajas que el nivel del mar o su entorno.</li>
+              </ul>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Importancia del relieve</h3>
+              <p class='mb-4'>El relieve condiciona el desarrollo de las sociedades humanas, influye en las rutas de comunicación, la distribución de recursos naturales, la actividad económica y la biodiversidad.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 2: Dinámicas Naturales del Planeta</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 4 - Climas del Mundo -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">04</div>
+                <h2 class="text-xl font-semibold mb-2">Climas del Mundo</h2>
+                <p class="text-gray-600 mb-4">
+                    Descubre los diferentes tipos de climas en la Tierra y cómo influyen en la vida, la vegetación y las actividades
+                    humanas.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion4'); openModal('Climas del Mundo', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Identificar los principales tipos de climas en el mundo y comprender cómo afectan a los ecosistemas y a las sociedades humanas.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. ¿Qué es el clima?</h3>
+                  <p class='mb-4'>El clima es el conjunto de condiciones atmosféricas promedio que se registran en un lugar durante un largo periodo. Se determina por factores como la temperatura, la precipitación, la humedad y la altitud.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Principales tipos de climas</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                    <li><b>Clima ecuatorial:</b> Altas temperaturas y lluvias abundantes todo el año.</li>
+                    <li><b>Clima tropical:</b> Caluroso, con estaciones húmedas y secas bien marcadas.</li>
+                    <li><b>Clima desértico:</b> Muy seco, con escasas lluvias y fuertes variaciones térmicas.</li>
+                    <li><b>Clima templado:</b> Estaciones definidas, ideal para la agricultura y el desarrollo humano.</li>
+                    <li><b>Clima polar:</b> Bajas temperaturas, hielo y nieve durante la mayor parte del año.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Influencia del clima en la vida humana</h3>
+                  <p class='mb-4'>El clima determina los cultivos, las construcciones, la vestimenta, los hábitos alimenticios y las actividades económicas de cada región. Además, influye directamente en la biodiversidad.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+
+        <!-- Tarjeta 5 - Hidrografía -->
+        <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+            <div class="text-green-700 text-2xl font-bold mb-2">05</div>
+            <h2 class="text-xl font-semibold mb-2">Hidrografía</h2>
+            <p class="text-gray-600 mb-4">
+                Explora la distribución de las aguas en la Tierra, su importancia para la vida y su papel en el equilibrio
+                ambiental.
+            </p>
+            <a href="#" onclick="marcarLeccion('leccion5'); openModal('Hidrografía', `
+              <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+              <p class='mb-4'>Comprender la distribución de los cuerpos de agua en el planeta y reconocer su influencia en los ecosistemas y las actividades humanas.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>1. ¿Qué es la hidrografía?</h3>
+              <p class='mb-4'>La hidrografía estudia la distribución, características y comportamiento de las aguas en la Tierra, incluyendo océanos, mares, ríos, lagos, glaciares y aguas subterráneas.</p>
+        
+              <h3 class='text-lg font-bold mb-2'>2. Tipos de aguas</h3>
+              <ul class='list-disc list-inside mb-4'>
+                <li><b>Aguas oceánicas:</b> Ocupan el 71% de la superficie terrestre y regulan el clima global.</li>
+                <li><b>Aguas continentales:</b> Incluyen ríos, lagos, glaciares y aguas subterráneas, esenciales para el consumo humano y la agricultura.</li>
+                <li><b>Aguas subterráneas:</b> Reservas de agua dulce almacenadas en acuíferos bajo la superficie terrestre.</li>
+              </ul>
+        
+              <h3 class='text-lg font-bold mb-2'>3. Importancia de la hidrografía</h3>
+              <p class='mb-4'>El agua es indispensable para la vida, la producción de alimentos, la generación de energía, el transporte y el mantenimiento de los ecosistemas. Conocer su distribución permite una mejor gestión y conservación de los recursos hídricos.</p>
+            `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                Ver lección
+            </a>
+        </div>
+
+
+            <!-- Tarjeta 6 - Recursos Naturales -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">06</div>
+                <h2 class="text-xl font-semibold mb-2">Recursos Naturales</h2>
+                <p class="text-gray-600 mb-4">
+                    Aprende sobre los recursos que nos brinda la naturaleza, su clasificación y la importancia de su uso sostenible.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion6'); openModal('Recursos Naturales', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Identificar los diferentes tipos de recursos naturales, su origen, usos y la necesidad de gestionarlos responsablemente para garantizar su disponibilidad futura.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. ¿Qué son los recursos naturales?</h3>
+                  <p class='mb-4'>Son elementos y bienes proporcionados por la naturaleza que el ser humano utiliza para satisfacer sus necesidades básicas y mejorar su calidad de vida.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Clasificación de los recursos naturales</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                    <li><b>Renovables:</b> Se regeneran naturalmente, como bosques, agua, aire y suelos.</li>
+                    <li><b>No renovables:</b> Se agotan con el uso, como minerales, petróleo y gas natural.</li>
+                    <li><b>Inagotables:</b> Su disponibilidad no se ve afectada por el uso humano, como la energía solar y el viento.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Importancia del uso sostenible</h3>
+                  <p class='mb-4'>La explotación responsable de los recursos naturales es esencial para preservar los ecosistemas, garantizar la supervivencia de las especies y asegurar el bienestar de las generaciones futuras.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+        </div>
+
+        <h1 class="mt-8 text-3xl font-bold mb-8 text-gray-800">Módulo 3: Sociedad, Espacio y Medio Ambiente</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+            <!-- Tarjeta 7 - Población y Demografía -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">07</div>
+                <h2 class="text-xl font-semibold mb-2">Población y Demografía</h2>
+                <p class="text-gray-600 mb-4">
+                    Comprende cómo se distribuye, crece y cambia la población humana en el mundo, así como sus impactos sociales y
+                    ambientales.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion7'); openModal('Población y Demografía', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Analizar las características, distribución, crecimiento y estructura de la población humana, así como los factores que influyen en sus cambios.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. ¿Qué es la demografía?</h3>
+                  <p class='mb-4'>Es la ciencia que estudia la población humana, analizando su tamaño, distribución, estructura y evolución a lo largo del tiempo.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Indicadores demográficos principales</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                    <li><b>Tasa de natalidad:</b> Número de nacimientos por cada 1.000 habitantes.</li>
+                    <li><b>Tasa de mortalidad:</b> Número de defunciones por cada 1.000 habitantes.</li>
+                    <li><b>Tasa de crecimiento poblacional:</b> Diferencia entre natalidad y mortalidad.</li>
+                    <li><b>Densidad de población:</b> Número de habitantes por kilómetro cuadrado.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Migraciones y su impacto</h3>
+                  <p class='mb-4'>Los movimientos migratorios influyen en la distribución de la población, afectan la economía, la cultura y la composición social de las regiones.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>4. Retos demográficos actuales</h3>
+                  <p class='mb-4'>El envejecimiento poblacional, la urbanización acelerada, la escasez de recursos y el cambio climático plantean grandes desafíos para el desarrollo sostenible.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+
+                <!-- Tarjeta 8 - Regiones Geográficas del Mundo -->
+                <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                    <div class="text-green-700 text-2xl font-bold mb-2">08</div>
+                    <h2 class="text-xl font-semibold mb-2">Regiones Geográficas del Mundo</h2>
+                    <p class="text-gray-600 mb-4">
+                        Explora las principales regiones geográficas del planeta y comprende sus características físicas, climáticas,
+                        culturales y económicas.
+                    </p>
+                    <a href="#" onclick="marcarLeccion('leccion8'); openModal('Regiones Geográficas del Mundo', `
+                      <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                      <p class='mb-4'>Identificar y analizar las principales regiones geográficas del mundo, entendiendo sus particularidades y su importancia global.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>1. ¿Qué es una región geográfica?</h3>
+                      <p class='mb-4'>Es un área del planeta definida por características comunes, ya sean físicas, climáticas, culturales o económicas, que la diferencian de otras zonas.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>2. Principales regiones del mundo</h3>
+                      <ul class='list-disc list-inside mb-4'>
+                        <li><b>América:</b> Diversidad de climas, culturas y ecosistemas que van desde el Ártico hasta la Patagonia.</li>
+                        <li><b>Europa:</b> Región de gran desarrollo económico, histórico y cultural.</li>
+                        <li><b>Asia:</b> La más extensa y poblada, con contrastes entre modernidad y tradición.</li>
+                        <li><b>África:</b> Riqueza natural, diversidad étnica y retos socioeconómicos importantes.</li>
+                        <li><b>Oceanía:</b> Archipiélagos y territorios insulares con ecosistemas únicos.</li>
+                        <li><b>Antártida:</b> Un continente helado dedicado principalmente a la investigación científica.</li>
+                      </ul>
+                
+                      <h3 class='text-lg font-bold mb-2'>3. Importancia de las regiones geográficas</h3>
+                      <p class='mb-4'>Comprender las características de cada región permite analizar fenómenos globales como la economía, el comercio, las migraciones y el cambio climático.</p>
+                
+                      <h3 class='text-lg font-bold mb-2'>4. Retos globales actuales</h3>
+                      <p class='mb-4'>Los problemas ambientales, las desigualdades sociales y las tensiones geopolíticas requieren cooperación entre las distintas regiones del mundo.</p>
+                    `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                        Ver lección
+                    </a>
+                </div>
+
+  
+
+            <!-- Tarjeta 9 - Impacto del Ser Humano en la Tierra -->
+            <div class="bg-white shadow-md rounded-2xl p-5 hover:shadow-lg transition">
+                <div class="text-green-700 text-2xl font-bold mb-2">09</div>
+                <h2 class="text-xl font-semibold mb-2">Impacto del Ser Humano en la Tierra</h2>
+                <p class="text-gray-600 mb-4">
+                    Analiza cómo las actividades humanas han transformado los ecosistemas y descubre la importancia de promover un
+                    desarrollo sostenible.
+                </p>
+                <a href="#" onclick="marcarLeccion('leccion9'); openModal('Impacto del Ser Humano en la Tierra', `
+                  <h3 class='text-lg font-bold mb-2'>Objetivo</h3>
+                  <p class='mb-4'>Comprender las principales acciones humanas que modifican la Tierra y reflexionar sobre las consecuencias ambientales, sociales y económicas.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>1. Transformación de los ecosistemas</h3>
+                  <p class='mb-4'>La deforestación, urbanización y expansión agrícola han alterado el equilibrio natural, provocando pérdida de biodiversidad y degradación de hábitats.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>2. Contaminación ambiental</h3>
+                  <ul class='list-disc list-inside mb-4'>
+                    <li><b>Contaminación del aire:</b> Emisiones industriales y vehiculares que afectan la salud y el clima.</li>
+                    <li><b>Contaminación del agua:</b> Desechos químicos y plásticos que deterioran ecosistemas acuáticos.</li>
+                    <li><b>Contaminación del suelo:</b> Uso excesivo de pesticidas y residuos sólidos mal gestionados.</li>
+                  </ul>
+            
+                  <h3 class='text-lg font-bold mb-2'>3. Cambio climático</h3>
+                  <p class='mb-4'>El aumento de gases de efecto invernadero está provocando fenómenos extremos como olas de calor, sequías, huracanes y el derretimiento de glaciares.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>4. Desarrollo sostenible</h3>
+                  <p class='mb-4'>La clave está en equilibrar el crecimiento económico con la preservación del medio ambiente, fomentando energías limpias, reciclaje y consumo responsable.</p>
+            
+                  <h3 class='text-lg font-bold mb-2'>5. Responsabilidad individual y colectiva</h3>
+                  <p class='mb-4'>Cada persona, comunidad y nación tiene un papel fundamental en la construcción de un futuro más justo y sostenible.</p>
+                `)" class="inline-block bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">
+                    Ver lección
+                </a>
+            </div>
+
+  
+        </div>
+
+
+    </main>
+
+
+    <!-- Script de colapso -->
+    <script>
+        function toggleMenu(id) {
+            const section = document.getElementById(id);
+            const icon = document.getElementById(`icon-${id}`);
+            if (section.style.display === 'none' || section.classList.contains('hidden')) {
+                section.style.display = 'block';
+                icon.textContent = '▼';
+            } else {
+                section.style.display = 'none';
+                icon.textContent = '►';
+            }
+        }
+
+        // Opcional: inicia todos los módulos colapsados
+        document.addEventListener("DOMContentLoaded", () => {
+            ['resumen', 'modulo1', 'modulo2', 'modulo3'].forEach(id => {
+                document.getElementById(id).style.display = 'none';
+                document.getElementById(`icon-${id}`).textContent = '►';
+            });
+        });
+    </script>
+
+    <!-- 🔹 Modal Base (fuera de los cards) -->
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white rounded-2xl p-6 w-full max-w-md shadow-lg animate-fade-in">
+            <h2 id="modal-title" class="text-2xl font-bold text-green-700 mb-4"></h2>
+            <div id="modal-content" class="text-gray-700 mb-6 text-sm leading-relaxed"></div>
+            <div class="text-right">
+                <button onclick="closeModal()"
+                    class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800 transition">Cerrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 🔹 JavaScript para controlar el modal -->
+    <script>
+        function openModal(title, htmlcontent) {
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-content').innerHTML = htmlcontent;
+            document.getElementById('modal').classList.remove('hidden');
+            document.getElementById('modal').classList.add('flex');
+        }
+
+        function closeModal() {
+            document.getElementById('modal').classList.remove('flex');
+            document.getElementById('modal').classList.add('hidden');
+        }
+    </script>
+
+
+    <!-- 🔹Total de lecciones y progreso -->
+
+    <script>
+        const totalLecciones = 9;
+        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+
+        function marcarLeccion(idLeccion) {
+            if (!progreso[idLeccion]) {
+                progreso[idLeccion] = true;
+                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+            }
+            actualizarBarraProgreso();
+            actualizarIconos();
+
+        }
+
+        function actualizarBarraProgreso() {
+            const completadas = Object.keys(progreso).length;
+            const porcentaje = Math.round((completadas / totalLecciones) * 100);
+            document.getElementById("progress-bar").style.width = porcentaje + "%";
+            document.getElementById("progress-label").textContent = porcentaje + "% completado";
+            if (porcentaje === 100) {
+            }
+        }
+
+        function actualizarIconos() {
+            for (let i = 1; i <= totalLecciones; i++) {
+                const id = "leccion" + i;
+                const li = document.getElementById("estado-" + id);
+                if (li) {
+                    li.textContent = (progreso[id] ? "🟢 " : "🔘 ") + li.textContent.replace(/^🟢 |^🔘 /, '');
+                }
+            }
+        }
+
+        // Ejecutar al cargar la página
+        actualizarBarraProgreso();
+        actualizarIconos();
+
+
+    </script>
+
+    <!-- 🔹 Tailwind Animación (opcional) -->
+    <style>
+        @keyframes fade-in {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fade-in 0.3s ease-out;
+        }
+    </style>
+
+
+
+</body>
+
+</html>
