@@ -41,13 +41,17 @@ public class RestablecerController {
         String enlace = request.getScheme() + "://" + request.getServerName() + ":" +
                 request.getServerPort() + "/restablecer/nueva?token=" + token;
 
-        emailService.enviarCorreo(usuario.getCorreoUsuario(),
-                "Restablecer contraseña - Shenmi",
-                "Hola " + usuario.getNombreUsuario() + ",\n\n" +
-                        "Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace:\n" +
-                        enlace + "\n\nEste enlace expirará en 1 hora.");
-
-        model.addAttribute("msg", "Hemos enviado un enlace a tu correo.");
+        try {
+            emailService.enviarCorreo(usuario.getCorreoUsuario(),
+                    "Restablecer contraseña - Shenmi",
+                    "Hola " + usuario.getNombreUsuario() + ",\n\n" +
+                            "Has solicitado restablecer tu contraseña. Haz clic en el siguiente enlace:\n" +
+                            enlace + "\n\nEste enlace expirará en 1 hora.");
+            model.addAttribute("msg", "Hemos enviado un enlace a tu correo.");
+        } catch (Exception e) {
+            model.addAttribute("msg", "Error al enviar el correo. Contacta al administrador.");
+            // El error real aparecerá en los logs del servidor
+        }
         return "restablecer";
     }
 
