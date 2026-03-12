@@ -24,7 +24,7 @@ public class EmailService {
         enviarCorreo(to, "Restablecer contraseña - EduGame", contenido);
     }
 
-    // Correo simple
+    // Correo simple (texto plano envuelto en HTML básico)
     public void enviarCorreo(String destinatario, String asunto, String contenido) {
         enviar(destinatario, asunto, "<html><body>" + contenido + "</body></html>");
     }
@@ -41,7 +41,7 @@ public class EmailService {
         }
     }
 
-    // Plantilla HTML
+    // Plantilla HTML de bienvenida
     public String plantillaBienvenida() {
         return """
                <html>
