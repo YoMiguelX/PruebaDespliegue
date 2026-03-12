@@ -6,8 +6,6 @@ import com.example.demo.Repository.ResetTokenRepository;
 import com.example.demo.Repository.UsuarioRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,16 +22,16 @@ public class PasswordResetService {
     private final UsuarioRepository usuarioRepository;
     private final ResetTokenRepository resetTokenRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender mailSender;
+    private final EmailService emailService;   // ← Brevo en lugar de JavaMailSender
 
     public PasswordResetService(UsuarioRepository usuarioRepository,
                                 ResetTokenRepository resetTokenRepository,
                                 PasswordEncoder passwordEncoder,
-                                JavaMailSender mailSender) {
+                                EmailService emailService) {
         this.usuarioRepository = usuarioRepository;
         this.resetTokenRepository = resetTokenRepository;
         this.passwordEncoder = passwordEncoder;
-        this.mailSender = mailSender;
+        this.emailService = emailService;
     }
 
     @Transactional
@@ -42,15 +40,10 @@ public class PasswordResetService {
             String token = UUID.randomUUID().toString();
             ResetToken rt = new ResetToken(token, user, Instant.now().plus(15, ChronoUnit.MINUTES));
             resetTokenRepository.save(rt);
-            log.info("Reset token (dev) para {} = {}", email, token);
+            log.info("Reset token generado para {}", email);
 
-            // enviar email (simple)
-            SimpleMailMessage msg = new SimpleMailMessage();
-            msg.setTo(email);
-            msg.setSubject("Restablecer contraseña - Shenmi");
-            String resetLink = "http://localhost:3000/reset-password?token=" + token;
-            msg.setText("Usa este enlace para restablecer tu contraseña (válido 15 min):\n\n" + resetLink);
-            mailSender.send(msg);
+            // Envío via Brevo
+            emailService.sendPasswordResetEmail(email, token);
         });
     }
 
