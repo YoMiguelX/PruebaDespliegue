@@ -1,31 +1,22 @@
 package com.example.demo.Services;
+
 import org.springframework.beans.factory.annotation.Value;
-
-import com.sendgrid.SendGrid;
-import com.sendgrid.Request;
-import com.sendgrid.Response;
-import com.sendgrid.Method;
-import com.sendgrid.helpers.mail.Mail;
-import com.sendgrid.helpers.mail.objects.Email;
-import com.sendgrid.helpers.mail.objects.Content;
-import org.springframework.beans.factory.annotation.Value;
-
-
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
 
-import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class EmailService {
 
-    @Value("${SENDGRID_API_KEY}")
+    @Value("${BREVO_API_KEY}")
     private String apiKey;
 
-    private final String remitente = "no-reply@tudominio.com"; // remitente verificado en SendGrid
+    private final String remitente = "no-reply@gmail.com"; // remitente verificado en Brevo
 
     // Reset password
-    public void sendPasswordResetEmail(String to, String token) throws IOException {
+    public void sendPasswordResetEmail(String to, String token) {
         String resetLink = "https://tu-frontend.com/reset-password?token=" + token;
         String contenido = "Hola,\n\nRecibimos una solicitud de restablecimiento de contraseña. " +
                 "Usa este enlace para cambiar tu contraseña (válido 15 min):\n\n" + resetLink +
@@ -34,41 +25,19 @@ public class EmailService {
     }
 
     // Correo simple
-    public void enviarCorreo(String destinatario, String asunto, String contenido) throws IOException {
-        Email from = new Email(remitente);
-        Email to = new Email(destinatario);
-        Content content = new Content("text/plain", contenido);
-        Mail mail = new Mail(from, asunto, to, content);
-        enviar(mail);
-    }
-
-    // Correo masivo
-    public void enviarCorreoMasivo(String[] destinatarios, String asunto, String contenido) throws IOException {
-        for (String destinatario : destinatarios) {
-            enviarCorreo(destinatario, asunto, contenido);
-        }
-    }
-
-    // Correos individuales
-    public void enviarCorreosIndividuales(List<String> destinatarios, String asunto, String contenido) throws IOException {
-        for (String destinatario : destinatarios) {
-            enviarCorreo(destinatario, asunto, contenido);
-        }
+    public void enviarCorreo(String destinatario, String asunto, String contenido) {
+        enviar(destinatario, asunto, "<html><body>" + contenido + "</body></html>");
     }
 
     // Correo HTML
-    public void enviarCorreoHtml(String destinatario, String asunto, String contenidoHtml) throws IOException {
-        Email from = new Email(remitente);
-        Email to = new Email(destinatario);
-        Content content = new Content("text/html", contenidoHtml);
-        Mail mail = new Mail(from, asunto, to, content);
-        enviar(mail);
+    public void enviarCorreoHtml(String destinatario, String asunto, String contenidoHtml) {
+        enviar(destinatario, asunto, contenidoHtml);
     }
 
-    // Correo HTML masivo
-    public void enviarCorreoHtmlMasivo(List<String> destinatarios, String asunto, String contenidoHtml) throws IOException {
+    // Correo masivo
+    public void enviarCorreoMasivo(List<String> destinatarios, String asunto, String contenidoHtml) {
         for (String destinatario : destinatarios) {
-            enviarCorreoHtml(destinatario, asunto, contenidoHtml);
+            enviar(destinatario, asunto, contenidoHtml);
         }
     }
 
@@ -92,18 +61,32 @@ public class EmailService {
                """;
     }
 
-    // Método interno para enviar
-    private void enviar(Mail mail) throws IOException {
-        SendGrid sg = new SendGrid(apiKey);
-        Request request = new Request();
-        request.setMethod(Method.POST);
-        request.setEndpoint("mail/send");
-        request.setBody(mail.build());
-        Response response = sg.api(request);
+    // Método interno para enviar usando Brevo API
+    private void enviar(String destinatario, String asunto, String contenidoHtml) {
+        String url = "https://api.brevo.com/v3/smtp/email";
+
+        Map<String, Object> body = new HashMap<>();
+        Map<String, String> sender = new HashMap<>();
+        sender.put("email", remitente);
+
+        Map<String, String> to = new HashMap<>();
+        to.put("email", destinatario);
+
+        body.put("sender", sender);
+        body.put("to", List.of(to));
+        body.put("subject", asunto);
+        body.put("htmlContent", contenidoHtml);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", apiKey);
+
+        HttpEntity<Map<String, Object>> request = new HttpEntity<>(body, headers);
+
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> response = restTemplate.postForEntity(url, request, String.class);
 
         System.out.println("Status: " + response.getStatusCode());
-        if (response.getStatusCode() >= 400) {
-            System.err.println("Error al enviar correo: " + response.getBody());
-        }
+        System.out.println("Response: " + response.getBody());
     }
 }
