@@ -3,10 +3,10 @@ package com.example.demo.Controller;
 import com.example.demo.Dto.DatoEstadisticoDto;
 import com.example.demo.Services.ReporteJasperService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.servlet.http.HttpServletResponse;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
@@ -21,37 +21,74 @@ public class ReporteJasperController {
         this.reporteJasperService = reporteJasperService;
     }
 
-    // Solo ADMIN puede generar reportes
-
+    /**
+     * Devuelve el PDF como descarga directa (sin base64).
+     * Soluciona el error "atob" en el navegador.
+     */
     @GetMapping("/api/reportes/jasper/estadistico")
-    public ResponseEntity<Map<String, Object>> getReporteEstadistico() {
-        // 1. Datos de ejemplo (normalmente vendrían de la BD)
-        List<DatoEstadisticoDto> datos = List.of(
-                new DatoEstadisticoDto("Enero", 123.45),
-                new DatoEstadisticoDto("Febrero", 98.76),
-                new DatoEstadisticoDto("Marzo", 150.00)
-        );
+    public void getReporteEstadistico(HttpServletResponse response) {
+        try {
+            List<DatoEstadisticoDto> datos = List.of(
+                    new DatoEstadisticoDto("Enero",   123.45),
+                    new DatoEstadisticoDto("Febrero",  98.76),
+                    new DatoEstadisticoDto("Marzo",   150.00)
+            );
 
-        // 2. Parámetros del reporte (puedes usarlos en el jrxml)
-        Map<String, Object> params = new HashMap<>();
-        params.put("TITULO", "Estadísticas de Ventas por Mes");
-        params.put("AUTOR", "Sistema Shenmi");
+            Map<String, Object> params = new HashMap<>();
+            params.put("TITULO", "Estadísticas de Ventas por Mes");
+            params.put("AUTOR",  "Sistema Shenmi");
 
-        // 3. Generar PDF con Jasper
-        byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(
-                datos,
-                "Reports/ReporteEstadistico.jrxml", // ruta dentro de resources
-                params
-        );
+            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(
+                    datos,
+                    "Reports/ReporteEstadistico.jrxml",
+                    params
+            );
 
-        // 4. Convertir a Base64 para enviar como JSON
-        String base64 = Base64.getEncoder().encodeToString(pdf);
+            // Devolver como descarga directa — sin base64
+            response.setContentType("application/pdf");
+            response.setHeader("Content-Disposition", "inline; filename=reporte-estadistico.pdf");
+            response.setContentLength(pdf.length);
+            response.getOutputStream().write(pdf);
+            response.getOutputStream().flush();
 
-        // 5. Construir respuesta
-        Map<String, Object> body = new HashMap<>();
-        body.put("nombre", "reporte-estadistico-jasper.pdf");
-        body.put("base64", base64);
+        } catch (Exception e) {
+            try {
+                response.setContentType("application/json");
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                response.getWriter().write("{\"error\": \"Error al generar reporte: "
+                        + e.getMessage().replace("\"", "'") + "\"}");
+            } catch (Exception ignored) {}
+        }
+    }
 
-        return ResponseEntity.ok(body);
+    /**
+     * Versión base64 (para compatibilidad con el frontend actual que usa atob).
+     * Solo funciona si el PDF se genera correctamente.
+     */
+    @GetMapping("/api/reportes/jasper/estadistico/base64")
+    public ResponseEntity<Map<String, Object>> getReporteEstadisticoBase64() {
+        try {
+            List<DatoEstadisticoDto> datos = List.of(
+                    new DatoEstadisticoDto("Enero",   123.45),
+                    new DatoEstadisticoDto("Febrero",  98.76),
+                    new DatoEstadisticoDto("Marzo",   150.00)
+            );
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("TITULO", "Estadísticas de Ventas por Mes");
+
+            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(
+                    datos, "Reports/ReporteEstadistico.jrxml", params);
+
+            Map<String, Object> body = new HashMap<>();
+            body.put("nombre", "reporte-estadistico.pdf");
+            body.put("base64", Base64.getEncoder().encodeToString(pdf));
+            return ResponseEntity.ok(body);
+
+        } catch (Exception e) {
+            Map<String, Object> error = new HashMap<>();
+            error.put("error", "Error al generar reporte: " + e.getMessage());
+            return ResponseEntity.internalServerError().body(error);
+        }
     }
 }

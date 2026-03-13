@@ -1,41 +1,75 @@
-<!-- Created with Jaspersoft Studio version 7.0.3.final using JasperReports Library version 7.0.3-41034ca841d452f3305ba55b9042260aaa1ab5dd  -->
-<jasperReport name="reporteEstadistico" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1d27193f-4d61-405c-a4df-7ef70dc4b32e">
-    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
-    <query language="sql"><![CDATA[]]></query>
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport name="reporteEstadistico" language="java"
+              pageWidth="595" pageHeight="842"
+              columnWidth="555" leftMargin="20" rightMargin="20"
+              topMargin="20" bottomMargin="20"
+              xmlns="http://jasperreports.sourceforge.net/jasperreports"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports
+              http://jasperreports.sourceforge.net/xsd/jasperreport.xsd">
+
     <field name="categoria" class="java.lang.String"/>
-    <field name="valor" class="java.lang.Double"/>
-    <background splitType="Stretch"/>
-    <title height="160" splitType="Stretch">
-        <element kind="image" uuid="e0d5216e-0a51-41f9-b4de-2d1200ca52fd" x="490" y="30" width="50" height="50">
-            <expression><![CDATA["https://toppng.com/uploads/preview/sena-colombia-vector-logo-11574045414dyuulrnx7t.png"]]></expression>
+    <field name="valor"     class="java.lang.Double"/>
+
+    <!-- ═══ TÍTULO ═══ -->
+    <title height="80">
+        <!-- Título del reporte -->
+        <element kind="staticText" x="0" y="10" width="555" height="30"
+                 style="TituloStyle">
+            <text><![CDATA[Reporte Estadístico]]></text>
         </element>
-        <element kind="staticText" uuid="bba559b0-4d7f-478a-8eac-06d242234532" stretchType="NoStretch" x="220" y="30" width="110" height="20" fontName="Bodoni MT Black">
-            <text><![CDATA[Reporte Estadistico]]></text>
+        <!-- Subtítulo con parámetro TITULO -->
+        <element kind="staticText" x="0" y="45" width="555" height="20">
+            <text><![CDATA[Sistema ShenmyKappai]]></text>
         </element>
-        <element kind="textField" uuid="6807aa48-7494-477c-8fc5-fb98e839ccf9" x="10" y="40" width="100" height="30" pattern="MMMMM dd, yyyy">
-            <expression><![CDATA[new java.util.Date()]]></expression>
-        </element>
-        <element kind="textField" uuid="181ee4d5-c9c5-4d43-b8f2-dd1d54725d50" x="10" y="70" width="100" height="20" pattern="HH:mm">
+        <!-- Fecha -->
+        <element kind="textField" x="430" y="45" width="125" height="20" pattern="dd/MM/yyyy HH:mm">
             <expression><![CDATA[new java.util.Date()]]></expression>
         </element>
     </title>
-    <pageHeader height="206" splitType="Stretch">
-        <element kind="chart" chartType="bar3D" uuid="34779cab-bd4a-4a5e-b9fa-8c6716c00d4f" x="180" y="6" width="200" height="200" evaluationTime="Report">
-            <dataset kind="category">
-                <series>
-                    <seriesExpression><![CDATA["SERIES 1"]]></seriesExpression>
-                    <categoryExpression><![CDATA[0]]></categoryExpression>
-                    <valueExpression><![CDATA[$F{valor}]]></valueExpression>
-                    <labelExpression><![CDATA[$F{categoria}]]></labelExpression>
-                </series>
-            </dataset>
-            <plot categoryAxisLineColor="#000000" categoryAxisLabelColor="#000000" categoryAxisTickLabelColor="#000000" valueAxisLineColor="#000000" valueAxisLabelColor="#000000" valueAxisTickLabelColor="#000000">
-                <itemLabel/>
-            </plot>
+
+    <!-- ═══ ENCABEZADO DE COLUMNAS ═══ -->
+    <columnHeader height="25">
+        <element kind="staticText" x="0"   y="0" width="277" height="25" style="HeaderStyle">
+            <text><![CDATA[Categoría]]></text>
         </element>
-    </pageHeader>
+        <element kind="staticText" x="278" y="0" width="277" height="25" style="HeaderStyle">
+            <text><![CDATA[Valor]]></text>
+        </element>
+    </columnHeader>
+
+    <!-- ═══ DETALLE (una fila por registro) ═══ -->
     <detail>
-        <band height="227" splitType="Stretch"/>
+        <band height="25" splitType="Stretch">
+            <!-- Categoría -->
+            <element kind="textField" x="0" y="0" width="277" height="25" style="DataStyle">
+                <expression><![CDATA[$F{categoria}]]></expression>
+            </element>
+            <!-- Valor -->
+            <element kind="textField" x="278" y="0" width="277" height="25" style="DataStyle"
+                     pattern="#,##0.00">
+                <expression><![CDATA[$F{valor}]]></expression>
+            </element>
+        </band>
     </detail>
-    <pageFooter height="54" splitType="Stretch"/>
+
+    <!-- ═══ PIE DE PÁGINA ═══ -->
+    <pageFooter height="30">
+        <element kind="staticText" x="0" y="5" width="300" height="20">
+            <text><![CDATA[© ShenmyKappai - Reporte generado automáticamente]]></text>
+        </element>
+        <element kind="textField" x="430" y="5" width="125" height="20">
+            <expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
+        </element>
+    </pageFooter>
+
+    <!-- ═══ ESTILOS ═══ -->
+    <style name="TituloStyle" fontName="Arial" fontSize="18" isBold="true"
+           hTextAlign="Center" forecolor="#1a237e"/>
+    <style name="HeaderStyle" fontName="Arial" fontSize="11" isBold="true"
+           hTextAlign="Center" forecolor="#FFFFFF"
+           backcolor="#1a237e" mode="Opaque"/>
+    <style name="DataStyle" fontName="Arial" fontSize="10"
+           hTextAlign="Left" mode="Transparent"/>
+
 </jasperReport>

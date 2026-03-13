@@ -1,18 +1,11 @@
 package com.example.demo.Services;
 
-// Imports para Apache POI
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-// Imports para Spring y Servlet
 import org.springframework.stereotype.Service;
 import jakarta.servlet.http.HttpServletResponse;
-
-// Imports para Java básico
 import java.io.IOException;
 import java.util.List;
-
-// Import de tu modelo
 import com.example.demo.Model.Usuario;
 
 @Service
@@ -20,17 +13,18 @@ public class ExcelExportService {
 
     public void exportarUsuariosAExcel(List<Usuario> usuarios, HttpServletResponse response) throws IOException {
 
-        // Crear libro de Excel (.xlsx)
+        // Headless explícito para Railway/Linux (evita errores de AWT en autoSizeColumn)
+        System.setProperty("java.awt.headless", "true");
+
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Usuarios");
 
-        // ===== CREAR ESTILOS =====
+        // ===== ESTILOS =====
 
-        // Estilo para encabezados
         CellStyle headerStyle = workbook.createCellStyle();
         Font headerFont = workbook.createFont();
         headerFont.setBold(true);
-        headerFont.setFontHeightInPoints((short) 12);
+        headerFont.setFontHeightInPoints((short) 11);
         headerFont.setColor(IndexedColors.WHITE.getIndex());
         headerStyle.setFont(headerFont);
         headerStyle.setFillForegroundColor(IndexedColors.DARK_BLUE.getIndex());
@@ -41,107 +35,62 @@ public class ExcelExportService {
         headerStyle.setBorderLeft(BorderStyle.THIN);
         headerStyle.setAlignment(HorizontalAlignment.CENTER);
 
-        // Estilo para datos
         CellStyle dataStyle = workbook.createCellStyle();
         dataStyle.setBorderBottom(BorderStyle.THIN);
         dataStyle.setBorderTop(BorderStyle.THIN);
         dataStyle.setBorderRight(BorderStyle.THIN);
         dataStyle.setBorderLeft(BorderStyle.THIN);
-        dataStyle.setWrapText(true);
+        dataStyle.setWrapText(false);
 
-        // Estilo para datos de administradores (fondo diferente)
         CellStyle adminDataStyle = workbook.createCellStyle();
         adminDataStyle.cloneStyleFrom(dataStyle);
         adminDataStyle.setFillForegroundColor(IndexedColors.LIGHT_YELLOW.getIndex());
         adminDataStyle.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 
-        // ===== CREAR ENCABEZADOS =====
+        // ===== ENCABEZADOS =====
+
+        String[] headers = {"ID", "Nombre", "Apellido", "Teléfono", "Correo", "Tipo", "Estado", "Fecha Creación"};
+        // Anchos fijos en unidades POI (1 unidad ≈ 1/256 de carácter) — sin autoSizeColumn
+        int[] colWidths = {2000, 5000, 5000, 4000, 7000, 4500, 3500, 5500};
 
         Row headerRow = sheet.createRow(0);
-        String[] headers = {"ID", "Nombre", "Apellido", "Teléfono", "Correo", "Tipo", "Estado", "Fecha Creación"};
-
         for (int i = 0; i < headers.length; i++) {
             Cell cell = headerRow.createCell(i);
             cell.setCellValue(headers[i]);
             cell.setCellStyle(headerStyle);
+            sheet.setColumnWidth(i, colWidths[i]);
         }
 
-        // ===== LLENAR DATOS =====
+        // ===== DATOS =====
 
         int rowNum = 1;
         for (Usuario usuario : usuarios) {
             Row row = sheet.createRow(rowNum++);
-
-            // Determinar si es admin para aplicar estilo diferente
             boolean esAdmin = (usuario.getRol() != null && usuario.getRol().getIdRol() == 1);
-            CellStyle styleToUse = esAdmin ? adminDataStyle : dataStyle;
+            CellStyle style = esAdmin ? adminDataStyle : dataStyle;
 
-            // ID
-            Cell cellId = row.createCell(0);
-            if (usuario.getIdUsuario() != null) {
-                cellId.setCellValue(usuario.getIdUsuario());
-            }
-            cellId.setCellStyle(styleToUse);
-
-            // Nombre
-            Cell cellNombre = row.createCell(1);
-            cellNombre.setCellValue(usuario.getNombreUsuario() != null ? usuario.getNombreUsuario() : "");
-            cellNombre.setCellStyle(styleToUse);
-
-            // Apellido
-            Cell cellApellido = row.createCell(2);
-            cellApellido.setCellValue(usuario.getApellidoUsuario() != null ? usuario.getApellidoUsuario() : "");
-            cellApellido.setCellStyle(styleToUse);
-
-            // Teléfono
-            Cell cellTelefono = row.createCell(3);
-            cellTelefono.setCellValue(usuario.getTelUsuario() != null ? usuario.getTelUsuario() : "");
-            cellTelefono.setCellStyle(styleToUse);
-
-            // Correo
-            Cell cellCorreo = row.createCell(4);
-            cellCorreo.setCellValue(usuario.getCorreoUsuario() != null ? usuario.getCorreoUsuario() : "");
-            cellCorreo.setCellStyle(styleToUse);
-
-            // Tipo (según rol)
-            Cell cellTipo = row.createCell(5);
-            String tipoUsuario = "Usuario";
-            if (usuario.getRol() != null) {
-                tipoUsuario = usuario.getRol().getIdRol() == 1 ? "Administrador" : "Usuario";
-            }
-            cellTipo.setCellValue(tipoUsuario);
-            cellTipo.setCellStyle(styleToUse);
-
-            // Estado
-            Cell cellEstado = row.createCell(6);
-            cellEstado.setCellValue(usuario.getEstadoUsuario() != null ? usuario.getEstadoUsuario() : "");
-            cellEstado.setCellStyle(styleToUse);
-
-            // Fecha de creación
-            Cell cellFecha = row.createCell(7);
-            if (usuario.getFechaCreacion() != null) {
-                cellFecha.setCellValue(usuario.getFechaCreacion().toString());
-            }
-            cellFecha.setCellStyle(styleToUse);
+            createCell(row, 0, usuario.getIdUsuario() != null ? String.valueOf(usuario.getIdUsuario()) : "", style);
+            createCell(row, 1, usuario.getNombreUsuario(), style);
+            createCell(row, 2, usuario.getApellidoUsuario(), style);
+            createCell(row, 3, usuario.getTelUsuario(), style);
+            createCell(row, 4, usuario.getCorreoUsuario(), style);
+            createCell(row, 5, esAdmin ? "Administrador" : "Usuario", style);
+            createCell(row, 6, usuario.getEstadoUsuario(), style);
+            createCell(row, 7, usuario.getFechaCreacion() != null ? usuario.getFechaCreacion().toString() : "", style);
         }
 
-        // ===== AJUSTAR TAMAÑOS DE COLUMNA =====
-
-        for (int i = 0; i < headers.length; i++) {
-            sheet.autoSizeColumn(i);
-            // Asegurar un ancho mínimo
-            if (sheet.getColumnWidth(i) < 3000) {
-                sheet.setColumnWidth(i, 3000);
-            }
-            // Limitar ancho máximo
-            if (sheet.getColumnWidth(i) > 8000) {
-                sheet.setColumnWidth(i, 8000);
-            }
+        // ===== ESCRIBIR RESPONSE =====
+        try {
+            workbook.write(response.getOutputStream());
+            response.getOutputStream().flush();
+        } finally {
+            workbook.close();
         }
+    }
 
-        // ===== ESCRIBIR AL RESPONSE Y CERRAR =====
-
-        workbook.write(response.getOutputStream());
-        workbook.close();
+    private void createCell(Row row, int col, String value, CellStyle style) {
+        Cell cell = row.createCell(col);
+        cell.setCellValue(value != null ? value : "");
+        cell.setCellStyle(style);
     }
 }
