@@ -21,10 +21,6 @@ public class ReporteJasperController {
         this.reporteJasperService = reporteJasperService;
     }
 
-    /**
-     * Devuelve el PDF como descarga directa (sin base64).
-     * Soluciona el error "atob" en el navegador.
-     */
     @GetMapping("/api/reportes/jasper/estadistico")
     public void getReporteEstadistico(HttpServletResponse response) {
         try {
@@ -38,13 +34,9 @@ public class ReporteJasperController {
             params.put("TITULO", "Estadísticas de Ventas por Mes");
             params.put("AUTOR",  "Sistema Shenmi");
 
-            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(
-                    datos,
-                    "Reports/ReporteEstadistico.jrxml",
-                    params
-            );
+            // Ahora solo pasamos lista y params
+            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(datos, params);
 
-            // Devolver como descarga directa — sin base64
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "inline; filename=reporte-estadistico.pdf");
             response.setContentLength(pdf.length);
@@ -61,10 +53,6 @@ public class ReporteJasperController {
         }
     }
 
-    /**
-     * Versión base64 (para compatibilidad con el frontend actual que usa atob).
-     * Solo funciona si el PDF se genera correctamente.
-     */
     @GetMapping("/api/reportes/jasper/estadistico/base64")
     public ResponseEntity<Map<String, Object>> getReporteEstadisticoBase64() {
         try {
@@ -77,8 +65,8 @@ public class ReporteJasperController {
             Map<String, Object> params = new HashMap<>();
             params.put("TITULO", "Estadísticas de Ventas por Mes");
 
-            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(
-                    datos, "Reports/ReporteEstadistico.jrxml", params);
+            // Ahora solo pasamos lista y params
+            byte[] pdf = reporteJasperService.generarReporteEstadisticoPdf(datos, params);
 
             Map<String, Object> body = new HashMap<>();
             body.put("nombre", "reporte-estadistico.pdf");
