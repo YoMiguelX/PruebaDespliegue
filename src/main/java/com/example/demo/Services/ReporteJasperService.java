@@ -23,28 +23,20 @@ public class ReporteJasperService {
     public byte[] generarReporteEstadisticoPdf(List<DatoEstadisticoDto> lista,
                                                Map<String, Object> params) {
         try {
-            // 1. Cargar la plantilla .jrxml desde resources (carpeta Reports)
-            InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jrxml");
+            InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper");
             if (reporteStream == null) {
-                throw new RuntimeException("No se encontró el reporte en resources: /Reports/ReporteEstadistico.jrxml");
+                throw new RuntimeException("No se encontró el reporte en resources: /Reports/ReporteEstadistico.jasper");
             }
 
-            // 2. Compilar el .jrxml a JasperReport
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(
-                    getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper")
-            );
-
-            // 3. Crear DataSource con la lista de DTOs
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reporteStream);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
-
-            // 4. Llenar el reporte con datos y parámetros
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
 
-            // 5. Exportar a PDF
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (JRException e) {
             throw new RuntimeException("Error generando el reporte Jasper", e);
         }
     }
+
 }
