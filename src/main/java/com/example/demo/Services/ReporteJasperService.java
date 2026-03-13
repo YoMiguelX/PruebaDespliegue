@@ -5,64 +5,45 @@ import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import org.springframework.stereotype.Service;
 
-import jakarta.annotation.PostConstruct;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class ReporteJasperService {
 
-    // Cache de reportes ya compilados — se compilan UNA sola vez al arrancar
-    private final ConcurrentHashMap<String, JasperReport> cache = new ConcurrentHashMap<>();
-
     /**
-     * Pre-compila los reportes al arrancar la app para no gastar RAM en cada petición.
+     * Genera un reporte estadístico en PDF usando JasperReports.
+     *
+     * @param lista   Lista de datos estadísticos (DTO con categoria y valor)
+     * @param rutaJrxml Ruta del archivo jrxml dentro de resources (ej: "reportes/reporte_estadistico.jrxml")
+     * @param params  Parámetros adicionales para el reporte (ej: TITULO, AUTOR, etc.)
+     * @return        PDF en bytes
      */
-    @PostConstruct
-    public void preCompilarReportes() {
-        preCompilar("Reports/ReporteEstadistico.jrxml");
-    }
-
-    private void preCompilar(String rutaJrxml) {
-        try {
-            InputStream stream = getClass().getResourceAsStream("/" + rutaJrxml);
-            if (stream != null) {
-                JasperReport compilado = JasperCompileManager.compileReport(stream);
-                cache.put(rutaJrxml, compilado);
-                System.out.println("[Jasper] Pre-compilado OK: " + rutaJrxml);
-            } else {
-                System.err.println("[Jasper] No se encontró: " + rutaJrxml);
-            }
-        } catch (Exception e) {
-            System.err.println("[Jasper] Error pre-compilando " + rutaJrxml + ": " + e.getMessage());
-        }
-    }
-
     public byte[] generarReporteEstadisticoPdf(List<DatoEstadisticoDto> lista,
                                                String rutaJrxml,
                                                Map<String, Object> params) {
         try {
-            // Usar el reporte ya compilado del cache
-            JasperReport jasperReport = cache.get(rutaJrxml);
-
-            if (jasperReport == null) {
-                // Si por alguna razón no está en cache, compilar ahora
-                InputStream stream = getClass().getResourceAsStream("/" + rutaJrxml);
-                if (stream == null) {
-                    throw new RuntimeException("No se encontró el reporte: " + rutaJrxml);
-                }
-                jasperReport = JasperCompileManager.compileReport(stream);
-                cache.put(rutaJrxml, jasperReport);
+            // 1. Cargar la plantilla .jrxml desde resources
+            InputStream reporteStream = getClass().getResourceAsStream("/" + rutaJrxml);
+            if (reporteStream == null) {
+                throw new RuntimeException("No se encontró el reporte: " + rutaJrxml);
             }
 
+            // 2. Compilar el .jrxml a JasperReport
+            JasperReport jasperReport = JasperCompileManager.compileReport(reporteStream);
+
+            // 3. Crear DataSource con la lista de DTOs
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
+
+            // 4. Llenar el reporte con datos y parámetros
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
+
+            // 5. Exportar a PDF
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (JRException e) {
-            throw new RuntimeException("Error generando el reporte Jasper: " + e.getMessage(), e);
+            throw new RuntimeException("Error generando el reporte Jasper", e);
         }
     }
 }
