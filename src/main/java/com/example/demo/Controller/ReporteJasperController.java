@@ -37,13 +37,16 @@ public class ReporteJasperController {
             response.setContentType("application/pdf");
             response.setHeader("Content-Disposition", "inline; filename=reporte-estadistico.pdf");
             response.setContentLength(pdf.length);
-            response.getOutputStream().write(pdf);
-            response.getOutputStream().flush();
+
+            try (var out = response.getOutputStream()) {
+                out.write(pdf);
+                out.flush();
+            }
 
         } catch (Exception e) {
+            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             try {
                 response.setContentType("application/json");
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 response.getWriter().write("{\"error\": \"Error al generar reporte: "
                         + e.getMessage().replace("\"", "'") + "\"}");
             } catch (Exception ignored) {}
