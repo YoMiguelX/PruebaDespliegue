@@ -3,6 +3,7 @@ package com.example.demo.Services;
 import com.example.demo.Dto.DatoEstadisticoDto;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.util.JRLoader;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -29,7 +30,9 @@ public class ReporteJasperService {
             }
 
             // 2. Compilar el .jrxml a JasperReport
-            JasperReport jasperReport = JasperCompileManager.compileReport(reporteStream);
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(
+                    getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper")
+            );
 
             // 3. Crear DataSource con la lista de DTOs
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
