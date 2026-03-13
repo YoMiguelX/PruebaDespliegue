@@ -15,19 +15,17 @@ public class ReporteJasperService {
     /**
      * Genera un reporte estadístico en PDF usando JasperReports.
      *
-     * @param lista   Lista de datos estadísticos (DTO con categoria y valor)
-     * @param rutaJrxml Ruta del archivo jrxml dentro de resources (ej: "reportes/reporte_estadistico.jrxml")
-     * @param params  Parámetros adicionales para el reporte (ej: TITULO, AUTOR, etc.)
-     * @return        PDF en bytes
+     * @param lista    Lista de datos estadísticos (DTO con categoria y valor)
+     * @param params   Parámetros adicionales para el reporte (ej: TITULO, AUTOR, etc.)
+     * @return         PDF en bytes
      */
     public byte[] generarReporteEstadisticoPdf(List<DatoEstadisticoDto> lista,
-                                               String rutaJrxml,
                                                Map<String, Object> params) {
         try {
-            // 1. Cargar la plantilla .jrxml desde resources
-            InputStream reporteStream = getClass().getResourceAsStream("/" + rutaJrxml);
+            // 1. Cargar la plantilla .jrxml desde resources (carpeta Reports)
+            InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jrxml");
             if (reporteStream == null) {
-                throw new RuntimeException("No se encontró el reporte: " + rutaJrxml);
+                throw new RuntimeException("No se encontró el reporte en resources: /Reports/ReporteEstadistico.jrxml");
             }
 
             // 2. Compilar el .jrxml a JasperReport
