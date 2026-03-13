@@ -13,30 +13,29 @@ import java.util.Map;
 @Service
 public class ReporteJasperService {
 
-    /**
-     * Genera un reporte estadístico en PDF usando JasperReports.
-     *
-     * @param lista    Lista de datos estadísticos (DTO con categoria y valor)
-     * @param params   Parámetros adicionales para el reporte (ej: TITULO, AUTOR, etc.)
-     * @return         PDF en bytes
-     */
     public byte[] generarReporteEstadisticoPdf(List<DatoEstadisticoDto> lista,
                                                Map<String, Object> params) {
-        try {
-            InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper");
+        try (InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper")) {
             if (reporteStream == null) {
-                throw new RuntimeException("No se encontró el reporte en resources: /Reports/ReporteEstadistico.jasper");
+                throw new IllegalStateException("No se encontró el archivo: /Reports/ReporteEstadistico.jasper");
             }
 
+            // Cargar el reporte compilado (.jasper)
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reporteStream);
+
+            // Fuente de datos con la lista de DTOs
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
+
+            // Llenar el reporte con datos y parámetros
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
 
+            // Exportar a PDF
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (JRException e) {
             throw new RuntimeException("Error generando el reporte Jasper", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Error cargando el archivo Jasper", e);
         }
     }
-
 }

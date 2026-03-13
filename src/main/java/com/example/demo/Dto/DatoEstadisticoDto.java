@@ -9,6 +9,19 @@ public class DatoEstadisticoDto {
         this.valor = valor;
     }
 
-    public String getCategoria() { return categoria; }
-    public Double getValor() { return valor; }
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 }
