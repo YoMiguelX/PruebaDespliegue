@@ -14,28 +14,25 @@ import java.util.Map;
 public class ReporteJasperService {
 
     public byte[] generarReporteEstadisticoPdf(List<DatoEstadisticoDto> lista,
+                                               String rutaJrxml,
                                                Map<String, Object> params) {
-        try (InputStream reporteStream = getClass().getResourceAsStream("/Reports/ReporteEstadistico.jasper")) {
-            if (reporteStream == null) {
-                throw new IllegalStateException("No se encontró el archivo: /Reports/ReporteEstadistico.jasper");
+        try {
+            // Cargar el .jasper pre-compilado directamente (no compilar .jrxml en runtime)
+            String rutaJasper = rutaJrxml.replace(".jrxml", ".jasper");
+            InputStream jasperStream = getClass().getResourceAsStream("/" + rutaJasper);
+
+            if (jasperStream == null) {
+                throw new RuntimeException("No se encontró el archivo: " + rutaJasper
+                        + " — asegúrate de que esté en src/main/resources/" + rutaJasper);
             }
 
-            // Cargar el reporte compilado (.jasper)
-            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(reporteStream);
-
-            // Fuente de datos con la lista de DTOs
+            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(jasperStream);
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(lista);
-
-            // Llenar el reporte con datos y parámetros
             JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, dataSource);
-
-            // Exportar a PDF
             return JasperExportManager.exportReportToPdf(jasperPrint);
 
         } catch (JRException e) {
-            throw new RuntimeException("Error generando el reporte Jasper", e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error cargando el archivo Jasper", e);
+            throw new RuntimeException("Error generando reporte: " + e.getMessage(), e);
         }
     }
 }
