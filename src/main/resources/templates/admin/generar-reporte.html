@@ -40,14 +40,13 @@
 
         fetch("/api/reportes/jasper/estadistico")
             .then(response => {
-                // Si el servidor devolvió error, leer el mensaje
+
                 if (!response.ok) {
                     return response.json().then(err => {
                         throw new Error(err.error || "Error " + response.status);
                     });
                 }
-                // Si es PDF, descargar directamente
-                return response.blob();
+
             })
             .then(blob => {
                 const url = URL.createObjectURL(blob);
