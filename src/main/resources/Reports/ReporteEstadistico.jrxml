@@ -12,55 +12,63 @@
     <field name="valor"     class="java.lang.Double"/>
 
     <!-- ═══ TÍTULO ═══ -->
-    <title height="80">
-        <!-- Título del reporte -->
-        <element kind="staticText" x="0" y="10" width="555" height="30"
-                 style="TituloStyle">
-            <text><![CDATA[Reporte Estadístico]]></text>
-        </element>
-        <!-- Subtítulo con parámetro TITULO -->
-        <element kind="staticText" x="0" y="45" width="555" height="20">
-            <text><![CDATA[Sistema ShenmyKappai]]></text>
-        </element>
-        <!-- Fecha -->
-        <element kind="textField" x="430" y="45" width="125" height="20" pattern="dd/MM/yyyy HH:mm">
-            <expression><![CDATA[new java.util.Date()]]></expression>
-        </element>
+    <title>
+        <band height="80">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30" style="TituloStyle"/>
+                <text><![CDATA[Reporte Estadístico]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="45" width="555" height="20"/>
+                <text><![CDATA[Sistema ShenmyKappai]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy HH:mm">
+                <reportElement x="430" y="45" width="125" height="20"/>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+        </band>
     </title>
 
     <!-- ═══ ENCABEZADO DE COLUMNAS ═══ -->
-    <columnHeader height="25">
-        <element kind="staticText" x="0"   y="0" width="277" height="25" style="HeaderStyle">
-            <text><![CDATA[Categoría]]></text>
-        </element>
-        <element kind="staticText" x="278" y="0" width="277" height="25" style="HeaderStyle">
-            <text><![CDATA[Valor]]></text>
-        </element>
+    <columnHeader>
+        <band height="25">
+            <staticText>
+                <reportElement x="0" y="0" width="277" height="25" style="HeaderStyle"/>
+                <text><![CDATA[Categoría]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="278" y="0" width="277" height="25" style="HeaderStyle"/>
+                <text><![CDATA[Valor]]></text>
+            </staticText>
+        </band>
     </columnHeader>
 
-    <!-- ═══ DETALLE (una fila por registro) ═══ -->
+    <!-- ═══ DETALLE ═══ -->
     <detail>
         <band height="25" splitType="Stretch">
-            <!-- Categoría -->
-            <element kind="textField" x="0" y="0" width="277" height="25" style="DataStyle">
-                <expression><![CDATA[$F{categoria}]]></expression>
-            </element>
-            <!-- Valor -->
-            <element kind="textField" x="278" y="0" width="277" height="25" style="DataStyle"
-                     pattern="#,##0.00">
-                <expression><![CDATA[$F{valor}]]></expression>
-            </element>
+            <textField>
+                <reportElement x="0" y="0" width="277" height="25" style="DataStyle"/>
+                <textFieldExpression><![CDATA[$F{categoria}]]></textFieldExpression>
+            </textField>
+            <textField pattern="#,##0.00">
+                <reportElement x="278" y="0" width="277" height="25" style="DataStyle"/>
+                <textFieldExpression><![CDATA[$F{valor}]]></textFieldExpression>
+            </textField>
         </band>
     </detail>
 
     <!-- ═══ PIE DE PÁGINA ═══ -->
-    <pageFooter height="30">
-        <element kind="staticText" x="0" y="5" width="300" height="20">
-            <text><![CDATA[© ShenmyKappai - Reporte generado automáticamente]]></text>
-        </element>
-        <element kind="textField" x="430" y="5" width="125" height="20">
-            <expression><![CDATA["Página " + $V{PAGE_NUMBER}]]></expression>
-        </element>
+    <pageFooter>
+        <band height="30">
+            <staticText>
+                <reportElement x="0" y="5" width="300" height="20"/>
+                <text><![CDATA[© ShenmyKappai - Reporte generado automáticamente]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="430" y="5" width="125" height="20"/>
+                <textFieldExpression><![CDATA["Página " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+        </band>
     </pageFooter>
 
     <!-- ═══ ESTILOS ═══ -->
@@ -71,5 +79,4 @@
            backcolor="#1a237e" mode="Opaque"/>
     <style name="DataStyle" fontName="Arial" fontSize="10"
            hTextAlign="Left" mode="Transparent"/>
-
 </jasperReport>
