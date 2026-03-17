@@ -73,7 +73,7 @@
                     </a>
                     <a th:href="@{/jugador}" class="dropdown-item">Estado del jugador</a>
 
-                    <a th:href="@{/admin/exportarExcel}" class="dropdown-item">Exportar Datos</a>
+                    <a href="javascript:void(0)" class="dropdown-item" onclick="exportarExcel()">Exportar Datos</a>
 
                 </div>
             </li>
@@ -476,23 +476,36 @@
 
 <script>
     function generarReporte() {
-        fetch("/api/reportes/jasper/estadistico")
-            .then(r => r.json())
-            .then(data => {
-                const byteCharacters = atob(data.base64);
-                const byteNumbers = new Array(byteCharacters.length);
-                for (let i = 0; i < byteCharacters.length; i++) {
-                    byteNumbers[i] = byteCharacters.charCodeAt(i);
+        fetch("/api/reportes/pdf/estadistico")
+            .then(response => {
+                if (!response.ok) {
+                    return response.json().then(err => { throw new Error(err.error || "Error " + response.status); });
                 }
-                const byteArray = new Uint8Array(byteNumbers);
-                const blob = new Blob([byteArray], { type: "application/pdf" });
-
-                const link = document.createElement("a");
-                link.href = URL.createObjectURL(blob);
-                link.download = data.nombre || "reporte.pdf";
-                link.click();
+                return response.blob();
             })
-            .catch(err => alert("Error al generar reporte: " + err));
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.href = url;
+                link.download = "reporte-estadistico.pdf";
+                link.click();
+                URL.revokeObjectURL(url);
+            })
+            .catch(err => alert("Error al generar reporte: " + err.message));
+    }
+
+    function exportarExcel() {
+        const nombre   = document.getElementById('filtroNombre')?.value || '';
+        const apellido = document.getElementById('filtroApellido')?.value || '';
+        const correo   = document.getElementById('filtroCorreo')?.value || '';
+
+        const params = new URLSearchParams();
+        if (nombre)   params.append('nombre',   nombre);
+        if (apellido) params.append('apellido', apellido);
+        if (correo)   params.append('correo',   correo);
+
+        const url = '/admin/exportarExcel' + (params.toString() ? '?' + params.toString() : '');
+        window.location.href = url;
     }
 </script>
 </body>
