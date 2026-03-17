@@ -199,7 +199,7 @@ public class PdfReporteService {
             agregarEspacio(doc);
             doc.add(new Chunk(new LineSeparator(0.5f, 100, Color.GRAY, Element.ALIGN_CENTER, -2)));
             Font fPie = FontFactory.getFont(FontFactory.HELVETICA, 8, Color.GRAY);
-            Paragraph pie = new Paragraph("© ShenmyKappai — Reporte generado automáticamente", fPie);
+            Paragraph pie = new Paragraph("© ShenmiKappai — Reporte generado automáticamente", fPie);
             pie.setAlignment(Element.ALIGN_CENTER);
             pie.setSpacingBefore(5);
             doc.add(pie);
@@ -223,7 +223,7 @@ public class PdfReporteService {
         doc.add(titulo);
 
         Font fSub = FontFactory.getFont(FontFactory.HELVETICA, 12, Color.DARK_GRAY);
-        Paragraph sub = new Paragraph("ShenmyKappai — Juego Educativo", fSub);
+        Paragraph sub = new Paragraph("ShenmiKappai — Juego Educativo", fSub);
         sub.setAlignment(Element.ALIGN_CENTER);
         sub.setSpacingAfter(4);
         doc.add(sub);
