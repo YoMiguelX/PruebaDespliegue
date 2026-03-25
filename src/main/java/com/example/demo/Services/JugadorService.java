@@ -28,11 +28,11 @@ public class JugadorService {
                 .count();
     }
 
+    // ✅ CORREGIDO - progreso es Integer, no tiene getPuntajeNivel()
     public double calcularProgresoPromedio() {
         return jugadorRepository.findAll().stream()
-                .mapToDouble(j -> j.getProgreso() != null ? j.getProgreso().getPuntajeNivel() : 0)
+                .mapToDouble(j -> j.getProgreso() != null ? j.getProgreso() : 0)
                 .average()
                 .orElse(0);
     }
-
 }
