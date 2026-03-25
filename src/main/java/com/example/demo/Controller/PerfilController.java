@@ -1,8 +1,10 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Dto.UsuarioDto;
+import com.example.demo.Model.Jugador;
 import com.example.demo.Model.Reporte;
 import com.example.demo.Model.Usuario;
+import com.example.demo.Repository.JugadorRepository;
 import com.example.demo.Repository.ReporteRepository;
 import com.example.demo.Services.UsuarioService;
 import jakarta.servlet.http.HttpSession;
@@ -16,12 +18,15 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/usuario")
 public class PerfilController {
 
-
     @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
     private ReporteRepository reporteRepository;
+
+    // 🆕 AGREGAR ESTO - Inyectar JugadorRepository
+    @Autowired
+    private JugadorRepository jugadorRepository;
 
     // Mostrar página de perfil
     @GetMapping("/perfil")
@@ -39,7 +44,13 @@ public class PerfilController {
             return "redirect:/login";
         }
 
+        // 🆕 CARGAR EL GAMETAG DESDE JUGADOR
+        Jugador jugador = jugadorRepository.findByUsuario_IdUsuario(usuario.getIdUsuario()).orElse(null);
+
+        // Agregar al modelo
         model.addAttribute("usuario", usuarioActualizado);
+        model.addAttribute("gametag", jugador != null ? jugador.getNombre() : "Sin gametag");
+
         return "perfil";
     }
 
@@ -59,14 +70,17 @@ public class PerfilController {
         if (usuario == null) {
             return "redirect:/login";
         }
+
+        // Actualizar gametag si se proporcionó
         if (gametag != null && !gametag.trim().isEmpty()) {
             try {
                 usuarioService.cambiarGametag(usuario.getIdUsuario(), gametag.trim());
-                redirectAttributes.addFlashAttribute("mensaje", "Información y gametag actualizados correctamente");
+                redirectAttributes.addFlashAttribute("mensaje", "Gametag actualizado correctamente");
             } catch (Exception e) {
                 redirectAttributes.addFlashAttribute("error", "Error al actualizar gametag: " + e.getMessage());
             }
         }
+
         try {
             // Validar teléfono si se proporcionó
             if (telUsuario != null && !telUsuario.trim().isEmpty()) {
@@ -111,6 +125,7 @@ public class PerfilController {
 
         return "redirect:/usuario/perfil";
     }
+
     // Cambiar contraseña
     @PostMapping("/cambiar-password")
     public String cambiarPassword(
