@@ -7,10 +7,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface JugadorRepository extends JpaRepository<Jugador, Integer> {
 
-    List<Jugador> findByUsuario_IdUsuario(Integer idUsuario);
+
+    Optional<Jugador> findByUsuario_IdUsuario(Integer idUsuario);
+
+    List<Jugador> findAllByUsuario_IdUsuario(Integer idUsuario);
+
+    boolean existsByNombre(String nombre);
 
     @Modifying
     @Query("UPDATE Jugador j SET j.progreso = null WHERE j.usuario.idUsuario = :idUsuario")

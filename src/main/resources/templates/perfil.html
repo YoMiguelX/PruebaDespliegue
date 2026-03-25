@@ -300,6 +300,11 @@
                 </div>
                 <h3 class="user-name"  th:text="${usuario.nombreUsuario}">Usuario</h3>
                 <p class="user-email"  th:text="${usuario.correoUsuario}">correo@ejemplo.com</p>
+                <p class="text-green-400 text-sm mt-1">
+                    <i class="fas fa-tag"></i>
+                    <span th:text="${usuario.gametag != null ? usuario.gametag : 'Sin gametag'}">Gametag</span>
+                </p>
+
                 <span class="user-status"><i class="fas fa-check-circle"></i> Cuenta Activa</span>
             </div>
 
@@ -385,6 +390,7 @@
                             <i class="fas fa-user-tag field-icon"></i>
                         </div>
                     </div>
+
                     <!-- Correo -->
                     <div class="info-field">
                         <div class="field-header">
@@ -396,6 +402,24 @@
                                        class="field-input hidden" required />
                             </div>
                             <i class="fas fa-envelope field-icon"></i>
+                        </div>
+                    </div>
+                    <div class="info-field">
+                        <div class="field-header">
+                            <div style="flex:1;">
+                                <div class="field-label">Gametag (Nombre en juego)</div>
+                                <div id="displayGametag" class="field-value"
+                                     th:text="${usuario.gametag != null ? usuario.gametag : 'Sin asignar'}">
+                                    Gametag
+                                </div>
+                                <input type="text" name="gametag" id="inputGametag"
+                                       th:value="${usuario.gametag}"
+                                       class="field-input hidden"
+                                       placeholder="Ej: DarkKnight, DragonSlayer"
+                                       pattern="[A-Za-z0-9_]{3,20}"
+                                       title="Solo letras, números y guión bajo. 3-20 caracteres" />
+                            </div>
+                            <i class="fas fa-tag field-icon"></i>
                         </div>
                     </div>
                     <!-- Teléfono -->
@@ -506,6 +530,14 @@
                         <div class="profile-card-label">Nombre de usuario</div>
                         <div class="profile-card-value" th:text="${usuario.nombreUsuario}">Usuario</div>
                     </div>
+                    <div class="profile-card">
+                        <i class="fas fa-tag profile-card-icon"></i>
+                        <div class="profile-card-label">Gametag (Nombre en juego)</div>
+                        <div class="profile-card-value" th:text="${usuario.gametag != null ? usuario.gametag : 'Sin asignar'}">
+                            Gametag
+                        </div>
+                    </div>
+
                     <div class="profile-card">
                         <i class="fas fa-id-card profile-card-icon"></i>
                         <div class="profile-card-label">Nombre completo</div>
@@ -661,8 +693,9 @@
     let valoresOriginales = {};
 
     function toggleEditarInfo() {
-        const displays = ['displayNombre','displayApellido','displayCorreo','displayTelefono'];
-        const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono'];
+        const displays = ['displayNombre','displayApellido','displayCorreo','displayTelefono','displayGametag'];
+
+        const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono','inputGametag'];
         const fields   = document.querySelectorAll('.info-field');
 
         valoresOriginales = {
@@ -682,8 +715,8 @@
     }
 
     function cancelarEditarInfo() {
-        const displays = ['displayNombre','displayApellido','displayCorreo','displayTelefono'];
-        const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono'];
+        const displays = ['displayNombre','displayApellido','displayCorreo','displayTelefono','displayGametag'];
+        const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono','inputGametag'];
         const fields   = document.querySelectorAll('.info-field');
 
         document.getElementById('inputNombre').value   = valoresOriginales.nombre;
@@ -721,7 +754,18 @@
                     e.preventDefault();
                     alert('El teléfono debe tener exactamente 10 dígitos');
                     document.getElementById('inputTelefono').focus();
+                    return;
                 }
+
+                  const gametag = document.getElementById('inputGametag').value.trim();
+        if (gametag) {
+            const gametagRegex = /^[A-Za-z0-9_]{3,20}$/;
+            if (!gametagRegex.test(gametag)) {
+                e.preventDefault();
+                alert('El gametag debe tener entre 3 y 20 caracteres, solo letras, números y guión bajo.');
+                document.getElementById('inputGametag').focus();
+                return;
+            }
             });
         }
 

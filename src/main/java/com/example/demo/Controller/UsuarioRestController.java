@@ -36,7 +36,6 @@ public class UsuarioRestController {
         return usuarioService.login(dto.getCorreo(), dto.getContrasena());
     }
 
-
     @GetMapping("/id/{id}")
     public ApiResponse<UsuarioDto> obtener(@PathVariable Integer id) {
         return usuarioService.findById(id);
@@ -52,6 +51,16 @@ public class UsuarioRestController {
         usuarioService.delete(id);
     }
 
+    // ✅ ENDPOINT PARA CAMBIAR GAMETAG
+    @PutMapping("/cambiar-gametag")
+    public ApiResponse<UsuarioDto> cambiarGametag(
+            @RequestParam Integer usuarioId,
+            @RequestParam String nuevoGametag) {
+
+        return usuarioService.cambiarGametag(usuarioId, nuevoGametag);
+    }
+
+    // ✅ CLASE INTERNA PARA RESETEO DE CONTRASEÑA - CORREGIDA
     @RestController
     @RequestMapping("/auth")
     public class PasswordResetController {
@@ -62,17 +71,18 @@ public class UsuarioRestController {
             this.resetService = resetService;
         }
 
+        // ✅ CORREGIDO: usar getEmail()
         @PostMapping("/password-reset-request")
         public ResponseEntity<?> requestReset(@RequestBody UsuarioDto.PasswordResetRequestDto dto) {
-            resetService.createAndSendToken(dto.email());
-            return ResponseEntity.ok(Map.of("message","Si el correo existe, se envió el enlace de restablecimiento"));
+            resetService.createAndSendToken(dto.getEmail());
+            return ResponseEntity.ok(Map.of("message", "Si el correo existe, se envió el enlace de restablecimiento"));
         }
 
+        // ✅ CORREGIDO: usar getToken() y getNewPassword()
         @PostMapping("/password-reset-confirm")
         public ResponseEntity<?> confirmReset(@RequestBody UsuarioDto.PasswordResetConfirmDto dto) {
-            resetService.resetPassword(dto.token(), dto.newPassword());
-            return ResponseEntity.ok(Map.of("message","Contraseña actualizada"));
+            resetService.resetPassword(dto.getToken(), dto.getNewPassword());
+            return ResponseEntity.ok(Map.of("message", "Contraseña actualizada"));
         }
     }
-
 }

@@ -112,6 +112,16 @@ th:style="'background: url(' + @{/IMG/fondoregistro.jpg} + ') no-repeat center/c
                     <label class="block text-white">Correo Electrónico</label>
                     <input type="email" th:field="*{correo}" class="w-full mt-1 p-2 bg-gray-800 text-white border border-green-500 rounded placeholder-gray-400" placeholder="micorreo@gmail.com" required>
                 </div>
+                <div class="mb-4">
+                    <label class="block text-white">Nombre de Jugador (Gametag)</label>
+                    <input type="text" th:field="*{gametag}"
+                           pattern="[A-Za-z0-9_]{3,20}"
+                           title="Solo letras, números y guión bajo. 3-20 caracteres"
+                           class="w-full mt-1 p-2 bg-gray-800 text-white border border-green-500 rounded placeholder-gray-400"
+                           placeholder="Ej: DarkKnight, DragonSlayer, StarLuna"
+                           required>
+                    <small class="text-gray-400 text-xs">Este será tu nombre visible en el juego. Puedes cambiarlo después.</small>
+                </div>
 
                 <!-- Contraseña con toggle -->
                 <div class="mb-6">

@@ -24,9 +24,11 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,16 +37,27 @@ public class UsuarioService implements IUsuarioService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private GameTagGeneratorService gametagGenerator;  // ← CORREGIDO: GametagGenerator (no GameTagGeneratorService)
+
+    @Autowired
+    private JugadorRepository jugadorRepository;
+
     private final UsuarioRepository repo;
     private final ModelMapper mapper;
-
     private final RolRepository rolRepository;
 
-    @Autowired private JugadorRepository jugadorRepository;
-    @Autowired private ProgresoJugadorRepository progresoJugadorRepository;
-    @Autowired private RespuestasJugadorRepository respuestasJugadorRepository;
-    @Autowired private ResetTokenRepository resetTokenRepository;
-    @Autowired private ReporteRepository reporteRepository;
+    @Autowired
+    private ProgresoJugadorRepository progresoJugadorRepository;
+
+    @Autowired
+    private RespuestasJugadorRepository respuestasJugadorRepository;
+
+    @Autowired
+    private ResetTokenRepository resetTokenRepository;
+
+    @Autowired
+    private ReporteRepository reporteRepository;
 
     public UsuarioService(
             UsuarioRepository repo,
@@ -65,7 +78,7 @@ public class UsuarioService implements IUsuarioService {
                     .map(u -> mapper.map(u, UsuarioDto.class))
                     .toList();
 
-            response.setSuccess(true);  // ← ✅ AGREGAR
+            response.setSuccess(true);
             response.setHttpStatusCode(HttpStatus.OK.value());
             response.setMessage(usuarios.isEmpty()
                     ? "No hay usuarios registrados."
@@ -73,7 +86,7 @@ public class UsuarioService implements IUsuarioService {
             response.setData(usuarios);
             response.setTotalRecords(usuarios.size());
         } catch (Exception ex) {
-            response.setSuccess(false);  // ← ✅ AGREGAR
+            response.setSuccess(false);
             response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error al obtener usuarios: " + ex.getMessage());
             response.setData(Collections.emptyList());
@@ -94,21 +107,22 @@ public class UsuarioService implements IUsuarioService {
             Usuario usuario = repo.findById(id)
                     .orElseThrow(() -> new EntityNotFoundException("Usuario no encontrado con ID: " + id));
             UsuarioDto dto = mapper.map(usuario, UsuarioDto.class);
-            response.setSuccess(true);  // ← ✅ AGREGAR
+            response.setSuccess(true);
             response.setHttpStatusCode(HttpStatus.OK.value());
             response.setMessage("Usuario obtenido correctamente");
             response.setData(dto);
         } catch (EntityNotFoundException ex) {
-            response.setSuccess(false);  // ← ✅ AGREGAR
+            response.setSuccess(false);
             response.setHttpStatusCode(HttpStatus.NOT_FOUND.value());
             response.setMessage(ex.getMessage());
         } catch (Exception ex) {
-            response.setSuccess(false);  // ← ✅ AGREGAR
+            response.setSuccess(false);
             response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error al obtener usuario: " + ex.getMessage());
         }
         return response;
     }
+
     // ------------------------------
     // REGISTRO
     // ------------------------------
@@ -118,10 +132,17 @@ public class UsuarioService implements IUsuarioService {
         ApiResponse<UsuarioDto> response = new ApiResponse<>();
 
         try {
+            // Validar correo único
             if (repo.findByCorreoUsuario(dto.getCorreo()).isPresent()) {
                 throw new RuntimeException("Ya existe un usuario con ese correo");
             }
 
+            // Validar gametag único
+            if (jugadorRepository.existsByNombre(dto.getGametag())) {
+                throw new RuntimeException("El gametag ya está en uso");
+            }
+
+            // Crear usuario
             Usuario usuario = new Usuario();
             usuario.setNombreUsuario(dto.getNombreUsuario());
             usuario.setApellidoUsuario(dto.getApellidoUsuario());
@@ -133,20 +154,34 @@ public class UsuarioService implements IUsuarioService {
 
             Rol rol = rolRepository.findById(2)
                     .orElseThrow(() -> new RuntimeException("El rol 2 (Usuario normal) no existe"));
-
             usuario.setRol(rol);
 
             Usuario saved = repo.save(usuario);
 
-            UsuarioDto dtoMapped = mapearUsuarioAUsuarioDto(saved);
+            // CREAR JUGADOR con gametag
+            Jugador jugador = new Jugador();
+            jugador.setNombre(dto.getGametag());
+            jugador.setUsuario(saved);
+            jugador.setFechaRegistro(LocalDate.now());
+            jugador.setUltimaConexion(LocalDate.now());
+            jugador.setEstado("ACTIVO");
+            jugador.setProgreso(null);
+            jugador.setActive(true);
+            jugador.setIsDeleted(false);
 
-            response.setSuccess(true);  // ← ✅ AGREGAR ESTA LÍNEA
+            jugadorRepository.save(jugador);
+
+            // Mapear respuesta con gametag
+            UsuarioDto dtoMapped = mapearUsuarioAUsuarioDto(saved);
+            dtoMapped.setGametag(jugador.getNombre());
+
+            response.setSuccess(true);
             response.setHttpStatusCode(HttpStatus.CREATED.value());
             response.setMessage("Usuario registrado exitosamente");
             response.setData(dtoMapped);
 
         } catch (Exception ex) {
-            response.setSuccess(false);  // ← ✅ AGREGAR ESTA LÍNEA
+            response.setSuccess(false);
             response.setHttpStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
             response.setMessage("Error al registrar usuario: " + ex.getMessage());
         }
@@ -155,7 +190,7 @@ public class UsuarioService implements IUsuarioService {
     }
 
     // ------------------------------
-    // UPDATE GENERICO CORRECTO
+    // UPDATE GENERICO
     // ------------------------------
     @Override
     public ApiResponse<UsuarioDto> update(Integer id, UsuarioDto dto) {
@@ -182,7 +217,6 @@ public class UsuarioService implements IUsuarioService {
         );
     }
 
-
     // ------------------------------
     // UPDATE (ADMIN)
     // ------------------------------
@@ -206,7 +240,6 @@ public class UsuarioService implements IUsuarioService {
 
         return new ApiResponse<>(200, "Usuario actualizado correctamente", dto);
     }
-
 
     // ------------------------------
     // INACTIVAR (soft delete)
@@ -235,13 +268,17 @@ public class UsuarioService implements IUsuarioService {
         resetTokenRepository.deleteByUsuario_IdUsuario(id);
 
         // 3. Obtener jugadores y limpiar FK circular Jugador->ProgresoJugador
-        List<Jugador> jugadores = jugadorRepository.findByUsuario_IdUsuario(id);
-        jugadorRepository.nullifyProgresoByUsuario(id);
+        // IMPORTANTE: Usar el método que devuelve List<Jugador>
+        List<Jugador> jugadores = jugadorRepository.findAllByUsuario_IdUsuario(id);
 
-        // 4. Borrar respuestas y progreso de cada jugador
-        for (Jugador jugador : jugadores) {
-            respuestasJugadorRepository.deleteByJugador(jugador);
-            progresoJugadorRepository.deleteByJugador(jugador);
+        if (jugadores != null && !jugadores.isEmpty()) {
+            jugadorRepository.nullifyProgresoByUsuario(id);
+
+            // 4. Borrar respuestas y progreso de cada jugador
+            for (Jugador jugador : jugadores) {
+                respuestasJugadorRepository.deleteByJugador(jugador);
+                progresoJugadorRepository.deleteByJugador(jugador);
+            }
         }
 
         // 5. Borrar jugadores y finalmente el usuario
@@ -253,7 +290,6 @@ public class UsuarioService implements IUsuarioService {
     public ApiResponse<UsuarioDto> verificarUsuario(String correo, String contrasena) {
         return null;
     }
-
 
     // ------------------------------
     // LOGIN
@@ -270,14 +306,42 @@ public class UsuarioService implements IUsuarioService {
                 throw new RuntimeException("Credenciales inválidas");
             }
 
+            // BUSCAR JUGADOR
+            Optional<Jugador> jugadorOpt = jugadorRepository.findByUsuario_IdUsuario(usuario.getIdUsuario());
+            Jugador jugador;
+
+            if (jugadorOpt.isEmpty()) {
+                // Crear jugador con gametag automático estilo Xbox
+                String gametagAuto = gametagGenerator.generarGametagAleatorio();
+
+                jugador = new Jugador();
+                jugador.setNombre(gametagAuto);
+                jugador.setUsuario(usuario);
+                jugador.setFechaRegistro(LocalDate.now());
+                jugador.setUltimaConexion(LocalDate.now());
+                jugador.setEstado("ACTIVO");
+                jugador.setProgreso(null);
+                jugador.setActive(true);
+                jugador.setIsDeleted(false);
+
+                jugadorRepository.save(jugador);
+            } else {
+                jugador = jugadorOpt.get();
+                // Actualizar última conexión
+                jugador.setUltimaConexion(LocalDate.now());
+                jugadorRepository.save(jugador);
+            }
+
             UsuarioDto dto = mapearUsuarioAUsuarioDto(usuario);
-            response.setSuccess(true);  // ← ✅ AGREGAR ESTA LÍNEA
+            dto.setGametag(jugador.getNombre());
+
+            response.setSuccess(true);
             response.setHttpStatusCode(200);
             response.setMessage("Login exitoso");
             response.setData(dto);
 
         } catch (Exception ex) {
-            response.setSuccess(false);  // ← ✅ AGREGAR ESTA LÍNEA
+            response.setSuccess(false);
             response.setHttpStatusCode(401);
             response.setMessage(ex.getMessage());
         }
@@ -302,12 +366,11 @@ public class UsuarioService implements IUsuarioService {
         return usuario;
     }
 
-
     // ------------------------------
     // MAPEO DTO
     // ------------------------------
     public UsuarioDto mapearUsuarioAUsuarioDto(Usuario usuario) {
-        return new UsuarioDto(
+        UsuarioDto dto = new UsuarioDto(
                 usuario.getIdUsuario(),
                 usuario.getNombreUsuario(),
                 usuario.getApellidoUsuario(),
@@ -316,6 +379,7 @@ public class UsuarioService implements IUsuarioService {
                 usuario.getEstadoUsuario(),
                 usuario.getRol() != null ? usuario.getRol().getIdRol() : null
         );
+        return dto;
     }
 
     @PostConstruct
@@ -329,7 +393,6 @@ public class UsuarioService implements IUsuarioService {
                     UsuarioDto::setRolId);
         });
     }
-
 
     // ------------------------------
     // OTROS
@@ -357,11 +420,9 @@ public class UsuarioService implements IUsuarioService {
         return repo.findAll();
     }
 
-
     public Usuario buscarPorCorreo(String correo) {
         return repo.findByCorreoUsuario(correo).orElse(null);
     }
-
 
     public String generarToken(Usuario usuario) {
         String token = UUID.randomUUID().toString();
@@ -392,10 +453,10 @@ public class UsuarioService implements IUsuarioService {
 
         return new ApiResponse<>(dto);
     }
+
     public Usuario buscarPorIdEntity(Integer id) {
         return repo.findById(id).orElse(null);
     }
-
 
     public void cambiarPassword(Integer idUsuario, String passwordActual, String passwordNueva) {
         Usuario usuario = repo.findById(idUsuario)
@@ -411,6 +472,51 @@ public class UsuarioService implements IUsuarioService {
         repo.save(usuario);
     }
 
+    @Transactional
+    public ApiResponse<UsuarioDto> cambiarGametag(Integer usuarioId, String nuevoGametag) {
+        ApiResponse<UsuarioDto> response = new ApiResponse<>();
+
+        try {
+            // Buscar jugador por usuario
+            Jugador jugador = jugadorRepository.findByUsuario_IdUsuario(usuarioId)
+                    .orElseThrow(() -> new RuntimeException("Jugador no encontrado"));
+
+            // Validar que el gametag no esté en uso por otro jugador
+            if (!jugador.getNombre().equals(nuevoGametag) &&
+                    jugadorRepository.existsByNombre(nuevoGametag)) {
+                throw new RuntimeException("El gametag ya está en uso");
+            }
+
+            // Validar formato
+            if (!nuevoGametag.matches("^[A-Za-z0-9_]{3,20}$")) {
+                throw new RuntimeException("El gametag debe tener entre 3 y 20 caracteres, solo letras, números y guión bajo");
+            }
+
+            // Actualizar gametag
+            jugador.setNombre(nuevoGametag);
+            jugadorRepository.save(jugador);
+
+            // Obtener usuario para respuesta
+            Usuario usuario = repo.findById(usuarioId)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            // Construir respuesta con gametag
+            UsuarioDto dto = mapearUsuarioAUsuarioDto(usuario);
+            dto.setGametag(nuevoGametag);
+
+            response.setSuccess(true);
+            response.setHttpStatusCode(200);
+            response.setMessage("Gametag actualizado correctamente");
+            response.setData(dto);
+
+        } catch (Exception ex) {
+            response.setSuccess(false);
+            response.setHttpStatusCode(400);
+            response.setMessage(ex.getMessage());
+        }
+
+        return response;
+    }
 
     public static UsuarioDto toDto(Usuario usuario) {
         return new UsuarioDto(
@@ -423,6 +529,4 @@ public class UsuarioService implements IUsuarioService {
                 usuario.getRol() != null ? usuario.getRol().getIdRol() : null
         );
     }
-
-
 }

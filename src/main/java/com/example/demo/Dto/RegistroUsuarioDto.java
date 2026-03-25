@@ -2,32 +2,35 @@ package com.example.demo.Dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-public class RegistroUsuarioDto {
-    @NotNull
-    private Integer rolId;
-    @NotBlank private String nombreUsuario;
-    @NotBlank private String apellidoUsuario;
-    @Email private String correo;
-    @NotBlank private String contrasena;
-    @Size(min = 7, max = 15) private String telefono;
 
+public class RegistroUsuarioDto {
+
+    @NotBlank(message = "El nombre es obligatorio")
+    private String nombreUsuario;
+
+    @NotBlank(message = "El apellido es obligatorio")
+    private String apellidoUsuario;
+
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El correo debe ser válido")
+    private String correo;
+
+    @NotBlank(message = "La contraseña es obligatoria")
+    @Size(min = 6, message = "La contraseña debe tener al menos 6 caracteres")
+    private String contrasena;
+
+    private String telefono;
+
+    // 🆕 NUEVO CAMPO
+    @NotBlank(message = "El gametag es obligatorio")
+    @Size(min = 3, max = 20, message = "El gametag debe tener entre 3 y 20 caracteres")
+    private String gametag;
+
+    // Constructor por defecto
     public RegistroUsuarioDto() {}
 
-    public RegistroUsuarioDto(Integer rolId, String nombreUsuario, String apellidoUsuario,
-                              String correo, String contrasena, String telefono) {
-        this.rolId = rolId;
-        this.nombreUsuario = nombreUsuario;
-        this.apellidoUsuario = apellidoUsuario;
-        this.correo = correo;
-        this.contrasena = contrasena;
-        this.telefono = telefono;
-    }
-
-    public Integer getRolId() { return rolId; }
-    public void setRolId(Integer rolId) { this.rolId = rolId; }
-
+    // Getters y Setters
     public String getNombreUsuario() { return nombreUsuario; }
     public void setNombreUsuario(String nombreUsuario) { this.nombreUsuario = nombreUsuario; }
 
@@ -42,6 +45,7 @@ public class RegistroUsuarioDto {
 
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
+
+    public String getGametag() { return gametag; }
+    public void setGametag(String gametag) { this.gametag = gametag; }
 }
-
-

@@ -50,6 +50,7 @@ public class PerfilController {
             @RequestParam String apellidoUsuario,
             @RequestParam String correoUsuario,
             @RequestParam(required = false) String telUsuario,
+            @RequestParam(required = false) String gametag,
             HttpSession session,
             RedirectAttributes redirectAttributes) {
 
@@ -58,7 +59,14 @@ public class PerfilController {
         if (usuario == null) {
             return "redirect:/login";
         }
-
+        if (gametag != null && !gametag.trim().isEmpty()) {
+            try {
+                usuarioService.cambiarGametag(usuario.getIdUsuario(), gametag.trim());
+                redirectAttributes.addFlashAttribute("mensaje", "Información y gametag actualizados correctamente");
+            } catch (Exception e) {
+                redirectAttributes.addFlashAttribute("error", "Error al actualizar gametag: " + e.getMessage());
+            }
+        }
         try {
             // Validar teléfono si se proporcionó
             if (telUsuario != null && !telUsuario.trim().isEmpty()) {
