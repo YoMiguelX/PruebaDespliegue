@@ -166,6 +166,7 @@ public class UsuarioService implements IUsuarioService {
             jugador.setUltimaConexion(LocalDate.now());
             jugador.setEstado("ACTIVO");
             jugador.setProgreso(null);
+            jugador.setProgresoJugador(null);
             jugador.setActive(true);
             jugador.setIsDeleted(false);
 
@@ -321,6 +322,7 @@ public class UsuarioService implements IUsuarioService {
                 jugador.setUltimaConexion(LocalDate.now());
                 jugador.setEstado("ACTIVO");
                 jugador.setProgreso(null);
+                jugador.setProgresoJugador(null);
                 jugador.setActive(true);
                 jugador.setIsDeleted(false);
 

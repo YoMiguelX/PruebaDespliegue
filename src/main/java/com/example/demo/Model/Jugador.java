@@ -19,18 +19,25 @@ public class Jugador extends BaseModel {
     private LocalDate ultimaConexion;
     private String estado;
 
+    // ✅ CORREGIDO: Usar el nombre correcto de la columna en BD
     @ManyToOne
-    @JoinColumn(name = "ID_USUARIO")
+    @JoinColumn(name = "usuario_ID_USUARIO", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario usuario;
 
+    // ✅ CORREGIDO: Este campo es INT en BD, no es relación
+    // En tu BD es "progreso" de tipo INT, no es una entidad
+    @Column(name = "progreso")
+    private Integer progreso;
+
+    // ✅ Este es el campo para la relación con ProgresoJugador
     @ManyToOne
-    @JoinColumn(name = "ID_PROGRESO_JUGADOR", referencedColumnName = "ID_PROGRESO_JUGADOR")
-    private ProgresoJugador progreso;
+    @JoinColumn(name = "PROGRESO_JUGADOR_ID_PROGRESO_JUGADOR")
+    private ProgresoJugador progresoJugador;
 
     @OneToMany(mappedBy = "jugador")
     private List<RespuestasJugador> respuestas;
 
-    //  Getters y setters
+    // Getters y setters
     public Integer getIdJugador() { return idJugador; }
     public void setIdJugador(Integer idJugador) { this.idJugador = idJugador; }
 
@@ -49,8 +56,11 @@ public class Jugador extends BaseModel {
     public Usuario getUsuario() { return usuario; }
     public void setUsuario(Usuario usuario) { this.usuario = usuario; }
 
-    public ProgresoJugador getProgreso() { return progreso; }
-    public void setProgreso(ProgresoJugador progreso) { this.progreso = progreso; }
+    public Integer getProgreso() { return progreso; }
+    public void setProgreso(Integer progreso) { this.progreso = progreso; }
+
+    public ProgresoJugador getProgresoJugador() { return progresoJugador; }
+    public void setProgresoJugador(ProgresoJugador progresoJugador) { this.progresoJugador = progresoJugador; }
 
     public List<RespuestasJugador> getRespuestas() { return respuestas; }
     public void setRespuestas(List<RespuestasJugador> respuestas) { this.respuestas = respuestas; }
