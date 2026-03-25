@@ -672,7 +672,7 @@
     </main>
 </div>
 
-<!-- ══ SCRIPTS ══════════════════════════════════════════════ -->
+<!-- ══ SCRIPTS CORREGIDOS ══════════════════════════════════════════════ -->
 <script>
     const SECCIONES = ['informacion','seguridad','perfil','privacidad','familia','reporte'];
 
@@ -689,29 +689,38 @@
         if (item) item.classList.add('active');
     }
 
-    // ── Editar información ──────────────────────────────────
+    // ── Editar información (CORREGIDO: incluye gametag) ──────────────────
     let valoresOriginales = {};
 
     function toggleEditarInfo() {
         const displays = ['displayNombre','displayApellido','displayCorreo','displayTelefono','displayGametag'];
-
         const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono','inputGametag'];
         const fields   = document.querySelectorAll('.info-field');
 
+        // Guardar valores originales incluyendo gametag
         valoresOriginales = {
             nombre:   document.getElementById('inputNombre').value,
             apellido: document.getElementById('inputApellido').value,
             correo:   document.getElementById('inputCorreo').value,
-            telefono: document.getElementById('inputTelefono').value
+            telefono: document.getElementById('inputTelefono').value,
+            gametag:  document.getElementById('inputGametag')?.value || ''
         };
 
-        displays.forEach(id => document.getElementById(id).classList.add('hidden'));
-        inputs.forEach((id,i) => {
-            document.getElementById(id).classList.remove('hidden');
-            if (fields[i]) fields[i].classList.add('edit-mode');
+        displays.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.add('hidden');
         });
-        document.getElementById('btnEditarInfo').classList.add('hidden');
-        document.getElementById('botonesAccionInfo').classList.remove('hidden');
+        inputs.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.remove('hidden');
+                if (fields[i]) fields[i].classList.add('edit-mode');
+            }
+        });
+        const btnEditar = document.getElementById('btnEditarInfo');
+        const btnAccion = document.getElementById('botonesAccionInfo');
+        if (btnEditar) btnEditar.classList.add('hidden');
+        if (btnAccion) btnAccion.classList.remove('hidden');
     }
 
     function cancelarEditarInfo() {
@@ -719,18 +728,30 @@
         const inputs   = ['inputNombre','inputApellido','inputCorreo','inputTelefono','inputGametag'];
         const fields   = document.querySelectorAll('.info-field');
 
+        // Restaurar valores originales
         document.getElementById('inputNombre').value   = valoresOriginales.nombre;
         document.getElementById('inputApellido').value = valoresOriginales.apellido;
         document.getElementById('inputCorreo').value   = valoresOriginales.correo;
         document.getElementById('inputTelefono').value = valoresOriginales.telefono;
+        if (document.getElementById('inputGametag')) {
+            document.getElementById('inputGametag').value = valoresOriginales.gametag;
+        }
 
-        displays.forEach(id => document.getElementById(id).classList.remove('hidden'));
-        inputs.forEach((id,i) => {
-            document.getElementById(id).classList.add('hidden');
-            if (fields[i]) fields[i].classList.remove('edit-mode');
+        displays.forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.classList.remove('hidden');
         });
-        document.getElementById('btnEditarInfo').classList.remove('hidden');
-        document.getElementById('botonesAccionInfo').classList.add('hidden');
+        inputs.forEach((id, i) => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.classList.add('hidden');
+                if (fields[i]) fields[i].classList.remove('edit-mode');
+            }
+        });
+        const btnEditar = document.getElementById('btnEditarInfo');
+        const btnAccion = document.getElementById('botonesAccionInfo');
+        if (btnEditar) btnEditar.classList.remove('hidden');
+        if (btnAccion) btnAccion.classList.add('hidden');
     }
 
     // ── Validaciones ────────────────────────────────────────
@@ -757,15 +778,16 @@
                     return;
                 }
 
-                  const gametag = document.getElementById('inputGametag').value.trim();
-        if (gametag) {
-            const gametagRegex = /^[A-Za-z0-9_]{3,20}$/;
-            if (!gametagRegex.test(gametag)) {
-                e.preventDefault();
-                alert('El gametag debe tener entre 3 y 20 caracteres, solo letras, números y guión bajo.');
-                document.getElementById('inputGametag').focus();
-                return;
-            }
+                const gametag = document.getElementById('inputGametag').value.trim();
+                if (gametag) {
+                    const gametagRegex = /^[A-Za-z0-9_]{3,20}$/;
+                    if (!gametagRegex.test(gametag)) {
+                        e.preventDefault();
+                        alert('El gametag debe tener entre 3 y 20 caracteres, solo letras, números y guión bajo.');
+                        document.getElementById('inputGametag').focus();
+                        return;
+                    }
+                }
             });
         }
 
@@ -807,7 +829,7 @@
             .then(r => r.text())
             .then(d => { if (d === 'NO_SESSION') window.location.href = '/login?expired=true'; })
             .catch(() => { window.location.href = '/login'; });
-    }, 30000); // cada 30 s (era 5 s — demasiado agresivo)
+    }, 30000);
 </script>
 
 <!-- Auto-abrir sección si viene de un redirect con flash (ej: envío de reporte) -->
