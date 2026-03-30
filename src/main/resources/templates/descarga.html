@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Descargar Shenmi - Juego Educativo</title>
+    <link rel="stylesheet" th:href="@{/CSS/navbar.css}" />
+    <link rel="stylesheet" th:href="@{/CSS/login.css}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        body {
+            background: url('/IMG/fondo.jpg') no-repeat center center fixed;
+            background-size: cover;
+            min-height: 100vh;
+            padding-top: 0;
+        }
+
+        .download-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 60px);
+            padding: 40px 20px;
+        }
+
+        .download-card {
+            background: rgba(40, 40, 40, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            border: 2px solid #28a745;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .download-icon {
+            font-size: 80px;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .download-title {
+            color: #28a745;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .download-subtitle {
+            color: #cccccc;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+
+        .version-info {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .version-text {
+            color: #28a745;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .version-number {
+            color: #ffffff;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .file-size {
+            color: #aaaaaa;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .btn-download {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            border: none;
+            border-radius: 50px;
+            padding: 16px 40px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
+        .btn-download:hover {
+            background: linear-gradient(45deg, #218838, #1e7e34);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(40, 167, 69, 0.4);
+            color: white;
+        }
+
+        .requirements {
+            text-align: left;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .requirements-title {
+            color: #28a745;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .requirements-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .requirements-list li {
+            color: #cccccc;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .requirements-list li i {
+            color: #28a745;
+            width: 20px;
+        }
+
+        .alert-box {
+            background: rgba(40, 167, 69, 0.15);
+            border: 2px solid #28a745;
+            border-radius: 10px;
+            padding: 12px 20px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #28a745;
+            font-size: 13px;
+        }
+
+        @media (max-width: 768px) {
+            .download-card {
+                padding: 30px 20px;
+            }
+
+            .download-title {
+                font-size: 24px;
+            }
+
+            .btn-download {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div th:replace="~{plantilla/navbar :: navbar}"></div>
+
+<div class="download-container">
+    <div class="download-card">
+        <div class="download-icon">
+            <i class="fas fa-download"></i>
+        </div>
+
+        <h1 class="download-title">Descargar Shenmi</h1>
+        <p class="download-subtitle">El juego educativo que pone a prueba tu conocimiento</p>
+
+        <div class="version-info">
+            <div class="version-text">Última versión disponible</div>
+            <div class="version-number">v1.0.0</div>
+            <div class="file-size">Tamaño: ~450 MB</div>
+        </div>
+
+        <!-- BOTÓN DE DESCARGA - Opciones según donde esté el archivo -->
+
+        <!-- Opción 1: Google Drive (requiere enlace de descarga directa) -->
+        <a href="#"
+           id="downloadLink"
+           class="btn-download"
+           onclick="iniciarDescarga(); return false;">
+            <i class="fas fa-gamepad"></i>
+            Descargar Juego
+            <i class="fas fa-arrow-down"></i>
+        </a>
+
+        <!-- Opción 2: Enlace directo a archivo -->
+        <!--
+        <a href="/downloads/ShenmiSetup.exe"
+           class="btn-download"
+           download>
+            <i class="fas fa-gamepad"></i>
+            Descargar Juego
+            <i class="fas fa-arrow-down"></i>
+        </a>
+        -->
+
+        <div class="requirements">
+            <div class="requirements-title">Requisitos mínimos</div>
+            <ul class="requirements-list">
+                <li><i class="fas fa-desktop"></i> Windows 10 / 11 (64 bits)</li>
+                <li><i class="fas fa-microchip"></i> Intel Core i3 / AMD Ryzen 3</li>
+                <li><i class="fas fa-memory"></i> 4 GB de RAM</li>
+                <li><i class="fas fa-hdd"></i> 1 GB de espacio disponible</li>
+                <li><i class="fas fa-chalkboard-user"></i> Conexión a internet para guardar progreso</li>
+            </ul>
+        </div>
+
+        <div class="alert-box">
+            <i class="fas fa-info-circle"></i>
+            <span>La descarga comenzará automáticamente. Si no inicia, haz clic en el botón nuevamente.</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── FUNCIÓN PARA MANEJAR DESCARGA ──────────────────────────────
+    // Reemplaza estas URLs con tus enlaces reales
+
+    const ENLACES_DESCARGA = {
+        windows: "https://drive.google.com/uc?export=download&id=TU_ID_DE_ARCHIVO",
+        // Para Windows: enlace directo o de Drive
+        // Para macOS si lo tienes:
+        // mac: "https://tu-enlace-mac.com/download"
+    };
+
+    function iniciarDescarga() {
+        // Mostrar mensaje de inicio
+        const btn = document.querySelector('.btn-download');
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Iniciando descarga...';
+        btn.style.opacity = '0.7';
+
+        // Iniciar descarga después de 1 segundo
+        setTimeout(() => {
+            // Opción A: Si es enlace directo
+            // window.location.href = ENLACES_DESCARGA.windows;
+
+            // Opción B: Si es Google Drive con confirmación
+            // Abrir en nueva pestaña para evitar bloqueos
+            window.open(ENLACES_DESCARGA.windows, '_blank');
+
+            // Restaurar botón
+            btn.innerHTML = textoOriginal;
+            btn.style.opacity = '1';
+
+            // Mostrar mensaje de éxito
+            mostrarMensajeDescarga();
+        }, 1000);
+    }
+
+    function mostrarMensajeDescarga() {
+        // Crear mensaje flotante temporal
+        const msg = document.createElement('div');
+        msg.innerHTML = '<i class="fas fa-check-circle"></i> La descarga debería comenzar en breve. Revisa tu carpeta de descargas.';
+        msg.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            font-weight: 600;
+            z-index: 9999;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            animation: fadeInUp 0.3s ease-out;
+        `;
+        document.body.appendChild(msg);
+
+        setTimeout(() => {
+            msg.style.opacity = '0';
+            setTimeout(() => msg.remove(), 500);
+        }, 4000);
+    }
+</script>
+</body>
+
+</html>
