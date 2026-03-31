@@ -72,7 +72,7 @@ public class CursosViewController {
         if (session.getAttribute("usuarioId") == null) {
             return "redirect:/login";
         }
-        return "openTrivia";
+        return "Opentrivia";
     }
 
     // Perfil (protegido)
