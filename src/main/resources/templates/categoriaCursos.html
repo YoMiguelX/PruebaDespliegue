@@ -11,7 +11,7 @@
 <!-- Encabezado -->
 <header class="bg-gray-900 text-white py-5 px-8 flex items-center justify-between shadow">
     <div class="flex items-center gap-4">
-        <button onclick="window.location.href='/home'"
+        <button onclick="window.location.href='/usuario/perfil'"
                 class="text-gray-400 hover:text-white transition text-sm flex items-center gap-1">
             ← Inicio
         </button>
@@ -19,7 +19,7 @@
     </div>
     <div class="flex items-center gap-3">
         <span class="text-sm text-gray-300" th:text="'Hola, ' + ${session.usuarioNombre}">Hola, Usuario</span>
-        <button onclick="window.location.href='/perfil'"
+        <button onclick="window.location.href='/usuario/perfil'"
                 class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded text-white text-sm font-medium transition">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
