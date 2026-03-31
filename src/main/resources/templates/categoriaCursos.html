@@ -6,16 +6,22 @@
     <title>Catálogo de Cursos - Shenmy</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen flex flex-col">
 
 <!-- Encabezado -->
-<header class="bg-gray-900 text-white py-6 px-8 flex items-center justify-between">
-    <h1 class="text-3xl font-bold">Catálogo de cursos</h1>
+<header class="bg-gray-900 text-white py-5 px-8 flex items-center justify-between shadow">
     <div class="flex items-center gap-4">
-        <span class="text-sm" th:text="'Bienvenido, ' + ${session.usuarioNombre}"></span>
-        <button class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded text-white font-semibold"
-                onclick="window.location.href='/perfil'">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <button onclick="window.location.href='/home'"
+                class="text-gray-400 hover:text-white transition text-sm flex items-center gap-1">
+            ← Inicio
+        </button>
+        <h1 class="text-2xl font-bold">Catálogo de Cursos</h1>
+    </div>
+    <div class="flex items-center gap-3">
+        <span class="text-sm text-gray-300" th:text="'Hola, ' + ${session.usuarioNombre}">Hola, Usuario</span>
+        <button onclick="window.location.href='/perfil'"
+                class="flex items-center gap-2 bg-gray-800 hover:bg-gray-700 px-3 py-2 rounded text-white text-sm font-medium transition">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
             </svg>
@@ -24,117 +30,221 @@
     </div>
 </header>
 
-<!-- Filtro por mundos -->
-<nav class="bg-white border-b border-gray-200 px-8 py-4">
-    <form method="get" action="/categoria-cursos" class="flex items-center gap-4">
-        <label class="text-sm font-medium text-gray-700">Filtrar por mundo:</label>
-        <select name="mundo" class="border rounded px-3 py-2 text-sm">
-            <option value="">Todos los mundos</option>
-            <option th:each="mundo : ${mundos}"
-                    th:value="${mundo.nombre}"
-                    th:text="${mundo.nombre}"
-                    th:selected="${param.mundo == mundo.nombre}">
-            </option>
-        </select>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">
-            Filtrar
-        </button>
-    </form>
+<!-- Barra de herramientas: filtro + botón Open Trivia -->
+<nav class="bg-white border-b border-gray-200 px-8 py-4 flex flex-wrap items-center justify-between gap-4">
+    <!-- Filtro por categoría (JavaScript-based) -->
+    <div class="flex items-center gap-3 flex-wrap">
+        <span class="text-sm font-medium text-gray-600">Filtrar por categoría:</span>
+        <div class="flex flex-wrap gap-2" id="filtros">
+            <button data-filtro="todos"
+                    onclick="filtrar('todos')"
+                    class="filtro-btn activo px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-900 text-white transition">
+                Todos
+            </button>
+            <button data-filtro="exactas"
+                    onclick="filtrar('exactas')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Ciencias exactas
+            </button>
+            <button data-filtro="naturales"
+                    onclick="filtrar('naturales')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Ciencias naturales
+            </button>
+            <button data-filtro="sociales"
+                    onclick="filtrar('sociales')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Ciencias sociales
+            </button>
+            <button data-filtro="tecnologia"
+                    onclick="filtrar('tecnologia')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Tecnología
+            </button>
+            <button data-filtro="idiomas"
+                    onclick="filtrar('idiomas')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Idiomas
+            </button>
+            <button data-filtro="otros"
+                    onclick="filtrar('otros')"
+                    class="filtro-btn px-3 py-1.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-700 hover:bg-gray-200 transition">
+                Otros
+            </button>
+        </div>
+    </div>
+
+    <!-- Botón Open Trivia -->
+    <button onclick="window.location.href='/open-trivia'"
+            class="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        Trivia Global (Open Trivia)
+    </button>
 </nav>
 
 <!-- Grid de cursos -->
-<main class="p-8">
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-
-        <!-- Curso: Comprar Casa -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/comprar-casa'">
-            <p class="text-xs text-gray-500 mb-1">Finanzas personales</p>
-            <h2 class="font-bold text-lg mb-2">Compra tu casa</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
-        </button>
+<main class="p-8 flex-1">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5" id="grid-cursos">
 
         <!-- Curso: Matemáticas -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/matematicas'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias exactas</p>
-            <h2 class="font-bold text-lg mb-2">Matemáticas</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="exactas"
+                onclick="window.location.href='/curso/matematicas'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">➗</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias exactas</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Matemáticas</h2>
+            <p class="text-xs text-gray-500">Álgebra, geometría y más</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
         <!-- Curso: Física -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/fisica'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
-            <h2 class="font-bold text-lg mb-2">Física</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
-        </button>
-
-        <!-- Curso: Inglés -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/ingles'">
-            <p class="text-xs text-gray-500 mb-1">Idiomas</p>
-            <h2 class="font-bold text-lg mb-2">Inglés</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
-        </button>
-
-        <!-- Curso: Historia -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/historia'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias sociales</p>
-            <h2 class="font-bold text-lg mb-2">Historia</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
-        </button>
-
-        <!-- Curso: Geografía -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/geografia'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias sociales</p>
-            <h2 class="font-bold text-lg mb-2">Geografía</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="naturales"
+                onclick="window.location.href='/curso/fisica'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">⚡</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias naturales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Física</h2>
+            <p class="text-xs text-gray-500">Mecánica, energía y ondas</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
         <!-- Curso: Biología -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/biologia'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
-            <h2 class="font-bold text-lg mb-2">Biología</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="naturales"
+                onclick="window.location.href='/curso/biologia'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🧬</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias naturales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Biología</h2>
+            <p class="text-xs text-gray-500">Células, ecosistemas y vida</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
         <!-- Curso: Química -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/quimica'">
-            <p class="text-xs text-gray-500 mb-1">Ciencias naturales</p>
-            <h2 class="font-bold text-lg mb-2">Química</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="naturales"
+                onclick="window.location.href='/curso/quimica'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🧪</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias naturales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Química</h2>
+            <p class="text-xs text-gray-500">Elementos, reacciones y más</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
-        <!-- Curso: Lógica -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/logica'">
-            <p class="text-xs text-gray-500 mb-1">Pensamiento crítico</p>
-            <h2 class="font-bold text-lg mb-2">Lógica</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <!-- Curso: Historia -->
+        <button data-categoria="sociales"
+                onclick="window.location.href='/curso/historia'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">📜</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias sociales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Historia</h2>
+            <p class="text-xs text-gray-500">Civilizaciones y eventos clave</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
+        </button>
+
+        <!-- Curso: Geografía -->
+        <button data-categoria="sociales"
+                onclick="window.location.href='/curso/geografia'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🌍</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ciencias sociales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Geografía</h2>
+            <p class="text-xs text-gray-500">Países, climas y regiones</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
+        </button>
+
+        <!-- Curso: Inglés -->
+        <button data-categoria="idiomas"
+                onclick="window.location.href='/curso/ingles'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🇬🇧</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Idiomas</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Inglés</h2>
+            <p class="text-xs text-gray-500">Vocabulario, gramática y más</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
         <!-- Curso: Programación -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/programacion'">
-            <p class="text-xs text-gray-500 mb-1">Tecnología</p>
-            <h2 class="font-bold text-lg mb-2">Programación</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="tecnologia"
+                onclick="window.location.href='/curso/programacion'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">💻</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Tecnología</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Programación</h2>
+            <p class="text-xs text-gray-500">Lógica, algoritmos y código</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
+        </button>
+
+        <!-- Curso: Lógica -->
+        <button data-categoria="exactas"
+                onclick="window.location.href='/curso/logica'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🧩</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Pensamiento crítico</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Lógica</h2>
+            <p class="text-xs text-gray-500">Razonamiento y resolución</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
 
         <!-- Curso: Medio Ambiente -->
-        <button class="bg-white border border-gray-200 p-4 rounded hover:shadow transition"
-                onclick="window.location.href='/curso/medio-ambiente'">
-            <p class="text-xs text-gray-500 mb-1">Ecología</p>
-            <h2 class="font-bold text-lg mb-2">Medio ambiente</h2>
-            <div class="text-right text-blue-600 text-xl">→</div>
+        <button data-categoria="naturales"
+                onclick="window.location.href='/curso/medio-ambiente'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🌿</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Ecología</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Medio Ambiente</h2>
+            <p class="text-xs text-gray-500">Sostenibilidad y ecología</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
         </button>
+
+        <!-- Curso: Compra tu Casa -->
+        <button data-categoria="otros"
+                onclick="window.location.href='/curso/comprar-casa'"
+                class="curso-card bg-white border border-gray-200 p-5 rounded-xl hover:shadow-md hover:-translate-y-0.5 transition-all text-left">
+            <div class="text-2xl mb-3">🏠</div>
+            <p class="text-xs text-gray-500 mb-1 font-medium uppercase tracking-wide">Finanzas personales</p>
+            <h2 class="font-bold text-base mb-1 text-gray-800">Compra tu Casa</h2>
+            <p class="text-xs text-gray-500">Guía paso a paso</p>
+            <div class="mt-3 text-right text-blue-600 font-bold">→</div>
+        </button>
+
+    </div>
+
+    <!-- Mensaje cuando no hay resultados -->
+    <div id="sin-resultados" class="hidden text-center py-16 text-gray-400">
+        <div class="text-5xl mb-4">🔍</div>
+        <p class="text-lg font-medium">No hay cursos en esta categoría</p>
     </div>
 </main>
+
+<script>
+    function filtrar(categoria) {
+        const tarjetas = document.querySelectorAll('.curso-card');
+        const botones  = document.querySelectorAll('.filtro-btn');
+        let visibles   = 0;
+
+        tarjetas.forEach(card => {
+            const cat = card.getAttribute('data-categoria');
+            const mostrar = categoria === 'todos' || cat === categoria;
+            card.style.display = mostrar ? '' : 'none';
+            if (mostrar) visibles++;
+        });
+
+        // Actualizar estado activo de botones
+        botones.forEach(btn => {
+            const isActivo = btn.getAttribute('data-filtro') === categoria;
+            btn.classList.toggle('bg-gray-900', isActivo);
+            btn.classList.toggle('text-white', isActivo);
+            btn.classList.toggle('bg-gray-100', !isActivo);
+            btn.classList.toggle('text-gray-700', !isActivo);
+            btn.classList.toggle('hover:bg-gray-200', !isActivo);
+        });
+
+        document.getElementById('sin-resultados').classList.toggle('hidden', visibles > 0);
+    }
+</script>
 
 </body>
 </html>

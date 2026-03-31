@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Trivia Global - Shenmy</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+<!-- Header -->
+<header class="bg-gray-900 text-white py-5 px-8 flex items-center justify-between shadow">
+    <div class="flex items-center gap-4">
+        <button onclick="window.location.href='/categoria-cursos'"
+                class="text-gray-400 hover:text-white transition text-sm flex items-center gap-1">
+            ← Cursos
+        </button>
+        <div>
+            <h1 class="text-xl font-bold leading-tight">Trivia Global</h1>
+            <p class="text-xs text-gray-400">Preguntas en tiempo real de Open Trivia DB</p>
+        </div>
+    </div>
+    <div id="marcador" class="hidden items-center gap-3 bg-gray-800 px-4 py-2 rounded-lg">
+        <span class="text-sm text-gray-400">Puntaje:</span>
+        <span id="puntaje-actual" class="text-xl font-bold text-green-400">0</span>
+        <span class="text-gray-500">/</span>
+        <span id="total-preguntas-hdr" class="text-gray-300 font-medium">5</span>
+    </div>
+</header>
+
+<!-- Contenido principal -->
+<main class="flex-1 flex items-start justify-center p-6">
+    <div class="w-full max-w-2xl">
+
+        <!-- ===== PANTALLA 1: Selección de categoría ===== -->
+        <div id="pantalla-inicio">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8">
+                <div class="text-center mb-8">
+                    <div class="text-5xl mb-4">🧠</div>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">¿Cuánto sabes del mundo?</h2>
+                    <p class="text-gray-500 text-sm">Elige una categoría y responde 5 preguntas de trivia internacional</p>
+                </div>
+
+                <!-- Selector de categoría -->
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Categoría</label>
+                    <select id="select-categoria"
+                            class="w-full border border-gray-300 rounded-xl px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <option value="9">🌐 Conocimiento General</option>
+                        <option value="23">📜 Historia</option>
+                        <option value="22">🌍 Geografía</option>
+                        <option value="17">🔬 Ciencia y Naturaleza</option>
+                        <option value="19">➕ Matemáticas</option>
+                        <option value="18">💻 Ciencia: Computación</option>
+                        <option value="21">⚽ Deportes</option>
+                        <option value="27">🐾 Animales</option>
+                        <option value="25">🎨 Arte</option>
+                        <option value="10">📚 Entretenimiento: Libros</option>
+                    </select>
+                </div>
+
+                <!-- Selector de dificultad -->
+                <div class="mb-8">
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Dificultad</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button onclick="seleccionarDificultad('easy')"
+                                data-dif="easy"
+                                class="dif-btn activa-dif border-2 border-green-500 bg-green-50 text-green-700 rounded-xl py-2.5 text-sm font-semibold transition">
+                            🟢 Fácil
+                        </button>
+                        <button onclick="seleccionarDificultad('medium')"
+                                data-dif="medium"
+                                class="dif-btn border-2 border-gray-200 bg-white text-gray-600 rounded-xl py-2.5 text-sm font-semibold hover:border-yellow-400 hover:bg-yellow-50 transition">
+                            🟡 Media
+                        </button>
+                        <button onclick="seleccionarDificultad('hard')"
+                                data-dif="hard"
+                                class="dif-btn border-2 border-gray-200 bg-white text-gray-600 rounded-xl py-2.5 text-sm font-semibold hover:border-red-400 hover:bg-red-50 transition">
+                            🔴 Difícil
+                        </button>
+                    </div>
+                </div>
+
+                <button onclick="iniciarTrivia()"
+                        class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-xl font-bold text-base shadow transition">
+                    Iniciar Trivia →
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PANTALLA 2: Cargando ===== -->
+        <div id="pantalla-carga" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-12 text-center">
+                <div class="text-5xl mb-4 animate-bounce">🔄</div>
+                <p class="text-gray-600 font-medium">Cargando preguntas...</p>
+            </div>
+        </div>
+
+        <!-- ===== PANTALLA 3: Pregunta ===== -->
+        <div id="pantalla-pregunta" class="hidden">
+            <!-- Barra de progreso -->
+            <div class="mb-4">
+                <div class="flex justify-between text-xs text-gray-500 mb-1.5">
+                    <span id="progreso-texto">Pregunta 1 de 5</span>
+                    <span id="categoria-texto" class="font-medium text-indigo-600"></span>
+                </div>
+                <div class="w-full bg-gray-200 h-2 rounded-full">
+                    <div id="barra-progreso" class="bg-indigo-500 h-2 rounded-full transition-all duration-500" style="width:20%"></div>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-7">
+                <!-- Dificultad badge -->
+                <div class="flex justify-between items-center mb-5">
+                    <span id="badge-dificultad"
+                          class="text-xs font-semibold px-3 py-1 rounded-full bg-green-100 text-green-700">Fácil</span>
+                </div>
+
+                <!-- Pregunta -->
+                <p id="texto-pregunta" class="text-lg font-semibold text-gray-800 mb-6 leading-relaxed"></p>
+
+                <!-- Opciones -->
+                <div id="contenedor-opciones" class="space-y-3"></div>
+
+                <!-- Feedback -->
+                <div id="feedback" class="hidden mt-5 p-4 rounded-xl text-sm font-medium"></div>
+
+                <!-- Botón siguiente -->
+                <button id="btn-siguiente"
+                        onclick="siguientePregunta()"
+                        class="hidden w-full mt-5 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition">
+                    Siguiente pregunta →
+                </button>
+            </div>
+        </div>
+
+        <!-- ===== PANTALLA 4: Resultados ===== -->
+        <div id="pantalla-resultado" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center">
+                <div id="emoji-resultado" class="text-6xl mb-4"></div>
+                <h2 id="titulo-resultado" class="text-2xl font-bold text-gray-800 mb-2"></h2>
+                <p id="subtitulo-resultado" class="text-gray-500 mb-6"></p>
+
+                <div class="bg-gray-50 rounded-xl p-5 mb-8">
+                    <div class="flex justify-center gap-10">
+                        <div>
+                            <div id="res-correctas" class="text-3xl font-bold text-green-600"></div>
+                            <div class="text-xs text-gray-500 mt-1">Correctas</div>
+                        </div>
+                        <div>
+                            <div id="res-incorrectas" class="text-3xl font-bold text-red-500"></div>
+                            <div class="text-xs text-gray-500 mt-1">Incorrectas</div>
+                        </div>
+                        <div>
+                            <div id="res-porcentaje" class="text-3xl font-bold text-indigo-600"></div>
+                            <div class="text-xs text-gray-500 mt-1">Acierto</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex gap-3">
+                    <button onclick="reiniciar()"
+                            class="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-bold transition">
+                        Jugar de nuevo
+                    </button>
+                    <button onclick="window.location.href='/categoria-cursos'"
+                            class="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 py-3 rounded-xl font-bold transition">
+                        Volver a cursos
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Error -->
+        <div id="pantalla-error" class="hidden">
+            <div class="bg-white rounded-2xl shadow-sm border border-red-200 p-8 text-center">
+                <div class="text-5xl mb-4">⚠️</div>
+                <h2 class="text-xl font-bold text-gray-800 mb-2">No se pudieron cargar las preguntas</h2>
+                <p class="text-gray-500 text-sm mb-6">Open Trivia DB puede estar temporalmente ocupado. Intenta de nuevo.</p>
+                <button onclick="reiniciar()"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2.5 rounded-xl font-bold transition">
+                    Intentar de nuevo
+                </button>
+            </div>
+        </div>
+
+    </div>
+</main>
+
+<script>
+    let preguntas      = [];
+    let indiceActual   = 0;
+    let puntaje        = 0;
+    let dificultad     = 'easy';
+    let respondida     = false;
+
+    // ── Selección de dificultad ──────────────────────────────────────────────
+    function seleccionarDificultad(nivel) {
+        dificultad = nivel;
+        document.querySelectorAll('.dif-btn').forEach(btn => {
+            const esActivo = btn.getAttribute('data-dif') === nivel;
+            btn.classList.toggle('activa-dif', esActivo);
+            // Colores según dificultad
+            const colores = { easy: 'green', medium: 'yellow', hard: 'red' };
+            const color   = colores[nivel];
+            if (esActivo) {
+                btn.className = `dif-btn border-2 border-${color}-500 bg-${color}-50 text-${color}-700 rounded-xl py-2.5 text-sm font-semibold transition`;
+            } else {
+                btn.className = 'dif-btn border-2 border-gray-200 bg-white text-gray-600 rounded-xl py-2.5 text-sm font-semibold hover:border-gray-400 hover:bg-gray-50 transition';
+            }
+        });
+    }
+
+    // ── Iniciar trivia ───────────────────────────────────────────────────────
+    async function iniciarTrivia() {
+        const categoria = document.getElementById('select-categoria').value;
+
+        mostrar('pantalla-carga');
+
+        try {
+            // Llamamos al endpoint interno que llama a Open Trivia DB
+            const url = `/api/external/trivia?categoria=${categoria}&dificultad=${dificultad}`;
+            const res  = await fetch(url);
+
+            if (!res.ok) throw new Error('HTTP ' + res.status);
+
+            const data = await res.json();
+
+            if (!data.results || data.results.length === 0) {
+                // response_code 1 = no hay suficientes preguntas para esos filtros
+                mostrar('pantalla-error');
+                return;
+            }
+
+            preguntas    = data.results;
+            indiceActual = 0;
+            puntaje      = 0;
+
+            document.getElementById('marcador').classList.remove('hidden');
+            document.getElementById('marcador').classList.add('flex');
+            document.getElementById('total-preguntas-hdr').textContent = preguntas.length;
+
+            mostrarPregunta();
+            mostrar('pantalla-pregunta');
+
+        } catch (e) {
+            console.error(e);
+            mostrar('pantalla-error');
+        }
+    }
+
+    // ── Mostrar una pregunta ─────────────────────────────────────────────────
+    function mostrarPregunta() {
+        respondida = false;
+        const p    = preguntas[indiceActual];
+        const num  = indiceActual + 1;
+        const tot  = preguntas.length;
+
+        document.getElementById('progreso-texto').textContent    = `Pregunta ${num} de ${tot}`;
+        document.getElementById('categoria-texto').textContent   = decodeHtml(p.category);
+        document.getElementById('barra-progreso').style.width    = `${(num / tot) * 100}%`;
+        document.getElementById('texto-pregunta').innerHTML      = decodeHtml(p.question);
+        document.getElementById('feedback').classList.add('hidden');
+        document.getElementById('btn-siguiente').classList.add('hidden');
+
+        // Badge dificultad
+        const badge   = document.getElementById('badge-dificultad');
+        const difMap  = { easy: ['🟢 Fácil', 'bg-green-100 text-green-700'],
+                          medium: ['🟡 Media', 'bg-yellow-100 text-yellow-700'],
+                          hard: ['🔴 Difícil', 'bg-red-100 text-red-700'] };
+        const [txt, cls] = difMap[p.difficulty] || difMap['easy'];
+        badge.textContent = txt;
+        badge.className = `text-xs font-semibold px-3 py-1 rounded-full ${cls}`;
+
+        // Mezclar opciones
+        const opciones  = shuffle([p.correct_answer, ...p.incorrect_answers]);
+        const contenedor = document.getElementById('contenedor-opciones');
+        contenedor.innerHTML = '';
+
+        opciones.forEach(op => {
+            const btn = document.createElement('button');
+            btn.innerHTML = decodeHtml(op);
+            btn.className = 'w-full text-left border-2 border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-800 hover:border-indigo-400 hover:bg-indigo-50 transition font-medium';
+            btn.onclick   = () => responder(btn, op, p.correct_answer);
+            contenedor.appendChild(btn);
+        });
+
+        // Actualizar marcador header
+        document.getElementById('puntaje-actual').textContent = puntaje;
+    }
+
+    // ── Responder ────────────────────────────────────────────────────────────
+    function responder(btnElegido, opcionElegida, correcta) {
+        if (respondida) return;
+        respondida = true;
+
+        const esCorrecta = decodeHtml(opcionElegida) === decodeHtml(correcta);
+        if (esCorrecta) puntaje++;
+
+        // Colorear botones
+        document.querySelectorAll('#contenedor-opciones button').forEach(btn => {
+            const texto = btn.innerHTML;
+            if (texto === decodeHtml(correcta)) {
+                btn.className = 'w-full text-left border-2 border-green-500 bg-green-50 rounded-xl px-4 py-3 text-sm text-green-800 font-semibold';
+            } else if (btn === btnElegido && !esCorrecta) {
+                btn.className = 'w-full text-left border-2 border-red-400 bg-red-50 rounded-xl px-4 py-3 text-sm text-red-700 font-medium';
+            } else {
+                btn.className = 'w-full text-left border-2 border-gray-100 bg-gray-50 rounded-xl px-4 py-3 text-sm text-gray-400 font-medium';
+            }
+            btn.disabled = true;
+        });
+
+        // Feedback
+        const fb = document.getElementById('feedback');
+        fb.classList.remove('hidden');
+        if (esCorrecta) {
+            fb.className = 'mt-5 p-4 rounded-xl text-sm font-medium bg-green-50 text-green-800 border border-green-200';
+            fb.textContent = '✅ ¡Correcto!';
+        } else {
+            fb.className = 'mt-5 p-4 rounded-xl text-sm font-medium bg-red-50 text-red-800 border border-red-200';
+            fb.innerHTML = `❌ Incorrecto. La respuesta correcta era: <strong>${decodeHtml(correcta)}</strong>`;
+        }
+
+        document.getElementById('puntaje-actual').textContent = puntaje;
+        document.getElementById('btn-siguiente').classList.remove('hidden');
+
+        // Si es la última pregunta cambia el texto del botón
+        if (indiceActual === preguntas.length - 1) {
+            document.getElementById('btn-siguiente').textContent = 'Ver resultados →';
+        }
+    }
+
+    // ── Siguiente pregunta ───────────────────────────────────────────────────
+    function siguientePregunta() {
+        indiceActual++;
+        if (indiceActual < preguntas.length) {
+            mostrarPregunta();
+        } else {
+            mostrarResultados();
+        }
+    }
+
+    // ── Resultados ───────────────────────────────────────────────────────────
+    function mostrarResultados() {
+        const total      = preguntas.length;
+        const incorrectas = total - puntaje;
+        const pct        = Math.round((puntaje / total) * 100);
+
+        document.getElementById('res-correctas').textContent  = puntaje;
+        document.getElementById('res-incorrectas').textContent = incorrectas;
+        document.getElementById('res-porcentaje').textContent  = pct + '%';
+
+        let emoji, titulo, subtitulo;
+        if (pct === 100)      { emoji = '🏆'; titulo = '¡Perfecto!';          subtitulo = 'Respondiste todo correctamente.'; }
+        else if (pct >= 80)   { emoji = '🎉'; titulo = '¡Muy bien!';           subtitulo = 'Excelente desempeño.'; }
+        else if (pct >= 60)   { emoji = '👍'; titulo = 'Buen intento';         subtitulo = 'Sigue practicando para mejorar.'; }
+        else if (pct >= 40)   { emoji = '📚'; titulo = 'Puedes mejorar';       subtitulo = 'Repasa los temas y vuelve a intentarlo.'; }
+        else                  { emoji = '💪'; titulo = 'Sigue estudiando';     subtitulo = 'No te rindas, cada intento te enseña algo nuevo.'; }
+
+        document.getElementById('emoji-resultado').textContent    = emoji;
+        document.getElementById('titulo-resultado').textContent   = titulo;
+        document.getElementById('subtitulo-resultado').textContent = subtitulo;
+
+        document.getElementById('marcador').classList.add('hidden');
+        document.getElementById('marcador').classList.remove('flex');
+        mostrar('pantalla-resultado');
+    }
+
+    // ── Reiniciar ────────────────────────────────────────────────────────────
+    function reiniciar() {
+        preguntas    = [];
+        indiceActual = 0;
+        puntaje      = 0;
+        respondida   = false;
+        mostrar('pantalla-inicio');
+    }
+
+    // ── Utilidades ────────────────────────────────────────────────────────────
+    function mostrar(id) {
+        ['pantalla-inicio','pantalla-carga','pantalla-pregunta','pantalla-resultado','pantalla-error']
+            .forEach(p => document.getElementById(p).classList.toggle('hidden', p !== id));
+    }
+
+    function shuffle(arr) {
+        for (let i = arr.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [arr[i], arr[j]] = [arr[j], arr[i]];
+        }
+        return arr;
+    }
+
+    function decodeHtml(html) {
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    }
+</script>
+
+</body>
+</html>

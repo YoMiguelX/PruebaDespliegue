@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.servlet.http.HttpSession;
 import java.util.List;
@@ -19,15 +20,19 @@ public class CursosViewController {
 
     // Página principal de categorías (protegida)
     @GetMapping("/categoria-cursos")
-    public String categoriaCursos(HttpSession session, Model model) {
-        // Verificar sesión
+    public String categoriaCursos(
+            HttpSession session,
+            Model model,
+            @RequestParam(required = false) String mundo) {
+
         if (session.getAttribute("usuarioId") == null) {
             return "redirect:/login";
         }
 
-        // Obtener lista de mundos para el filtro
         List<Mundo> mundos = mundoService.findAll();
         model.addAttribute("mundos", mundos);
+        // Se pasa el filtro activo para que el template pueda pre-seleccionarlo
+        model.addAttribute("mundoActivo", mundo != null ? mundo : "");
 
         return "categoriaCursos";
     }
@@ -35,12 +40,11 @@ public class CursosViewController {
     // Páginas de cursos individuales (TODAS protegidas)
     @GetMapping("/curso/{nombreCurso}")
     public String verCurso(@PathVariable String nombreCurso, HttpSession session, Model model) {
-        // Verificar sesión
+
         if (session.getAttribute("usuarioId") == null) {
             return "redirect:/login";
         }
 
-        // Validar que el curso existe
         List<String> cursosValidos = List.of(
                 "matematicas", "fisica", "biologia", "quimica", "historia",
                 "geografia", "ingles", "programacion", "logica", "medio-ambiente",
@@ -51,14 +55,24 @@ public class CursosViewController {
             return "redirect:/categoria-cursos";
         }
 
-        // Mapear nombres de URL a nombres de archivo
+        // Mapear nombres de URL a nombres de archivo de template
+        // IMPORTANTE: el directorio es "Cursos/" con C mayúscula (Linux es case-sensitive)
         String archivoCurso = switch (nombreCurso) {
             case "medio-ambiente" -> "medioAmbiente";
-            case "comprar-casa" -> "moduloAprendizaje";
-            default -> nombreCurso;
+            case "comprar-casa"   -> "moduloAprendizaje";
+            default               -> nombreCurso;
         };
 
-        return "cursos/" + archivoCurso;
+        return "Cursos/" + archivoCurso;
+    }
+
+    // Vista de Open Trivia DB (protegida)
+    @GetMapping("/open-trivia")
+    public String openTrivia(HttpSession session, Model model) {
+        if (session.getAttribute("usuarioId") == null) {
+            return "redirect:/login";
+        }
+        return "openTrivia";
     }
 
     // Perfil (protegido)
@@ -68,7 +82,6 @@ public class CursosViewController {
             return "redirect:/login";
         }
 
-        // Agregar datos del usuario al modelo
         model.addAttribute("usuarioNombre", session.getAttribute("usuarioNombre"));
         model.addAttribute("usuarioCorreo", session.getAttribute("usuarioCorreo"));
 

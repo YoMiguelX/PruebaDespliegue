@@ -1,7 +1,8 @@
 package com.example.demo.Model;
 
-import com.example.demo.Model.BaseModel;
 import jakarta.persistence.*;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -19,18 +20,16 @@ public class Jugador extends BaseModel {
     private LocalDate ultimaConexion;
     private String estado;
 
-    // ✅ CORREGIDO: Usar el nombre correcto de la columna en BD
     @ManyToOne
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "usuario_ID_USUARIO", referencedColumnName = "ID_USUARIO", nullable = false)
     private Usuario usuario;
 
-    // ✅ CORREGIDO: Este campo es INT en BD, no es relación
-    // En tu BD es "progreso" de tipo INT, no es una entidad
     @Column(name = "progreso")
     private Integer progreso;
 
-    // ✅ Este es el campo para la relación con ProgresoJugador
     @ManyToOne
+    @NotFound(action = NotFoundAction.IGNORE)
     @JoinColumn(name = "PROGRESO_JUGADOR_ID_PROGRESO_JUGADOR")
     private ProgresoJugador progresoJugador;
 
