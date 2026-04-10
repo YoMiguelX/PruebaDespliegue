@@ -335,7 +335,16 @@
       </div>
     
     
-  </main>
+  
+        <!-- 🎓 Botón certificado (aparece al 100%) -->
+        <div id="cert-btn-wrap" class="hidden flex justify-center mt-10 mb-6">
+            <a id="cert-link" href="#"
+               class="bg-yellow-500 hover:bg-yellow-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-lg transition flex items-center gap-3">
+                🎓 ¡Curso completado! — Obtener mi Certificado
+            </a>
+        </div>
+
+    </main>
   
 
   <!-- Script de colapso -->
@@ -393,12 +402,13 @@
 
 <script>
   const totalLecciones = 9;
-  let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+  const PROGRESO_KEY = "progreso_comprar-casa";
+        let progreso = JSON.parse(localStorage.getItem(PROGRESO_KEY)) || {};
 
   function marcarLeccion(idLeccion) {
       if (!progreso[idLeccion]) {
         progreso[idLeccion] = true;
-        localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+        localStorage.setItem(PROGRESO_KEY, JSON.stringify(progreso));
       }
         actualizarBarraProgreso();
         actualizarIconos();
@@ -428,7 +438,7 @@
   actualizarBarraProgreso();
   actualizarIconos();
 
-  localStorage.removeItem("progresoLecciones");//para pruebas es este comando importamnten quitar
+  localStorage.removeItem("progreso_comprar-casa");//para pruebas es este comando importamnten quitar
 
 
 </script>

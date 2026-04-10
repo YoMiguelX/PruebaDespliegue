@@ -394,12 +394,13 @@
 
     <script>
         const totalLecciones = 9;
-        let progreso = JSON.parse(localStorage.getItem("progresoLecciones")) || {};
+        const PROGRESO_KEY = "progreso_programacion";
+        let progreso = JSON.parse(localStorage.getItem(PROGRESO_KEY)) || {};
 
         function marcarLeccion(idLeccion) {
             if (!progreso[idLeccion]) {
                 progreso[idLeccion] = true;
-                localStorage.setItem("progresoLecciones", JSON.stringify(progreso));
+                localStorage.setItem(PROGRESO_KEY, JSON.stringify(progreso));
             }
             actualizarBarraProgreso();
             actualizarIconos();
@@ -412,6 +413,8 @@
             document.getElementById("progress-bar").style.width = porcentaje + "%";
             document.getElementById("progress-label").textContent = porcentaje + "% completado";
             if (porcentaje === 100) {
+                document.getElementById("cert-btn-wrap").classList.remove("hidden");
+                document.getElementById("cert-link").href = "/certificado?curso=programacion";
             }
         }
 
